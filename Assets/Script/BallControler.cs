@@ -48,9 +48,9 @@ public class BallControler : NetworkBehaviour
 
     public void TpStart()
     {
-        gameObject.SetActive(false);
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         transform.rotation = sr;
         transform.position = sp;
-        gameObject.SetActive(true);
     }
 }

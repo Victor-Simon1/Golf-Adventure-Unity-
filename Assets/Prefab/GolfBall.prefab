@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2475137442998286018}
   - component: {fileID: 3164139789890264425}
   - component: {fileID: 109992488218626856}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GolfBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,6 +173,8 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 5628052547963160389}
   _networkObjectCache: {fileID: 5628052547963160389}
   force: 100
+  sp: {x: 0, y: 0, z: 0}
+  sr: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &2475137442998286018
 MonoBehaviour:
   m_ObjectHideFlags: 0
