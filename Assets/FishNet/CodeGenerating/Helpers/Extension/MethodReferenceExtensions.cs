@@ -1,4 +1,5 @@
-﻿using MonoFN.Cecil;
+﻿using FishNet.CodeGenerating.Extension;
+using MonoFN.Cecil;
 using MonoFN.Cecil.Rocks;
 using System;
 
@@ -7,6 +8,16 @@ namespace FishNet.CodeGenerating.Helping.Extension
 
     internal static class MethodReferenceExtensions
     {
+
+        /// <summary>
+        /// Returns a custom attribute.
+        /// </summary>
+        public static CustomAttribute GetCustomAttribute(this MethodReference mr, string attributeFullName)
+        {
+            MethodDefinition md = mr.Resolve();
+            return MethodDefinitionExtensions.GetCustomAttribute(md, attributeFullName);
+        }
+
         /// <summary>
         /// Makes a generic method with specified arguments.
         /// </summary>
@@ -76,6 +87,14 @@ namespace FishNet.CodeGenerating.Helping.Extension
             return session.GetClass<GeneralHelper>().GetMethodReferenceResolve(methodRef);
         }
 
+        /// <summary>
+        /// Removes ret if it exist at the end of the method. Returns if ret was removed.
+        /// </summary>
+        internal static bool RemoveEndRet(this MethodReference mr, CodegenSession session)
+        {
+            MethodDefinition md = mr.CachedResolve(session);
+            return MethodDefinitionExtensions.RemoveEndRet(md, session);
+        }
         /// <summary>
         /// Given a method of a generic class such as ArraySegment`T.get_Count,
         /// and a generic instance such as ArraySegment`int

@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
-
 using FishNet.Configuring;
+using FishNet.Managing;
 using FishNet.Managing.Object;
 using FishNet.Object;
 using System.Collections.Generic;
@@ -205,6 +205,14 @@ namespace FishNet.Editing.PrefabCollectionGenerator
         /// </summary>
         public static void GenerateChanged(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, PrefabGeneratorConfigurations settings = null)
         {
+#if PARRELSYNC
+            if (ParrelSync.ClonesManager.IsClone() && ParrelSync.Preferences.AssetModPref.Value)
+            {
+                UnityDebug.Log("Skipping prefab generation in ParrelSync clone");
+                return;
+            }
+#endif
+
             if (settings == null)
                 settings = Configuration.Configurations.PrefabGenerator;
             if (!settings.Enabled)
@@ -244,7 +252,7 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                         continue;
 
                     NetworkObject nob = AssetDatabase.LoadAssetAtPath<NetworkObject>(item);
-                    if (nob != null)
+                    if (CanAddNetworkObject(nob, settings))
                     {
                         changedNobPaths.Add(item);
                         prefabCollection.AddObject(nob, true);
@@ -304,6 +312,14 @@ namespace FishNet.Editing.PrefabCollectionGenerator
         /// </summary>
         public static void GenerateFull(PrefabGeneratorConfigurations settings = null, bool forced = false)
         {
+#if PARRELSYNC
+            if (ParrelSync.ClonesManager.IsClone() && ParrelSync.Preferences.AssetModPref.Value)
+            {
+                UnityDebug.Log("Skipping prefab generation in ParrelSync clone");
+                return;
+            }
+#endif
+
             if (settings == null)
                 settings = Configuration.Configurations.PrefabGenerator;
             if (!forced && !settings.Enabled)
@@ -320,7 +336,7 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 foreach (string path in GetPrefabFiles("Assets", excludedPaths, true))
                 {
                     NetworkObject nob = AssetDatabase.LoadAssetAtPath<NetworkObject>(path);
-                    if (nob != null)
+                    if (CanAddNetworkObject(nob, settings))
                         foundNobs.Add(nob);
                 }
             }
@@ -339,7 +355,7 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                     foreach (string path in GetPrefabFiles(sf.Path, excludedPaths, sf.Recursive))
                     {
                         NetworkObject nob = AssetDatabase.LoadAssetAtPath<NetworkObject>(path);
-                        if (nob != null)
+                        if (CanAddNetworkObject(nob, settings))
                             foundNobs.Add(nob);
                     }
                 }
@@ -402,25 +418,39 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                     recursive = false;
                 }
 
+                p = GetPlatformPath(p);
                 results.Add(new SpecifiedFolder(p, recursive));
             }
 
             return results;
         }
 
+        internal static string GetPlatformPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            path = path.Replace(@"\"[0], Path.DirectorySeparatorChar);
+            path = path.Replace(@"/"[0], Path.DirectorySeparatorChar);
+            return path;
+        }
+
         /// <summary>
         /// Returns the DefaultPrefabObjects file.
         /// </summary>
-        private static DefaultPrefabObjects GetDefaultPrefabObjects(PrefabGeneratorConfigurations settings = null)
+        internal static DefaultPrefabObjects GetDefaultPrefabObjects(PrefabGeneratorConfigurations settings = null)
         {
             if (settings == null)
                 settings = Configuration.Configurations.PrefabGenerator;
 
+            //If not using default prefabs then exit early.
+            if (!settings.Enabled)
+                return null;
+
             //Load the prefab collection 
-            string defaultPrefabsPath = settings.DefaultPrefabObjectsPath;
-            defaultPrefabsPath = defaultPrefabsPath.Replace(@"\", "/");
+            string defaultPrefabsPath = settings.DefaultPrefabObjectsPath_Platform;
             string fullDefaultPrefabsPath = (defaultPrefabsPath.Length > 0) ? Path.GetFullPath(defaultPrefabsPath) : string.Empty;
-            
+
             //If cached prefabs is not the same path as assetPath.
             if (_cachedDefaultPrefabs != null)
             {
@@ -428,7 +458,7 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 string fullCachedPath = (unityAssetPath.Length > 0) ? Path.GetFullPath(unityAssetPath) : string.Empty;
                 if (fullCachedPath != fullDefaultPrefabsPath)
                     _cachedDefaultPrefabs = null;
-            } 
+            }
 
             //If cached is null try to get it.
             if (_cachedDefaultPrefabs == null)
@@ -454,22 +484,29 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 }
             }
 
-            if (_cachedDefaultPrefabs == null)
+#if PARRELSYNC
+            if (!ParrelSync.ClonesManager.IsClone() && ParrelSync.Preferences.AssetModPref.Value)
             {
-                string fullPath = Path.GetFullPath(defaultPrefabsPath);
-                UnityDebug.Log($"Creating a new DefaultPrefabsObject at {fullPath}.");
-                string directory = Path.GetDirectoryName(fullPath);
+#endif
+                if (_cachedDefaultPrefabs == null)
+                {
+                    string fullPath = Path.GetFullPath(defaultPrefabsPath);
+                    UnityDebug.Log($"Creating a new DefaultPrefabsObject at {fullPath}.");
+                    string directory = Path.GetDirectoryName(fullPath);
 
-                if (!Directory.Exists(directory))
-                { 
-                    Directory.CreateDirectory(directory);
-                    AssetDatabase.Refresh();
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                        AssetDatabase.Refresh();
+                    }
+
+                    _cachedDefaultPrefabs = ScriptableObject.CreateInstance<DefaultPrefabObjects>();
+                    AssetDatabase.CreateAsset(_cachedDefaultPrefabs, defaultPrefabsPath);
+                    AssetDatabase.SaveAssets();
                 }
-
-                _cachedDefaultPrefabs = ScriptableObject.CreateInstance<DefaultPrefabObjects>();
-                AssetDatabase.CreateAsset(_cachedDefaultPrefabs, defaultPrefabsPath);
-                AssetDatabase.SaveAssets();
+#if PARRELSYNC
             }
+#endif
 
             if (_cachedDefaultPrefabs != null && _retryRefreshDefaultPrefabs)
                 UnityDebug.Log("DefaultPrefabObjects found on the second iteration.");
@@ -524,8 +561,8 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 if (totalChanges == 0)
                     return;
 
-                //normalizes path.
-                string dpoPath = Path.GetFullPath(settings.DefaultPrefabObjectsPath);
+                //Normalizes path.
+                string dpoPath = Path.GetFullPath(settings.DefaultPrefabObjectsPath_Platform);
                 //If total changes is 1 and the only changed file is the default prefab collection then do nothing.
                 if (totalChanges == 1)
                 {
@@ -550,7 +587,7 @@ namespace FishNet.Editing.PrefabCollectionGenerator
 
                         NetworkObject nob = AssetDatabase.LoadAssetAtPath<NetworkObject>(imported);
                         //If is a networked object.
-                        if (nob != null)
+                        if (CanAddNetworkObject(nob, settings))
                         {
                             //Already added!
                             if (prefabCollection.Prefabs.Contains(nob))
@@ -573,37 +610,15 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                     _ranOnce = true;
                     fullRebuild = true;
                 }
-                else
+                //Other conditions which a full rebuild may be required.
+                else if (!fullRebuild)
                 {
-                    CheckForVersionFile(importedAssets);
-                    CheckForVersionFile(deletedAssets);
-                    CheckForVersionFile(movedAssets);
-                    CheckForVersionFile(movedFromAssetPaths);
-                }
-
-                /* See if any of the changed files are the version file.
-                * A new version file suggests an update. Granted, this could occur if
-                * other assets imported a new version file as well but better
-                * safe than sorry. */
-                void CheckForVersionFile(string[] arr)
-                {
-                    string targetText = "VERSION.txt".ToLower();
-                    int targetLength = targetText.Length;
-
-                    for (int i = 0; i < arr.Length; i++)
+                    const string fishnetVersionSave = "fishnet_version";
+                    string savedVersion = EditorPrefs.GetString(fishnetVersionSave, string.Empty);
+                    if (savedVersion != NetworkManager.FISHNET_VERSION)
                     {
-                        string item = arr[i];
-                        int itemLength = item.Length;
-                        if (itemLength < targetLength)
-                            continue;
-
-                        item = item.ToLower();
-                        int startIndex = (itemLength - targetLength);
-                        if (item.Substring(startIndex, targetLength) == targetText)
-                        {
-                            fullRebuild = true;
-                            return;
-                        }
+                        fullRebuild = true;
+                        EditorPrefs.SetString(fishnetVersionSave, NetworkManager.FISHNET_VERSION);
                     }
                 }
 
@@ -612,6 +627,14 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 else
                     GenerateChanged(importedAssets, deletedAssets, movedAssets, movedFromAssetPaths, settings);
             }
+        }
+
+        /// <summary>
+        /// Returns true if a NetworkObject can be added to DefaultPrefabs.
+        /// </summary>
+        private static bool CanAddNetworkObject(NetworkObject networkObject, PrefabGeneratorConfigurations settings)
+        {
+            return networkObject != null && (networkObject.IsSpawnable || !settings.SpawnableOnly);
         }
     }
 }
