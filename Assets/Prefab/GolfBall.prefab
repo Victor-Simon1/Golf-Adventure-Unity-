@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4769761015133152729}
   - component: {fileID: 2475137442998286018}
   - component: {fileID: 3164139789890264425}
+  - component: {fileID: 109992488218626856}
   m_Layer: 0
   m_Name: GolfBall
   m_TagString: Untagged
@@ -95,16 +96,16 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642568831136114363}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 62e5cc6e6dc44a14e9bcd143000d7e2b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
@@ -171,6 +172,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 5628052547963160389}
   _networkObjectCache: {fileID: 5628052547963160389}
+  force: 100
 --- !u!114 &2475137442998286018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,3 +263,30 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!54 &109992488218626856
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642568831136114363}
+  serializedVersion: 4
+  m_Mass: 0.5
+  m_Drag: 0.5
+  m_AngularDrag: 0.5
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
