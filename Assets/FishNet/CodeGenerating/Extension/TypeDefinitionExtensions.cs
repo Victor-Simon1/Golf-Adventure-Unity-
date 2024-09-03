@@ -1,5 +1,8 @@
 ﻿using FishNet.CodeGenerating.Helping.Extension;
+using FishNet.Object.Prediction;
+using FishNet.Utility.Performance;
 using MonoFN.Cecil;
+using System.Collections.Generic;
 
 namespace FishNet.CodeGenerating.Extension
 {
@@ -17,13 +20,29 @@ namespace FishNet.CodeGenerating.Extension
             return (td.Name == typeof(System.Nullable<>).Name);
         }
 
+        /// <summary>
+        /// Finds the first method by a given name.
+        /// </summary>
+        /// <param name="typeDef"></param>
+        /// <param name="methodName"></param>
+        /// <returns></returns>
+        internal static MethodDefinition GetMethod(this TypeDefinition typeDef, string methodName)
+        {
+            foreach (MethodDefinition md in typeDef.Methods)
+            {
+                if (md.Name == methodName)
+                    return md;
+            }
+
+            return null;
+        }
+
 
         public static MethodReference GetMethodReferenceInBase(this TypeDefinition td, CodegenSession session, string methodName)
         {
             MethodDefinition baseMd = td.GetMethodDefinitionInBase(session, methodName);
             if (baseMd == null)
                 return null;
-
 
             MethodReference baseMr;
             TypeReference baseTr = td.BaseType;
@@ -144,7 +163,16 @@ namespace FishNet.CodeGenerating.Extension
                 if (copyParameters)
                 {
                     foreach (ParameterDefinition pd in methodTemplate.Parameters)
+                    {
+                        session.ImportReference(pd.ParameterType.CachedResolve(session));
                         md.Parameters.Add(pd);
+                    }
+                }
+
+                foreach (GenericParameter item in methodTemplate.GenericParameters)
+                {
+                    session.ImportReference(item);
+                    md.GenericParameters.Add(item);
                 }
 
                 td.Methods.Add(md);
@@ -181,6 +209,29 @@ namespace FishNet.CodeGenerating.Extension
                 {
                     return null;
                 }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns a TypeDefintiion found in typeDef or up it's hierarchy.
+        /// </summary>
+        /// <param name="checkTypeDef">True to check if typeDef equals fullName.</param>
+        /// <returns></returns>
+        public static TypeDefinition GetTypeDefinitionInBase(this TypeDefinition typeDef, CodegenSession session, string targetFullName, bool checkTypeDef)
+        {
+            if (typeDef == null)
+                return null;
+            if (!checkTypeDef)
+                typeDef = typeDef.GetNextBaseTypeDefinition(session);
+
+            while (typeDef != null)
+            {
+                if (typeDef.FullName == targetFullName)
+                    return typeDef;
+
+                typeDef = typeDef.GetNextBaseTypeDefinition(session);
             }
 
             return null;
@@ -246,6 +297,15 @@ namespace FishNet.CodeGenerating.Extension
             return fd.CreateFieldReference(session);
         }
 
+
+        /// <summary>
+        /// Makes a GenericInstanceType.
+        /// </summary>
+        public static GenericInstanceType MakeGenericInstanceType(this TypeDefinition self, CodegenSession session)
+        {
+            TypeReference tr = session.ImportReference(self);
+            return tr.MakeGenericInstanceType();
+        }
 
 
     }

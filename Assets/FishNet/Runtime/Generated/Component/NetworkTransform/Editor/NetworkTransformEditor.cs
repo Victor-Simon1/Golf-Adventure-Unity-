@@ -1,12 +1,12 @@
 ﻿#if UNITY_EDITOR
 using FishNet.Editing;
+using GameKit.Dependencies.Utilities;
 using UnityEditor;
 using UnityEngine;
+using GameKitEditing = GameKit.Dependencies.Utilities.Editing;
 
 namespace FishNet.Component.Transforming.Editing
 {
-
-
     [CustomEditor(typeof(NetworkTransform), true)]
     [CanEditMultipleObjects]
     public class NetworkTransformEditor : Editor
@@ -20,6 +20,7 @@ namespace FishNet.Component.Transforming.Editing
         private SerializedProperty _teleportThreshold;
         private SerializedProperty _clientAuthoritative;
         private SerializedProperty _sendToOwner;
+        private SerializedProperty _interval;
         private SerializedProperty _synchronizePosition;
         private SerializedProperty _positionSnapping;
         private SerializedProperty _synchronizeRotation;
@@ -39,6 +40,7 @@ namespace FishNet.Component.Transforming.Editing
             _teleportThreshold = serializedObject.FindProperty("_teleportThreshold");
             _clientAuthoritative = serializedObject.FindProperty("_clientAuthoritative");
             _sendToOwner = serializedObject.FindProperty("_sendToOwner");
+            _interval = serializedObject.FindProperty(nameof(_interval));
             _synchronizePosition = serializedObject.FindProperty("_synchronizePosition");
             _positionSnapping = serializedObject.FindProperty("_positionSnapping");
             _synchronizeRotation = serializedObject.FindProperty("_synchronizeRotation");
@@ -51,20 +53,20 @@ namespace FishNet.Component.Transforming.Editing
         {
             serializedObject.Update();
 
-            GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((NetworkTransform)target), typeof(NetworkTransform), false);
-            GUI.enabled = true;
+            GameKitEditing.AddObjectField("Script:", MonoScript.FromMonoBehaviour((NetworkTransform)target), typeof(NetworkTransform), false, EditorLayoutEnableType.Disabled);
 
+            bool isPro = false;
             
-#pragma warning disable CS0162 // Unreachable code detected
+            if (isPro)
+                EditorGUILayout.HelpBox(EditingConstants.PRO_ASSETS_UNLOCKED_TEXT, MessageType.None);
+            else
                 EditorGUILayout.HelpBox(EditingConstants.PRO_ASSETS_LOCKED_TEXT, MessageType.Warning);
-#pragma warning restore CS0162 // Unreachable code detected
 
             //Misc.
             EditorGUILayout.LabelField("Misc", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(_componentConfiguration);
-            EditorGUILayout.PropertyField(_synchronizeParent, new GUIContent("* Synchronize Parent"));
+            EditorGUILayout.PropertyField(_synchronizeParent, new GUIContent("Synchronize Parent"));
             EditorGUILayout.PropertyField(_packing);
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
@@ -81,6 +83,7 @@ namespace FishNet.Component.Transforming.Editing
                 EditorGUILayout.PropertyField(_teleportThreshold);
                 EditorGUI.indentLevel--;
             }
+
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
 
@@ -94,12 +97,15 @@ namespace FishNet.Component.Transforming.Editing
                 EditorGUILayout.PropertyField(_sendToOwner);
                 EditorGUI.indentLevel--;
             }
+
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
 
             //Synchronizing.
             EditorGUILayout.LabelField("Synchronizing.", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
+            //Interval.
+            EditorGUILayout.PropertyField(_interval, new GUIContent("Send Interval"));
             //Position.
             EditorGUILayout.PropertyField(_synchronizePosition);
             if (_synchronizePosition.boolValue)
@@ -108,6 +114,7 @@ namespace FishNet.Component.Transforming.Editing
                 EditorGUILayout.PropertyField(_positionSnapping);
                 EditorGUI.indentLevel -= 2;
             }
+
             //Rotation.
             EditorGUILayout.PropertyField(_synchronizeRotation);
             if (_synchronizeRotation.boolValue)
@@ -116,6 +123,7 @@ namespace FishNet.Component.Transforming.Editing
                 EditorGUILayout.PropertyField(_rotationSnapping);
                 EditorGUI.indentLevel -= 2;
             }
+
             //Scale.
             EditorGUILayout.PropertyField(_synchronizeScale);
             if (_synchronizeScale.boolValue)
@@ -124,11 +132,11 @@ namespace FishNet.Component.Transforming.Editing
                 EditorGUILayout.PropertyField(_scaleSnapping);
                 EditorGUI.indentLevel -= 2;
             }
+
             EditorGUI.indentLevel--;
 
             serializedObject.ApplyModifiedProperties();
         }
     }
-
 }
 #endif

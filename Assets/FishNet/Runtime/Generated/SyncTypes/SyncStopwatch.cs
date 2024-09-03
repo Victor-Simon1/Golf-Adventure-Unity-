@@ -1,4 +1,5 @@
-﻿using FishNet.Documenting;
+﻿using FishNet.CodeGenerating;
+using FishNet.Documenting;
 using FishNet.Object.Synchronizing.Internal;
 using FishNet.Serializing;
 using System.Collections.Generic;
@@ -60,12 +61,31 @@ namespace FishNet.Object.Synchronizing
         /// <summary>
         /// Server OnChange events waiting for start callbacks.
         /// </summary>
-        private readonly List<ChangeData> _serverOnChanges = new List<ChangeData>();
+        private List<ChangeData> _serverOnChanges = new List<ChangeData>();
         /// <summary>
         /// Client OnChange events waiting for start callbacks.
         /// </summary>
-        private readonly List<ChangeData> _clientOnChanges = new List<ChangeData>();
+        private List<ChangeData> _clientOnChanges = new List<ChangeData>();
         #endregion
+
+        #region Constructors
+        public SyncStopwatch(SyncTypeSettings settings = new SyncTypeSettings()) : base(settings) { }
+        #endregion
+
+        /// <summary>
+        /// Called when the SyncType has been registered, but not yet initialized over the network.
+        /// </summary>
+        protected override void Initialized()
+        {
+            base.Initialized();
+
+            //Initialize collections if needed. OdinInspector can cause them to become deinitialized.
+#if ODIN_INSPECTOR
+            if (_changed == null) _changed = new();
+            if (_serverOnChanges == null) _serverOnChanges = new();
+            if (_clientOnChanges == null) _clientOnChanges = new();
+#endif
+        }
 
         /// <summary>
         /// Starts a Stopwatch. If called when a Stopwatch is already active then StopStopwatch will automatically be sent.
@@ -151,10 +171,10 @@ namespace FishNet.Object.Synchronizing
         /// </summary>
         private void AddOperation(SyncStopwatchOperation operation, float prev)
         {
-            if (!base.IsRegistered)
+            if (!base.IsInitialized)
                 return;
 
-            bool asServerInvoke = (!base.IsNetworkInitialized || base.NetworkBehaviour.IsServer);
+            bool asServerInvoke = (!base.IsNetworkInitialized || base.NetworkBehaviour.IsServerStarted);
 
             if (asServerInvoke)
             {
@@ -172,7 +192,7 @@ namespace FishNet.Object.Synchronizing
         /// Writes all changed values.
         /// </summary>
         ///<param name="resetSyncTick">True to set the next time data may sync.</param>
-        public override void WriteDelta(PooledWriter writer, bool resetSyncTick = true)
+        internal protected override void WriteDelta(PooledWriter writer, bool resetSyncTick = true)
         {
             base.WriteDelta(writer, resetSyncTick);
             writer.WriteInt32(_changed.Count);
@@ -180,7 +200,7 @@ namespace FishNet.Object.Synchronizing
             for (int i = 0; i < _changed.Count; i++)
             {
                 ChangeData change = _changed[i];
-                writer.WriteByte((byte)change.Operation);
+                writer.WriteUInt8Unpacked((byte)change.Operation);
                 if (change.Operation == SyncStopwatchOperation.Start)
                     WriteStartStopwatch(writer, 0f, false);
                 //Pause and unpause updated need current value written.
@@ -195,7 +215,7 @@ namespace FishNet.Object.Synchronizing
         /// <summary>
         /// Writes all values.
         /// </summary>
-        public override void WriteFull(PooledWriter writer)
+        internal protected override void WriteFull(PooledWriter writer)
         {
             //Only write full if a Stopwatch is running.
             if (Elapsed < 0f)
@@ -209,7 +229,7 @@ namespace FishNet.Object.Synchronizing
             //And the operations.
             WriteStartStopwatch(writer, Elapsed, true);
             if (Paused)
-                writer.WriteByte((byte)SyncStopwatchOperation.Pause);
+                writer.WriteUInt8Unpacked((byte)SyncStopwatchOperation.Pause);
         }
 
         /// <summary>
@@ -219,7 +239,7 @@ namespace FishNet.Object.Synchronizing
         private void WriteStartStopwatch(Writer w, float elapsed, bool includeOperationByte)
         {
             if (includeOperationByte)
-                w.WriteByte((byte)SyncStopwatchOperation.Start);
+                w.WriteUInt8Unpacked((byte)SyncStopwatchOperation.Start);
 
             w.WriteSingle(elapsed);
         }
@@ -227,15 +247,15 @@ namespace FishNet.Object.Synchronizing
         /// <summary>
         /// Reads and sets the current values for server or client.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         [APIExclude]
-        public override void Read(PooledReader reader, bool asServer)
+        internal protected override void Read(PooledReader reader, bool asServer)
         {
             int changes = reader.ReadInt32();
 
             for (int i = 0; i < changes; i++)
             {
-                SyncStopwatchOperation op = (SyncStopwatchOperation)reader.ReadByte();
+                SyncStopwatchOperation op = (SyncStopwatchOperation)reader.ReadUInt8Unpacked();
                 if (op == SyncStopwatchOperation.Start)
                 {
                     float elapsed = reader.ReadSingle();
@@ -284,7 +304,7 @@ namespace FishNet.Object.Synchronizing
         /// </summary>
         private bool CanSetValues(bool asServer)
         {
-            return (asServer || !base.NetworkManager.IsServer);
+            return (asServer || !base.NetworkManager.IsServerStarted);
         }
 
         /// <summary>
@@ -326,7 +346,7 @@ namespace FishNet.Object.Synchronizing
         /// Called after OnStartXXXX has occurred.
         /// </summary>
         /// <param name="asServer">True if OnStartServer was called, false if OnStartClient.</param>
-        public override void OnStartCallback(bool asServer)
+        internal protected override void OnStartCallback(bool asServer)
         {
             base.OnStartCallback(asServer);
             List<ChangeData> collection = (asServer) ? _serverOnChanges : _clientOnChanges;
@@ -341,7 +361,7 @@ namespace FishNet.Object.Synchronizing
         }
 
         /// <summary>
-        /// Removes delta from Remaining for server and client.
+        /// Adds delta from Remaining for server and client.
         /// </summary>
         /// <param name="delta">Value to remove from Remaining.</param>
         public void Update(float delta)

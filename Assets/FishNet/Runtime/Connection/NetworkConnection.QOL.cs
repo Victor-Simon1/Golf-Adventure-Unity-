@@ -10,14 +10,14 @@ namespace FishNet.Connection
     /// <summary>
     /// A container for a connected client used to perform actions on and gather information for the declared client.
     /// </summary>
-    public partial class NetworkConnection : IEquatable<NetworkConnection>
+    public partial class NetworkConnection
     {
 
         #region Public.
         /// <summary>
         /// Returns true if this connection is a clientHost.
         /// </summary>
-        public bool IsHost => (NetworkManager == null) ? false : (NetworkManager.IsServer && (this == NetworkManager.ClientManager.Connection));
+        public bool IsHost => (NetworkManager == null) ? false : (NetworkManager.IsServerStarted && (this == NetworkManager.ClientManager.Connection));
         /// <summary>
         /// Returns if this connection is for the local client.
         /// </summary>
