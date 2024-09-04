@@ -4,8 +4,9 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Managing.Timing;
 using static UnityEngine.GraphicsBuffer;
+using UnityEngine.InputSystem;
 
-public class BallControler : NetworkBehaviour
+public class BallControler : MonoBehaviour//NetworkBehaviour
 {
     [Range(0.0f, 100.0f)]
     [SerializeField] private float force;
