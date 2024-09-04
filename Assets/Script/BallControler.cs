@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FishNet.Object;
 using UnityEngine.InputSystem;
 
-public class BallControler : NetworkBehaviour
+public class BallControler : MonoBehaviour//NetworkBehaviour
 {
     [Range(0.0f, 100.0f)]
     [SerializeField] private float force;
@@ -35,7 +34,7 @@ public class BallControler : NetworkBehaviour
         AvanceServer();
     }
 
-    [ServerRpc]
+    //[ServerRpc]
     private void AvanceServer()
     {
         transform.position += new Vector3(1, 0, 0);
