@@ -453,7 +453,7 @@ PrefabInstance:
         type: 3}
       propertyPath: playerPrefab
       value: 
-      objectReference: {fileID: 642568831136114363, guid: 0c4fcb77281258845a741282432abefe,
+      objectReference: {fileID: 642568831136114363, guid: 479b694e0ff63b3469ec2971ed09ee59,
         type: 3}
     - target: {fileID: 778045979305346330, guid: 70be4e7f5e604d94f9c0510c1a196131,
         type: 3}
