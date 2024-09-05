@@ -823,8 +823,13 @@ PrefabInstance:
         type: 3}
       propertyPath: playerPrefab
       value: 
-      objectReference: {fileID: 642568831136114363, guid: 479b694e0ff63b3469ec2971ed09ee59,
+      objectReference: {fileID: 922957054793802191, guid: e89fb596335760349be402e8d9aa271a,
         type: 3}
+    - target: {fileID: 778045979305346330, guid: 70be4e7f5e604d94f9c0510c1a196131,
+        type: 3}
+      propertyPath: networkAddress
+      value: 192.168.1.142
+      objectReference: {fileID: 0}
     - target: {fileID: 778045979305346330, guid: 70be4e7f5e604d94f9c0510c1a196131,
         type: 3}
       propertyPath: spawnPrefabs.Array.size
@@ -1303,7 +1308,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1322,7 +1327,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.19215688, g: 0.4745098, b: 0.23269536, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1487,13 +1492,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309808504}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.2, y: 0.64, z: -2.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1488211689
 GameObject:
   m_ObjectHideFlags: 0

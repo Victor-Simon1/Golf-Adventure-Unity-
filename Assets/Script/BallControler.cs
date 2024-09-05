@@ -10,7 +10,6 @@ public class BallControler : MonoBehaviour
     private Rigidbody rb;
     private Vector3 sp;
     private Quaternion sr;
-    [SerializeField] private Camera cam;
 
     [SerializeField] private Vector3 offset;
 
@@ -19,11 +18,15 @@ public class BallControler : MonoBehaviour
 
     float zoomLevel;
     private Vector2 rotationValues;
+#if UNITY_EDITOR
+    private float RotationSensitivity = 100f;
+#else
     private float RotationSensitivity = 1f;
+#endif
 
     private Touch touch;
-
-
+    [Header("Camera")]
+    [SerializeField] private Camera cam;
     [Header("Button")]
     public Button bStart;
     public Button bPush;
@@ -40,6 +43,8 @@ public class BallControler : MonoBehaviour
 
         bPush = GameObject.Find("ButtonPush").GetComponent<Button>();
         bPush.onClick.AddListener(Push);
+
+        cam = transform.parent.GetChild(0).GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -62,7 +67,7 @@ public class BallControler : MonoBehaviour
 
         }
 
-        if(Input.touchCount > 0)
+        if (Input.touchCount > 0)
         {
             touch = Input.GetTouch(0);
 
