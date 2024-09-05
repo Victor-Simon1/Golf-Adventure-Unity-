@@ -46,7 +46,9 @@ public class BallControler : MonoBehaviour//NetworkBehaviour
         if (Input.GetMouseButton(1))
         {
             var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
-            
+            rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
+            rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+
         }
 
         if(Input.touchCount > 0)
