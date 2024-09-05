@@ -10,7 +10,6 @@ public class BallControler : MonoBehaviour
     private Rigidbody rb;
     private Vector3 sp;
     private Quaternion sr;
-    [SerializeField] private Camera cam;
 
     [SerializeField] private Vector3 offset;
 
@@ -19,11 +18,15 @@ public class BallControler : MonoBehaviour
 
     float zoomLevel;
     private Vector2 rotationValues;
+#if UNITY_EDITOR
+    private float RotationSensitivity = 100f;
+#else
     private float RotationSensitivity = 1f;
+#endif
 
     private Touch touch;
-
-
+    [Header("Camera")]
+    [SerializeField] private Camera cam;
     [Header("Button")]
     public Button bStart;
     public Button bPush;
@@ -40,6 +43,8 @@ public class BallControler : MonoBehaviour
 
         bPush = GameObject.Find("ButtonPush").GetComponent<Button>();
         bPush.onClick.AddListener(Push);
+
+        cam = transform.parent.GetChild(0).GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -57,10 +62,12 @@ public class BallControler : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
-            
+            rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
+            rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+
         }
 
-        if(Input.touchCount > 0)
+        if (Input.touchCount > 0)
         {
             touch = Input.GetTouch(0);
 
