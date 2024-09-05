@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class BallControler : MonoBehaviour//NetworkBehaviour
+public class BallControler : MonoBehaviour
 {
     [Range(0.0f, 100.0f)]
     [SerializeField] private float force;
@@ -23,12 +23,23 @@ public class BallControler : MonoBehaviour//NetworkBehaviour
 
     private Touch touch;
 
+
+    [Header("Button")]
+    public Button bStart;
+    public Button bPush;
+
     // Start is called before the first frame update
     void Start()
     {
         sp = transform.position;
         sr = transform.rotation;
         rb = GetComponent<Rigidbody>();
+
+        bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
+        bStart.onClick.AddListener(TpStart);
+
+        bPush = GameObject.Find("ButtonPush").GetComponent<Button>();
+        bPush.onClick.AddListener(Push);
     }
 
     // Update is called once per frame
