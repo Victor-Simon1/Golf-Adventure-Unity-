@@ -20,7 +20,7 @@ public class BallControler : NetworkBehaviour
     private Touch touch;
     [Header("Camera")]
     [SerializeField] private Camera cam;
-    private Vector2 rotationValues;
+    private Vector2 rotationValues = new Vector2(0,0);
     //La sensibilité n'est pas la même dans l'éditeur que sur téléphone
 #if UNITY_EDITOR
     private float RotationSensitivity = 100f;
@@ -69,7 +69,8 @@ public class BallControler : NetworkBehaviour
 
         if (moving && magnHasChanged && AbsMagn < limitForce) 
             Stopped();
-        
+
+#if UNITY_EDITOR
 
         if (Input.GetMouseButton(1))
         {
@@ -79,6 +80,10 @@ public class BallControler : NetworkBehaviour
 
         }
 
+
+        var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
+        zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
+#else
         if (Input.touchCount > 0)
         {
             touch = Input.GetTouch(0);
@@ -91,9 +96,7 @@ public class BallControler : NetworkBehaviour
             }
         }
 
-        var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
-        zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
-
+#endif
         var curRotation = Quaternion.Euler(rotationValues);
         var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
         cam.transform.SetPositionAndRotation(lookPosition, curRotation);
@@ -102,7 +105,7 @@ public class BallControler : NetworkBehaviour
     private void OnEnable()
     {
         cam = Camera.main;
-        rotationValues = transform.position + offset;
+        rotationValues = new Vector2(15, 0);
         zoomLevel = 10;
     }
 

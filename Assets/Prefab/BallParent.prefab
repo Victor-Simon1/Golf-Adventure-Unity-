@@ -327,7 +327,6 @@ MonoBehaviour:
   bStart: {fileID: 0}
   bPush: {fileID: 0}
   sliderForce: {fileID: 0}
-  player: {fileID: 0}
 --- !u!114 &3308073455899982781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,13 +411,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8167517089024093975}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19200529, y: -0, z: -0, w: 0.98139393}
-  m_LocalPosition: {x: 12.232153, y: 3.5617595, z: -0.579473}
+  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
+  m_LocalPosition: {x: 0, y: 5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6273080394418404147}
-  m_LocalEulerAnglesHint: {x: 22.14, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!20 &2028859925345120222
 Camera:
   m_ObjectHideFlags: 0
