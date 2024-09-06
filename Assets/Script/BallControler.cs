@@ -28,6 +28,11 @@ public class BallControler : NetworkBehaviour
     private float RotationSensitivity = 1f;
 #endif
     float zoomLevel;
+    float touchesPrevPosDifference, touchesCurPosDifference,zoomModifier;
+    Vector2 firstTouchPrevPos, secondTouchPrevPos;
+    [SerializeField]
+    float zoomModifierSpeed = 0.1f;
+
     [Header("Button")]
     [SerializeField] private Button bStart;
     [SerializeField] private Button bPush;
@@ -71,7 +76,7 @@ public class BallControler : NetworkBehaviour
             Stopped();
 
 #if UNITY_EDITOR
-
+        //Permet de tester l'orientation et le zomm dans l'éditeur
         if (Input.GetMouseButton(1))
         {
             var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
@@ -84,7 +89,8 @@ public class BallControler : NetworkBehaviour
         var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
         zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
 #else
-        if (Input.touchCount > 0)
+        //Permet de tester l'orientation et le zomm dans le télephone
+        if (Input.touchCount == 1)
         {
             touch = Input.GetTouch(0);
 
@@ -95,6 +101,28 @@ public class BallControler : NetworkBehaviour
                 rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
             }
         }
+        else if (Input.touchCount == 2)
+        {
+            //Récuperation des deux entrés
+            Touch firstTouch = Input.GetTouch(0);
+            Touch secondTouch = Input.GetTouch(1);
+
+            //Calcul des différences(savoir si on zoom/dezoom)
+            firstTouchPrevPos = firstTouch.position - firstTouch.deltaPosition;
+            secondTouchPrevPos = secondTouch.position - secondTouch.deltaPosition;
+
+            touchesPrevPosDifference = (firstTouchPrevPos - secondTouchPrevPos).magnitude;
+			touchesCurPosDifference = (firstTouch.position - secondTouch.position).magnitude;
+
+			zoomModifier = (firstTouch.deltaPosition - secondTouch.deltaPosition).magnitude * zoomModifierSpeed;
+            //Application
+			if (touchesPrevPosDifference > touchesCurPosDifference)
+				zoomLevel += zoomModifier;
+			if (touchesPrevPosDifference < touchesCurPosDifference)
+				zoomLevel-= zoomModifier;
+
+                zoomLevel = Mathf.Clamp (zoomLevel, 1f, 10f);
+         }
 
 #endif
         var curRotation = Quaternion.Euler(rotationValues);
