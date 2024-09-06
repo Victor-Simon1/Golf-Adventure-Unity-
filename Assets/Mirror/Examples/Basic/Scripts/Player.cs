@@ -20,6 +20,8 @@ namespace Mirror.Examples.Basic
         GameObject playerUIObject;
         PlayerUI playerUI = null;
 
+        public ushort nbStrokes = 0;
+
         #region SyncVars
 
         [Header("SyncVars")]
@@ -100,7 +102,7 @@ namespace Mirror.Examples.Basic
         [ServerCallback]
         void UpdateData()
         {
-            playerData = (ushort)Random.Range(100, 1000);
+            playerData = nbStrokes;
         }
 
         /// <summary>

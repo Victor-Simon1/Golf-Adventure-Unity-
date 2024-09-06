@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class BallControler : MonoBehaviour
 {
+    [Header("Control")]
     [Range(0.0f, 100.0f)]
     [SerializeField] private float force;
     [SerializeField] private float AbsMagn;
@@ -16,21 +17,28 @@ public class BallControler : MonoBehaviour
     private bool moving;
     private bool magnHasChanged;
 
-    float zoomLevel;
+    private Touch touch;
+    [Header("Camera")]
+    [SerializeField] private Camera cam;
     private Vector2 rotationValues;
+    //La sensibilité n'est pas la même dans l'éditeur que sur téléphone
 #if UNITY_EDITOR
     private float RotationSensitivity = 100f;
 #else
     private float RotationSensitivity = 1f;
 #endif
-
-    private Touch touch;
-    [Header("Camera")]
-    [SerializeField] private Camera cam;
+    float zoomLevel;
     [Header("Button")]
-    public Button bStart;
-    public Button bPush;
-
+    [SerializeField] private Button bStart;
+    [SerializeField] private Button bPush;
+    [Header("Slider")]
+    [SerializeField] private Slider sliderForce;
+    [Header("Gameplay")]
+    private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
+    [Header("Movement")]
+    private float limitForce = 0.5f;
+    [Header("Player")]
+    [SerializeField] private Mirror.Examples.Basic.Player player;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +52,8 @@ public class BallControler : MonoBehaviour
         bPush = GameObject.Find("ButtonPush").GetComponent<Button>();
         bPush.onClick.AddListener(Push);
 
+        sliderForce = GameObject.Find("Slider").GetComponent <Slider>();
+
         cam = transform.parent.GetChild(0).GetComponent<Camera>();
     }
 
@@ -53,10 +63,13 @@ public class BallControler : MonoBehaviour
 
         AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
 
-        if(!magnHasChanged && AbsMagn > 0.1) magnHasChanged = true;
-        if(magnHasChanged && AbsMagn == 0) magnHasChanged = false;
+        if(!magnHasChanged && AbsMagn > 0.1) 
+            magnHasChanged = true;
+        if(magnHasChanged && AbsMagn == 0) 
+            magnHasChanged = false;
 
-        if (moving && magnHasChanged && AbsMagn < 1) Stopped();
+        if (moving && magnHasChanged && AbsMagn < limitForce) 
+            Stopped();
         
 
         if (Input.GetMouseButton(1))
@@ -97,9 +110,13 @@ public class BallControler : MonoBehaviour
     public void Push()
     {
         var vec = cam.transform.forward;
+        force = sliderForce.value;
         vec = new Vector3(vec.x, 0, vec.z);
         rb.AddForce(vec * force, ForceMode.Impulse);
+        //rb.velocity = vec * force;
         moving = true;
+
+        player.nbStrokes++;
     }
 
     public void TpStart()

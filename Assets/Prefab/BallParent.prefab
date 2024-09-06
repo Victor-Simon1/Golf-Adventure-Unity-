@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -5188827248133415134}
   - component: {fileID: 2101221168259908806}
   - component: {fileID: 8826329815462632856}
+  - component: {fileID: 4411405333770067808}
   m_Layer: 0
   m_Name: BallParent
   m_TagString: Untagged
@@ -159,6 +160,28 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
+--- !u!114 &4411405333770067808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922957054793802191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a472ac3ae1701d149861871cf416a46d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  playerUIPrefab: {fileID: 8255105435526661227, guid: 56463387190d46b44bf87838be80ca4c,
+    type: 3}
+  playerNumber: 0
+  playerColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  playerData: 0
 --- !u!1 &2280871444263343271
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +277,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2280871444263343271}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 62e5cc6e6dc44a14e9bcd143000d7e2b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -306,6 +329,8 @@ MonoBehaviour:
   cam: {fileID: 2028859925345120222}
   bStart: {fileID: 0}
   bPush: {fileID: 0}
+  sliderForce: {fileID: 0}
+  player: {fileID: 4411405333770067808}
 --- !u!114 &3308073455899982781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,9 +370,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2280871444263343271}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2.5
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
