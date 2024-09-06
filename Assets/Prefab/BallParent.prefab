@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2101221168259908806}
   - component: {fileID: 8826329815462632856}
   - component: {fileID: -3911127702487239908}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BallParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 2609761587280812506}
   - component: {fileID: 3308073455899982781}
   - component: {fileID: 6544871517458406900}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GolfBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -324,6 +324,7 @@ MonoBehaviour:
   AbsMagn: 0
   offset: {x: 0, y: 0, z: 0}
   cam: {fileID: 2028859925345120222}
+  zoomModifierSpeed: 0.1
   bStart: {fileID: 0}
   bPush: {fileID: 0}
   sliderForce: {fileID: 0}
@@ -396,7 +397,7 @@ GameObject:
   - component: {fileID: 2141484749787794759}
   - component: {fileID: 2028859925345120222}
   - component: {fileID: 1222132618180700872}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CameraBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}

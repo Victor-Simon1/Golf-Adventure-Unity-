@@ -40,6 +40,8 @@ public class BallControler : NetworkBehaviour
     [SerializeField] private Slider sliderForce;
     [Header("Gameplay")]
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
+    [SyncVar] private bool endFirstPut;//Pour remettre les collisions entre les balles
+    [SerializeField] private LayerMask ballLayer;
     [Header("Movement")]
     private float limitForce = 0.5f;
 
@@ -137,9 +139,15 @@ public class BallControler : NetworkBehaviour
         zoomLevel = 10;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        CmdFinishHole(transform.parent.name);
+    }
+
     [Client]
     public void Push()
     {
+        lastPosition = transform.position;
         var vec = cam.transform.forward;
         force = sliderForce.value;
         vec = new Vector3(vec.x, 0, vec.z);
@@ -156,6 +164,14 @@ public class BallControler : NetworkBehaviour
         Player player = GameManager.GetPlayer(sourceId);
         player.RpcAddStroke(sourceId);
     }
+
+    [Command]
+    public void CmdFinishHole(string sourceId)
+    {
+        Debug.Log(sourceId + " a fini le trou");
+        Player player = GameManager.GetPlayer(sourceId);
+        //player.RpcAddStroke(sourceId);
+    }
     [Client]
     public void TpStart()
     {
@@ -167,12 +183,24 @@ public class BallControler : NetworkBehaviour
 
     private void Stopped()
     {
-        moving = false;
+        if (!endFirstPut)
+        {
+            GetComponent<SphereCollider>().excludeLayers = 0;
+            endFirstPut = true;
+            RpcFinishFirstPut();
+        }
+         moving = false;
         Debug.Log("Ball stopped");
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
     }
 
+    [ClientRpc]
+    public void RpcFinishFirstPut()
+    {
+       GetComponent<SphereCollider>().excludeLayers = 0;
+       endFirstPut = true;
+    }
     public void rotateLeft()
     {
         cam.transform.RotateAround(transform.position, Vector3.up, cam.transform.eulerAngles.y - transform.eulerAngles.y);
