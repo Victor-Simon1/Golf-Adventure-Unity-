@@ -1,18 +1,35 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
+using System.Linq;
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    private const string playerIDprefix = "Player";
+    private static Dictionary<string, Player> players = new Dictionary<string, Player>();
         
+
+    public static void RegisterPlayer(string netID,Player player)
+    {
+        Debug.Log(netID + " s'est enregistré");
+        string playerID = playerIDprefix + netID;
+        players.Add(playerID, player);
+        player.transform.name = playerID;
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void UnregisterPlayer(string playerID) 
     {
-        
+        players.Remove(playerID);
     }
+    public static Player GetPlayer(string playerId)
+    {
+        return players[playerId];
+    }
+    public static Player[] GetAllPlayer()
+    {
+        return players.Values.ToArray();
+    }
+
 }

@@ -20,8 +20,7 @@ namespace Mirror.Examples.Basic
         GameObject playerUIObject;
         PlayerUI playerUI = null;
 
-        public ushort nbStrokes = 0;
-
+     
         #region SyncVars
 
         [Header("SyncVars")]
@@ -43,6 +42,11 @@ namespace Mirror.Examples.Basic
         /// </summary>
         [SyncVar(hook = nameof(PlayerDataChanged))]
         public ushort playerData = 0;
+
+        // [Command(hook = nameof(PlayerDataChanged))]
+        //[SyncVar(hook = nameof(PlayerDataChanged))]
+        public ushort[] nbStrokes = new ushort[16];
+
 
         // This is called by the hook of playerNumber SyncVar above
         void PlayerNumberChanged(byte _, byte newPlayerNumber)
@@ -82,10 +86,10 @@ namespace Mirror.Examples.Basic
             playerColor = Random.ColorHSV(0f, 1f, 0.9f, 0.9f, 1f, 1f);
 
             // set the initial player data
-            playerData = (ushort)Random.Range(100, 1000);
+            playerData = 0;//(ushort)Random.Range(100, 1000);
 
             // Start generating updates
-            InvokeRepeating(nameof(UpdateData), 1, 1);
+           // InvokeRepeating(nameof(UpdateData), 1, 1);
         }
 
         // This is called from BasicNetManager OnServerAddPlayer and OnServerDisconnect
@@ -100,11 +104,10 @@ namespace Mirror.Examples.Basic
 
         // This only runs on the server, called from OnStartServer via InvokeRepeating
         [ServerCallback]
-        void UpdateData()
+        public void UpdateData()
         {
-            playerData = nbStrokes;
+            playerData++;
         }
-
         /// <summary>
         /// Invoked on the server when the object is unspawned
         /// <para>Useful for saving object data in persistent storage</para>
@@ -138,6 +141,8 @@ namespace Mirror.Examples.Basic
             OnPlayerNumberChanged.Invoke(playerNumber);
             OnPlayerColorChanged.Invoke(playerColor);
             OnPlayerDataChanged.Invoke(playerData);
+
+           
         }
 
         /// <summary>

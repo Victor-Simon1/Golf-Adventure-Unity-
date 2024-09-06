@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -5188827248133415134}
   - component: {fileID: 2101221168259908806}
   - component: {fileID: 8826329815462632856}
-  - component: {fileID: 4411405333770067808}
+  - component: {fileID: -3911127702487239908}
   m_Layer: 0
   m_Name: BallParent
   m_TagString: Untagged
@@ -160,7 +160,7 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
---- !u!114 &4411405333770067808
+--- !u!114 &-3911127702487239908
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,19 +169,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 922957054793802191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a472ac3ae1701d149861871cf416a46d, type: 3}
+  m_Script: {fileID: 11500000, guid: c646fe98ca7152b478f493c528e622b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  playerUIPrefab: {fileID: 8255105435526661227, guid: 56463387190d46b44bf87838be80ca4c,
-    type: 3}
-  playerNumber: 0
-  playerColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  playerData: 0
+  strokes: 0
 --- !u!1 &2280871444263343271
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd019107ef72a3b4b9ce845e3dfaebae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   force: 100
   AbsMagn: 0
   offset: {x: 0, y: 0, z: 0}
@@ -330,7 +327,7 @@ MonoBehaviour:
   bStart: {fileID: 0}
   bPush: {fileID: 0}
   sliderForce: {fileID: 0}
-  player: {fileID: 4411405333770067808}
+  player: {fileID: 0}
 --- !u!114 &3308073455899982781
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BallControler : MonoBehaviour
+public class BallControler : NetworkBehaviour
 {
     [Header("Control")]
     [Range(0.0f, 100.0f)]
@@ -37,8 +37,7 @@ public class BallControler : MonoBehaviour
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
     [Header("Movement")]
     private float limitForce = 0.5f;
-    [Header("Player")]
-    [SerializeField] private Mirror.Examples.Basic.Player player;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -107,6 +106,7 @@ public class BallControler : MonoBehaviour
         zoomLevel = 10;
     }
 
+    [Client]
     public void Push()
     {
         var vec = cam.transform.forward;
@@ -115,10 +115,17 @@ public class BallControler : MonoBehaviour
         rb.AddForce(vec * force, ForceMode.Impulse);
         //rb.velocity = vec * force;
         moving = true;
-
-        player.nbStrokes++;
+        CmdAddStrokes(transform.parent.name);
     }
+    [Command]
+    public void CmdAddStrokes(string sourceId)
+    {
 
+        Debug.Log(sourceId + " a tiré");
+        Player player = GameManager.GetPlayer(sourceId);
+        player.RpcAddStroke(sourceId);
+    }
+    [Client]
     public void TpStart()
     {
         rb.velocity = Vector3.zero;
