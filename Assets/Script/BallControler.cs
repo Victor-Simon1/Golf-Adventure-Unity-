@@ -34,7 +34,7 @@ public class BallControler : NetworkBehaviour
     float zoomModifierSpeed = 0.1f;
 
     [Header("Button")]
-    [SerializeField] private Button bStart;
+  //  [SerializeField] private Button bStart;
     [SerializeField] private Button bPush;
     [Header("Slider")]
     [SerializeField] private Slider sliderForce;
@@ -52,13 +52,13 @@ public class BallControler : NetworkBehaviour
         sr = transform.rotation;
         rb = GetComponent<Rigidbody>();
 
-        bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
-        bStart.onClick.AddListener(TpStart);
+        //bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
+        //bStart.onClick.AddListener(TpStart);
 
         bPush = GameObject.Find("ButtonPush").GetComponent<Button>();
         bPush.onClick.AddListener(Push);
 
-        sliderForce = GameObject.Find("Slider").GetComponent <Slider>();
+        sliderForce = GameObject.Find("SliderForce").GetComponent <Slider>();
 
         cam = transform.parent.GetChild(0).GetComponent<Camera>();
     }
