@@ -10,7 +10,7 @@ public class VictoryPopup : MonoBehaviour
     [SerializeField] private float decalY = 40f;
     [SerializeField] private bool isRetracted= true;
     [SerializeField] private bool isMoving = false;
-
+    [SerializeField] private GameObject scoreboard;
     private void Start()
     {
         Vector3 scale = transform.parent.parent.localScale;
@@ -53,9 +53,16 @@ public class VictoryPopup : MonoBehaviour
         isMoving = false;
         yield return null;//new WaitForSeconds(pause);
         if (isRetracted)
+        {
+            scoreboard.SetActive(false);
             text.text = ">";
-        else 
+        }
+        else
+        {
+            scoreboard.SetActive(true);
             text.text = "<";
+        }
+          
 
     }
 }
