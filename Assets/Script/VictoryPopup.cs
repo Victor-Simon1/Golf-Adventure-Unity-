@@ -5,10 +5,18 @@ using UnityEngine;
 public class VictoryPopup : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private float duration = 1f;
-    [SerializeField] private float pause = 2f;
-    [SerializeField] private float stepX = -800f;
-    [SerializeField] private float stepY = -40f;
+    [SerializeField] private float duration = 2f;
+    [SerializeField] private float decalX = 800f;
+    [SerializeField] private float decalY = 40f;
+    [SerializeField] private bool isRetracted= true;
+    [SerializeField] private bool isMoving = false;
+
+    private void Start()
+    {
+        Vector3 scale = transform.parent.parent.localScale;
+        decalX *=scale.x;
+        decalY *= scale.y;
+    }
     public void ChangeMessage(string str)
     {
         text.text = str;
@@ -16,36 +24,38 @@ public class VictoryPopup : MonoBehaviour
 
     public void Pop()
     {
-        //gameObject.SetActive(true);
-        StartCoroutine(Animate());
+        Vector3 startPosition = GetComponent<RectTransform>().position;
+        Vector3 endPosition;
+    
+        if (isRetracted)
+            endPosition = startPosition + new Vector3(decalX, decalY , 0);
+        else
+            endPosition = startPosition - new Vector3(decalX , decalY , 0);
+        if (isMoving)
+            return;
+        StartCoroutine(Animate(startPosition, endPosition, duration));
+
     }
 
-    IEnumerator Animate()
+    IEnumerator Animate(Vector3 startPosition,Vector3 endPosition,float duration)
     {
-        float t = 0;
-        var startPosition = transform.position;
-        RectTransform rt = GetComponent<RectTransform>();
-
-        while (t < duration)
+        var timeElapsed = 0f;
+        isMoving = true;
+        while (timeElapsed < duration)
         {
-            t = Mathf.Min(duration, t + Time.deltaTime / duration);
-            Vector3 offset = (new Vector3 (-1* stepX, -1* stepY, 0))*t /* (step * t)*/;
-            rt.position = startPosition + offset;
-            yield return null;
+            transform.position = Vector3.Lerp(startPosition, endPosition, timeElapsed / duration);
+            yield return new WaitForEndOfFrame();
+            timeElapsed += Time.deltaTime;
         }
-        
-        yield return new WaitForSeconds(pause);
-/*
-        t = 0f;
-        startPosition = transform.position;
+     
+        transform.position = Vector3.Lerp(startPosition, endPosition, timeElapsed / duration);
+        isRetracted = !isRetracted;
+        isMoving = false;
+        yield return null;//new WaitForSeconds(pause);
+        if (isRetracted)
+            text.text = ">";
+        else 
+            text.text = "<";
 
-        while (t < 1f)
-        {
-            t = Mathf.Min(1f, t + Time.deltaTime / duration);
-            Vector3 offset = (new Vector3(0, 1, 0)) * (step * t);
-            rt.position = startPosition + offset;
-            yield return null;
-        }*/
-        //gameObject.SetActive(false);
     }
 }
