@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-public class BallSetup : NetworkBehaviour
+public class PlayerNetwork : NetworkBehaviour
 {
 
     [SerializeField] Behaviour[] componentsToDisable;
+    private int netID;
 
     // Start is called before the first frame update
     void Start()
@@ -23,17 +24,20 @@ public class BallSetup : NetworkBehaviour
     {
         base.OnStartClient();
 
-        string netID = transform.parent.GetComponent<NetworkIdentity>().netId.ToString();
-        Player player = transform.parent.GetComponent<Player>();
+        netID = (int) transform.parent.GetComponent<NetworkIdentity>().netId;
+        PlayerController player = transform.parent.GetComponent<PlayerController>();
         GameManager.RegisterPlayer(netID,player);
     }
 
+/*
     
     //Désactiver les go importants(camera principale)
     private void OnDisable()
     {
         GameManager.UnregisterPlayer(transform.name);
     }
+*/
+
     // Update is called once per frame
     void Update()
     {

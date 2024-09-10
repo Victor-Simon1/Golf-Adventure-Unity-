@@ -2,7 +2,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BallControler : NetworkBehaviour
+public class BallControler : MonoBehaviour
 {
     [Header("Control")]
     [Range(0.0f, 100.0f)]
@@ -40,10 +40,12 @@ public class BallControler : NetworkBehaviour
     [SerializeField] private Slider sliderForce;
     [Header("Gameplay")]
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
-    [SyncVar] private bool endFirstPut;//Pour remettre les collisions entre les balles
+    private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
     [Header("Movement")]
     private float limitForce = 0.5f;
+
+    [SerializeField] private PlayerController pc;
 
     // Start is called before the first frame update
     void Start()
@@ -139,12 +141,6 @@ public class BallControler : NetworkBehaviour
         zoomLevel = 10;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        CmdFinishHole(transform.parent.name);
-    }
-
-    [Client]
     public void Push()
     {
         lastPosition = transform.position;
@@ -154,25 +150,8 @@ public class BallControler : NetworkBehaviour
         rb.AddForce(vec * force, ForceMode.Impulse);
         //rb.velocity = vec * force;
         moving = true;
-        CmdAddStrokes(transform.parent.name);
-    }
-    [Command]
-    public void CmdAddStrokes(string sourceId)
-    {
-
-        Debug.Log(sourceId + " a tiré");
-        Player player = GameManager.GetPlayer(sourceId);
-        player.RpcAddStroke(sourceId);
     }
 
-    [Command]
-    public void CmdFinishHole(string sourceId)
-    {
-        Debug.Log(sourceId + " a fini le trou");
-        Player player = GameManager.GetPlayer(sourceId);
-        //player.RpcAddStroke(sourceId);
-    }
-    [Client]
     public void TpStart()
     {
         rb.velocity = Vector3.zero;
@@ -183,31 +162,20 @@ public class BallControler : NetworkBehaviour
 
     private void Stopped()
     {
-        if (!endFirstPut)
-        {
-            GetComponent<SphereCollider>().excludeLayers = 0;
-            endFirstPut = true;
-            RpcFinishFirstPut();
-        }
-         moving = false;
+        moving = false;
         Debug.Log("Ball stopped");
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
     }
 
-    [ClientRpc]
-    public void RpcFinishFirstPut()
+    public void IgnoreBalls()
     {
-       GetComponent<SphereCollider>().excludeLayers = 0;
-       endFirstPut = true;
-    }
-    public void rotateLeft()
-    {
-        cam.transform.RotateAround(transform.position, Vector3.up, cam.transform.eulerAngles.y - transform.eulerAngles.y);
+        GetComponent<SphereCollider>().excludeLayers = 3;
     }
 
-    public void rotateLeft(float angle)
+    public void DontIgnoreBalls()
     {
-        cam.transform.RotateAround(transform.position, Vector3.up, angle);
+        GetComponent<SphereCollider>().excludeLayers = 0;
     }
+
 }

@@ -11,9 +11,9 @@ public class Scoreboard : MonoBehaviour
     private void OnEnable()
     {
         //Recupere l'array du server 
-        Player[] players = GameManager.GetAllPlayer(); 
+        PlayerController[] players = GameManager.GetAllPlayer(); 
         //Loop sur l'array et ajout de ligne
-        foreach (Player p in players)
+        foreach (PlayerController p in players)
         {
             Debug.Log(p.name + " " + p.strokes);
             GameObject itemGo = Instantiate(playerScoreboardItem,playerScoreboardList);

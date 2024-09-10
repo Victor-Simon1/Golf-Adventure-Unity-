@@ -10,7 +10,7 @@ public class PlayerScoreboardItem : MonoBehaviour
     [SerializeField] TextMeshProUGUI strokeText;
 
 
-    public void Setup(Player p)
+    public void Setup(PlayerController p)
     {
         usernameText.text = p.name;
         strokeText.text = p.strokes.ToString();
