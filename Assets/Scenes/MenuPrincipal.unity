@@ -2551,11 +2551,6 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 778045979305346330, guid: 70be4e7f5e604d94f9c0510c1a196131,
         type: 3}
-      propertyPath: networkAddress
-      value: 192.168.1.142
-      objectReference: {fileID: 0}
-    - target: {fileID: 778045979305346330, guid: 70be4e7f5e604d94f9c0510c1a196131,
-        type: 3}
       propertyPath: spawnPrefabs.Array.size
       value: 0
       objectReference: {fileID: 0}
@@ -3395,8 +3390,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1762238087}
-        m_TargetAssemblyTypeName: JoinUIManager, Assembly-CSharp
-        m_MethodName: setIp
+        m_TargetAssemblyTypeName: JoinManager, Assembly-CSharp
+        m_MethodName: SetIp
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4247,7 +4242,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1762238087}
         m_TargetAssemblyTypeName: JoinManager, Assembly-CSharp
-        m_MethodName: connect
+        m_MethodName: Connect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7165,7 +7160,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1762238087}
         m_TargetAssemblyTypeName: JoinManager, Assembly-CSharp
-        m_MethodName: setName
+        m_MethodName: SetName
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

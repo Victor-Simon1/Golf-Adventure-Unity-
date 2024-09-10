@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using Services;
+
 public class PlayerNetwork : NetworkBehaviour
 {
 
@@ -26,7 +28,7 @@ public class PlayerNetwork : NetworkBehaviour
 
         netID = (int) transform.parent.GetComponent<NetworkIdentity>().netId;
         PlayerController player = transform.parent.GetComponent<PlayerController>();
-        GameManager.RegisterPlayer(netID,player);
+        ServiceLocator.Get<GameManager>().RegisterPlayer(netID,player);
     }
 
 /*

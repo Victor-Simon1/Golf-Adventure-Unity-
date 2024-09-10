@@ -7,8 +7,9 @@ using System.Linq;
 using Mirror;
 using System.Net.Sockets;
 using System.Net;
+using Services;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoRegistrable
 {
 
     [SerializeField] private static List<PlayerController> players = new List<PlayerController>();
@@ -21,25 +22,30 @@ public class GameManager : MonoBehaviour
 
     private bool isHost = false;
 
+    private void Start()
+    {
+        ServiceLocator.Register<GameManager>(this);
+    }
+
     private void OnEnable()
     {
         Debug.Log(networkManager.name);
     }
 
-    public static void RegisterPlayer(int netID,PlayerController player)
+    public void RegisterPlayer(int netID,PlayerController player)
     {
         players.Add(player);
     }
 
-    public static void UnregisterPlayer(PlayerController pc) 
+    public void UnregisterPlayer(PlayerController pc) 
     {
         players.Remove(pc);
     }
-    public static PlayerController GetPlayer(int playerId)
+    public PlayerController GetPlayer(int playerId)
     {
         return players[playerId];
     }
-    public static PlayerController[] GetAllPlayer()
+    public PlayerController[] GetAllPlayer()
     {
         return players.ToArray();
     }
@@ -84,7 +90,9 @@ public class GameManager : MonoBehaviour
     public void Connection(string connectionIp, string connectionName)
     {
         hostIP = connectionIp;
+        Debug.Log(hostIP);
         networkManager.networkAddress = hostIP;
+        Debug.Log(networkManager.networkAddress);
         currentPlayer = connectionName;
         networkManager.StartClient();
     }

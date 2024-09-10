@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Services;
 
 public class JoinManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class JoinManager : MonoBehaviour
     void Start()
     {
         playerName = "Player 1";
+        gm = ServiceLocator.Get<GameManager>();
     }
 
     // Update is called once per frame
