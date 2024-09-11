@@ -20,6 +20,8 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     [SerializeField] private GameObject ball;
 
+    private PlayerDisplay display;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,4 +80,8 @@ public class PlayerController : NetworkBehaviour, IComparable
         return 0;
     }
 
+    public void SetDisplay(PlayerDisplay display)
+    {
+        this.display = display;
+    }
 }
