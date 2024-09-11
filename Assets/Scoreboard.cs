@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Services;
 
 public class Scoreboard : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class Scoreboard : MonoBehaviour
     private void OnEnable()
     {
         //Recupere l'array du server 
-        PlayerController[] players = GameManager.GetAllPlayer(); 
+        PlayerController[] players = ServiceLocator.Get<GameManager>().GetAllPlayer(); 
         //Loop sur l'array et ajout de ligne
         foreach (PlayerController p in players)
         {

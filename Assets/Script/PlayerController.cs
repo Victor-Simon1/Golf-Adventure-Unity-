@@ -1,16 +1,21 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : NetworkBehaviour, IComparable
 {
     /*[Client]
     [ClientRpc]
     [Command]*/
     public int strokes;
-    private string name;
-    public string id;
+
+    [SyncVar]
+    [SerializeField] private string playerName = "Player";
+
+    public int id;
 
 
     [SerializeField] private GameObject ball;
@@ -47,6 +52,30 @@ public class PlayerController : NetworkBehaviour
     public void DespawnBall()
     {
         ball.SetActive(false);
+    }
+
+    public void SetName(string newName)
+    {
+        this.playerName = newName;
+    }
+
+    public string GetName()
+    {
+        return playerName;
+    }
+
+    public int CompareTo(object obj)
+    {
+        var a = this;
+        var b = obj as PlayerController;
+
+        if (a.id < b.id)
+            return -1;
+
+        if (a.id > b.id)
+            return 1;
+
+        return 0;
     }
 
 }

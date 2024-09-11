@@ -12,17 +12,16 @@ using Services;
 public class GameManager : MonoRegistrable
 {
 
-    [SerializeField] private static List<PlayerController> players = new List<PlayerController>();
+    [SerializeField] private List<PlayerController> players = new List<PlayerController>();
+
     [SerializeField] private NetworkManager networkManager;
 
     private string hostIP;
     private string sessionName;
 
-    private string currentPlayer;
-
     private bool isHost = false;
 
-    private void Start()
+    private void Awake()
     {
         ServiceLocator.Register<GameManager>(this);
     }
@@ -32,9 +31,10 @@ public class GameManager : MonoRegistrable
         Debug.Log(networkManager.name);
     }
 
-    public void RegisterPlayer(int netID,PlayerController player)
+    public void RegisterPlayer(PlayerController player)
     {
         players.Add(player);
+        players.Sort();
     }
 
     public void UnregisterPlayer(PlayerController pc) 
@@ -50,11 +50,11 @@ public class GameManager : MonoRegistrable
         return players.ToArray();
     }
 
-    public void CreateParty()
+    public void CreateParty(string PartyName)
     {
         networkManager.StartHost();
         hostIP = GetLocalIPAddress();
-        sessionName = hostIP;
+        sessionName = PartyName;
         networkManager.networkAddress = hostIP;
         isHost = true;
     }
@@ -87,18 +87,10 @@ public class GameManager : MonoRegistrable
         sessionName = newName;
     }
 
-    public void Connection(string connectionIp, string connectionName)
+    public void Connection(string connectionIp)
     {
         hostIP = connectionIp;
-        Debug.Log(hostIP);
         networkManager.networkAddress = hostIP;
-        Debug.Log(networkManager.networkAddress);
-        currentPlayer = connectionName;
         networkManager.StartClient();
-    }
-
-    public string GetCurrentPlayerName()
-    {
-        return currentPlayer;
     }
 }

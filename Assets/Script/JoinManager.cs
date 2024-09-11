@@ -4,17 +4,19 @@ using TMPro;
 using UnityEngine;
 using Services;
 
-public class JoinManager : MonoBehaviour
+public class JoinManager : MonoRegistrable
 {
     [SerializeField] private GameManager gm;
 
     private string playerName;
+    private string sessionName;
     private string ip;
 
     // Start is called before the first frame update
     void Start()
     {
         playerName = "Player 1";
+        ServiceLocator.Register<JoinManager>(this);
         gm = ServiceLocator.Get<GameManager>();
     }
 
@@ -29,6 +31,11 @@ public class JoinManager : MonoBehaviour
         playerName = newName;
     }
 
+    public void SetSessionName(string sessionName)
+    {
+        this.sessionName = sessionName;
+    }
+
     public void SetIp(string newIp)
     {
         ip = newIp;
@@ -36,6 +43,16 @@ public class JoinManager : MonoBehaviour
 
     public void Connect()
     {
-        gm.Connection(ip, playerName);
+        gm.Connection(ip);
+    }
+
+    public void Create()
+    {
+        gm.CreateParty(sessionName);
+    }
+
+    public string GetPlayerName()
+    {
+        return playerName;
     }
 }
