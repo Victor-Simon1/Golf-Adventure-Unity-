@@ -99,8 +99,7 @@ public class ColourPickerControl : MonoBehaviour
         }
 
         outputTexture.Apply();
-
-        changeThisColour.material.SetColor("_BaseColor", currentColour);
+        changeThisColour.material.SetColor("_Color", currentColour);
     }
 
     public void SetSV(float S,  float V)
