@@ -28,7 +28,7 @@ public class GameManager : MonoRegistrable
 
     private void OnEnable()
     {
-        Debug.Log(networkManager.name);
+       // Debug.Log(networkManager.name);
     }
 
     public void RegisterPlayer(PlayerController player)
