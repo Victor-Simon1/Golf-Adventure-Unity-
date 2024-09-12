@@ -46,14 +46,15 @@ public class BallControler : MonoBehaviour
     private float limitForce = 0.5f;
 
     [SerializeField] private PlayerController pc;
-
+    [Header("Sound")]
+    [SerializeField] private AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
         sp = transform.position;
         sr = transform.rotation;
         rb = GetComponent<Rigidbody>();
-
+        audioSource = GetComponent<AudioSource>();
         //bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
         //bStart.onClick.AddListener(TpStart);
 
@@ -143,6 +144,8 @@ public class BallControler : MonoBehaviour
 
     public void Push()
     {
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
+        audioSource.Play();
         lastPosition = transform.position;
         var vec = cam.transform.forward;
         force = sliderForce.value;
