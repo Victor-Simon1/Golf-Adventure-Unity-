@@ -49,6 +49,10 @@ public class GameManager : MonoRegistrable
     {
         return players.ToArray();
     }
+    public List<PlayerController> GetListPlayer()
+    {
+        return players;
+    }
 
     public void CreateParty(string PartyName)
     {

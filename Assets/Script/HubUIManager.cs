@@ -9,6 +9,7 @@ public class HubUIManager : MonoRegistrable
     [SerializeField] private GameManager gm;
     [SerializeField] private TMP_InputField sessionName;
     [SerializeField] private TextMeshProUGUI ip;
+    [SerializeField] private PlayerListScript pl;
 
     private void Start()
     {
@@ -25,5 +26,10 @@ public class HubUIManager : MonoRegistrable
     {
         Debug.Log("change de titre");
         this.sessionName.SetTextWithoutNotify(sessionName);
+    }
+
+    public void UpdatePlayers(List<PlayerController> pcs)
+    {
+        pl.UpdatePlayers(pcs);
     }
 }

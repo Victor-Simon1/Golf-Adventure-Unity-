@@ -40,15 +40,17 @@ public class PlayerNetwork : NetworkBehaviour
 
         gm.RegisterPlayer(player);
 
+        CmdUpdateUI(gm.GetSessionName(), gm.GetListPlayer());
+
         joinManager = ServiceLocator.Get<JoinManager>();
 
-        CmdRegisterPlayer(player.id, joinManager.GetPlayerName());
-        RpcUpdateTitle(gm.GetSessionName());
+
+        CmdUpdatePlayerName(player.id, joinManager.GetPlayerName());
 
     }
 
     [Command]
-    private void CmdRegisterPlayer(int id, string username)
+    private void CmdUpdatePlayerName(int id, string username)
     {
         PlayerController player = ServiceLocator.Get<GameManager>().GetPlayer(id);
         if(player != null)
@@ -56,12 +58,28 @@ public class PlayerNetwork : NetworkBehaviour
             Debug.Log(username + " has joined !");
             player.SetName(username);
         }
+        Debug.Log("fin update name");
+    }
+
+    [Command]
+    private void CmdUpdateUI(string sessionName, List<PlayerController> pcs)
+    {
+        RpcUpdateTitle(sessionName);
+        RpcUpdateDisplay(pcs);
+
+        Debug.Log("fin update ui");
     }
 
     [ClientRpc]
     private void RpcUpdateTitle(string sessionName)
     {
         ServiceLocator.Get<HubUIManager>().SetSessionNameWithoutNotify(sessionName);
+    }
+
+    [ClientRpc]
+    private void RpcUpdateDisplay(List<PlayerController> pcs)
+    {
+        ServiceLocator.Get<HubUIManager>().UpdatePlayers(pcs);
     }
 
 /*
