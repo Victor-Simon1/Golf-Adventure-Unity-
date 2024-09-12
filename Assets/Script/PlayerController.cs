@@ -1,4 +1,5 @@
 using Mirror;
+using Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,22 +18,9 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public int id;
 
-
     [SerializeField] private GameObject ball;
 
     private PlayerDisplay display;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     [ClientRpc]
     public void RpcAddStroke()
@@ -44,6 +32,48 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void RpcFinishFirstPut()
     {
         GetComponent<SphereCollider>().excludeLayers = 0;
+    }
+
+    [Command]
+    public void CmdExit()
+    {
+        RpcExit();
+        PlayerDestroy();
+    }
+
+    [ClientRpc]
+    public void RpcExit()
+    {
+        var gm = ServiceLocator.Get<GameManager>();
+        gm.StopConnection();
+        PlayerDestroy();
+    }
+
+    [Command]
+    public void CmdStopHost()
+    {
+        RpcStopHost();
+    }
+
+    [ClientRpc]
+    public void RpcStopHost()
+    {
+        ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        if (isLocalPlayer)
+        {
+            ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+        }
+    }
+
+    private void PlayerDestroy()
+    {
+        Destroy(display.gameObject);
+        Destroy(gameObject);
     }
 
     public void SpawnBall()

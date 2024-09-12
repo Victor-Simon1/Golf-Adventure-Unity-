@@ -18,9 +18,10 @@ public class GameManager : MonoRegistrable
 
     [SerializeField] private NetworkManager networkManager;
 
+    [SerializeField] private ErrorManager em;
+
     private string hostIP;
     private string sessionName;
-
     private bool isHost = false;
 
     [SerializeField] private string[] maps;
@@ -28,7 +29,12 @@ public class GameManager : MonoRegistrable
 
     private void Awake()
     {
-        ServiceLocator.Register<GameManager>(this);
+        ServiceLocator.Register<GameManager>(this, false);
+    }
+
+    private void Start()
+    {
+        networkManager = ServiceLocator.Get<StockNetManager>().GetNetworkManager();
     }
 
     private void OnEnable()
@@ -36,16 +42,50 @@ public class GameManager : MonoRegistrable
        // Debug.Log(networkManager.name);
     }
 
+    private void OnDestroy()
+    {
+        foreach (var player in players) { Destroy(player); }
+        //Destroy(networkManager.gameObject);
+    }
+
     public void RegisterPlayer(PlayerController player)
     {
-        players.Add(player);
+        if(player.id < players.Count && players[player.id] == null)
+        {
+            players[player.id] = player;
+        }
+        else
+        {
+            players.Add(player);
+        }
+
         players.Sort();
     }
 
-    public void UnregisterPlayer(PlayerController pc) 
+    public void PlayerQuit()
     {
-        players.Remove(pc);
+        if (isHost)
+        {
+            Debug.Log("Stop Server");
+            /*foreach (PlayerController player in players)
+            {
+                player.CmdStopHost();
+            }*/
+            networkManager.StopHost();
+        }
+        else
+        {
+            foreach (PlayerController player in players)
+            {
+                if (player.isLocalPlayer)
+                {
+                    player.CmdExit();
+                    break;
+                }
+            }
+        }
     }
+
     public PlayerController GetPlayer(int playerId)
     {
         return players[playerId];
@@ -73,6 +113,11 @@ public class GameManager : MonoRegistrable
         hostIP = connectionIp;
         networkManager.networkAddress = hostIP;
         networkManager.StartClient();
+    }
+
+    public void StopConnection()
+    {
+        networkManager.StopClient();
     }
 
     /*[ClientRpc]
@@ -118,6 +163,11 @@ public class GameManager : MonoRegistrable
     public int GetMapID()
     {
         return mapId;
+    }
+
+    public void ThrowError(string message)
+    {
+        em.Error(message);
     }
 
 }

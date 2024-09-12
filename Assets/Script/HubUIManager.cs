@@ -13,7 +13,7 @@ public class HubUIManager : MonoRegistrable
 
     private void Start()
     {
-        ServiceLocator.Register<HubUIManager>(this);
+        ServiceLocator.Register<HubUIManager>(this, false);
     }
 
     private void OnEnable()

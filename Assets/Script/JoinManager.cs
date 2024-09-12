@@ -7,6 +7,8 @@ using Services;
 public class JoinManager : MonoRegistrable
 {
     [SerializeField] private GameManager gm;
+    [SerializeField] private GameObject waiting;
+    [SerializeField] private GameObject next;
 
     private string playerName;
     private string sessionName;
@@ -16,7 +18,7 @@ public class JoinManager : MonoRegistrable
     void Start()
     {
         playerName = "Player 1";
-        ServiceLocator.Register<JoinManager>(this);
+        ServiceLocator.Register<JoinManager>(this, false);
         gm = ServiceLocator.Get<GameManager>();
     }
 
@@ -43,12 +45,26 @@ public class JoinManager : MonoRegistrable
 
     public void Connect()
     {
+        waiting.SetActive(true);
         gm.Connection(ip);
     }
 
     public void Create()
     {
         gm.CreateParty(sessionName);
+    }
+
+    public void StopConnection()
+    {
+        waiting.SetActive(false);
+        gm.StopConnection();
+    }
+
+    public void Connected()
+    {
+        waiting.SetActive(false);
+        gameObject.SetActive(false);
+        next.SetActive(true);
     }
 
     public string GetPlayerName()

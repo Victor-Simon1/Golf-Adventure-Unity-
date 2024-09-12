@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using Services;
+using Unity.VisualScripting;
 
 public class PlayerNetwork : NetworkBehaviour
 {
@@ -28,22 +29,22 @@ public class PlayerNetwork : NetworkBehaviour
         Debug.Log("Player Network OnStartClient");
         base.OnStartClient();
 
+        joinManager = ServiceLocator.Get<JoinManager>();
+
+        joinManager.Connected();
         netID = (int) transform.parent.GetComponent<NetworkIdentity>().netId;
 
         transform.name = "Player " + netId;
 
         PlayerController player = transform.parent.GetComponent<PlayerController>();
 
-        player.id = netID - 2;
+        player.id = netID - 1;
 
         var gm = ServiceLocator.Get<GameManager>();
 
         gm.RegisterPlayer(player);
 
-        CmdUpdateUI(gm.GetSessionName(), gm.GetListPlayer());
-
-        joinManager = ServiceLocator.Get<JoinManager>();
-
+        CmdUpdateUI(gm.GetListPlayer());
 
         CmdUpdatePlayerName(player.id, joinManager.GetPlayerName());
 
@@ -62,12 +63,11 @@ public class PlayerNetwork : NetworkBehaviour
     }
 
     [Command]
-    private void CmdUpdateUI(string sessionName, List<PlayerController> pcs)
+    private void CmdUpdateUI(List<PlayerController> pcs)
     {
-        RpcUpdateTitle(sessionName);
+        var gm = ServiceLocator.Get<GameManager>();
+        RpcUpdateTitle(gm.GetSessionName());
         RpcUpdateDisplay(pcs);
-
-        Debug.Log("fin update ui");
     }
 
     [ClientRpc]
