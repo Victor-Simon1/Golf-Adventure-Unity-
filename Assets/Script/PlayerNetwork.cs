@@ -34,7 +34,7 @@ public class PlayerNetwork : NetworkBehaviour
 
         PlayerController player = transform.parent.GetComponent<PlayerController>();
 
-        player.id = netID - 1;
+        player.id = netID - 2;
 
         var gm = ServiceLocator.Get<GameManager>();
 

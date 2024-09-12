@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2101221168259908806}
   - component: {fileID: 8826329815462632856}
   - component: {fileID: -3911127702487239908}
+  - component: {fileID: 8651431653243201400}
   m_Layer: 3
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -176,7 +177,21 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   strokes: 0
+  playerName: Player
+  id: 0
   ball: {fileID: 2280871444263343271}
+--- !u!114 &8651431653243201400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922957054793802191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3751a58b04846da4392744b3a499b1c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2280871444263343271
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,9 +333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd019107ef72a3b4b9ce845e3dfaebae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   force: 100
   AbsMagn: 0
   offset: {x: 0, y: 0, z: 0}
@@ -331,6 +343,7 @@ MonoBehaviour:
   ballLayer:
     serializedVersion: 2
     m_Bits: 0
+  pc: {fileID: 0}
 --- !u!114 &3308073455899982781
 MonoBehaviour:
   m_ObjectHideFlags: 0

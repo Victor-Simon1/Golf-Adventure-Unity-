@@ -2,12 +2,14 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static Unity.VisualScripting.Member;
 using System.Linq;
 using Mirror;
 using System.Net.Sockets;
 using System.Net;
 using Services;
+using System;
 
 public class GameManager : MonoRegistrable
 {
@@ -20,6 +22,9 @@ public class GameManager : MonoRegistrable
     private string sessionName;
 
     private bool isHost = false;
+
+    [SerializeField] private string[] maps;
+    private int mapId;
 
     private void Awake()
     {
@@ -63,6 +68,20 @@ public class GameManager : MonoRegistrable
         isHost = true;
     }
 
+    public void Connection(string connectionIp)
+    {
+        hostIP = connectionIp;
+        networkManager.networkAddress = hostIP;
+        networkManager.StartClient();
+    }
+
+    /*[ClientRpc]
+    private void RpcLaunchGame(int mapId)
+    {
+        Debug.Log("Change scene");
+        SceneManager.LoadScene(maps[mapId]);
+    }*/
+
     private string GetLocalIPAddress()
     {
         var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -91,10 +110,14 @@ public class GameManager : MonoRegistrable
         sessionName = newName;
     }
 
-    public void Connection(string connectionIp)
+    public void SetMapID(int mapID)
     {
-        hostIP = connectionIp;
-        networkManager.networkAddress = hostIP;
-        networkManager.StartClient();
+        mapId = mapID;
     }
+
+    public int GetMapID()
+    {
+        return mapId;
+    }
+
 }
