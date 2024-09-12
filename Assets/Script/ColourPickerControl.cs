@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using TMPro.EditorUtilities;
 
 public class ColourPickerControl : MonoBehaviour
 {
@@ -13,9 +12,6 @@ public class ColourPickerControl : MonoBehaviour
 
     [SerializeField]
     private Slider hueSlider;
-
-    [SerializeField] 
-    private TMP_InputFieldEditor hexInputField;
 
     private Texture2D hueTexture, svTexture, outputTexture;
 
