@@ -37,7 +37,7 @@ public class ColourPickerControl : MonoBehaviour
 
         for (int i = 0; i < hueTexture.height; i++)
         {
-            hueTexture.SetPixel(0, i, Color.HSVToRGB((float)i / hueTexture.height,1f, 0.6f));
+            hueTexture.SetPixel(0, i, Color.HSVToRGB((float)i / hueTexture.height,1f, 0.8f));
         }
 
         hueTexture.Apply();

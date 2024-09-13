@@ -30,4 +30,9 @@ public class PlayerDisplay : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public void ChangeColor(Color color)
+    {
+        pc.SetColor(color);
+    }
 }

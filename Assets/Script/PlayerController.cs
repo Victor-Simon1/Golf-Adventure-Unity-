@@ -23,6 +23,17 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     private PlayerDisplay display;
 
+    private Material mat;
+
+    private void Start()
+    {
+        mat = new Material(Shader.Find("Standard"));
+        mat.SetFloat("_Glossiness", .8f);
+        mat.SetFloat("_Metallic", 0f);
+
+        GetComponent<Renderer>().material = mat;
+    }
+
     [ClientRpc]
     public void RpcAddStroke()
     {
@@ -94,6 +105,11 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void DespawnBall()
     {
         ball.SetActive(false);
+    }
+
+    public void SetColor(Color color)
+    {
+        mat.color = color;
     }
 
     public void SetName(string newName)
