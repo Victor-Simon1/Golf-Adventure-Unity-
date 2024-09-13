@@ -120,12 +120,16 @@ public class GameManager : MonoRegistrable
         networkManager.StopClient();
     }
 
-    /*[ClientRpc]
-    private void RpcLaunchGame(int mapId)
+    private void LaunchGame()
     {
-        Debug.Log("Change scene");
-        SceneManager.LoadScene(maps[mapId]);
-    }*/
+        if(isHost)
+        {
+            foreach (PlayerController player in players)
+            {
+                player.RpcLaunch(maps[mapId]);
+            }
+        }
+    }
 
     private string GetLocalIPAddress()
     {
@@ -148,6 +152,11 @@ public class GameManager : MonoRegistrable
     public string GetSessionName()
     {
         return sessionName;
+    }
+
+    public bool IsHost()
+    {
+        return isHost;
     }
 
     public void SetSessionName(string newName)

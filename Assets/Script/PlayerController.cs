@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
 
 public class PlayerController : NetworkBehaviour, IComparable
@@ -67,6 +68,15 @@ public class PlayerController : NetworkBehaviour, IComparable
         if (isLocalPlayer)
         {
             ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+        }
+    }
+
+    [ClientRpc]
+    public void RpcLaunch(string mapId)
+    {
+        if(isLocalPlayer)
+        {
+            SceneManager.LoadScene(mapId);
         }
     }
 

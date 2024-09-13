@@ -11,6 +11,10 @@ public class HubUIManager : MonoRegistrable
     [SerializeField] private TextMeshProUGUI ip;
     [SerializeField] private PlayerListScript pl;
 
+    [SerializeField] private GameObject launchButton;
+    [SerializeField] private GameObject TextDropDown;
+    [SerializeField] private TMP_Dropdown dropdown;
+
     private void Start()
     {
         ServiceLocator.Register<HubUIManager>(this, false);
@@ -19,7 +23,12 @@ public class HubUIManager : MonoRegistrable
     private void OnEnable()
     {
         ip.text = "IP: " + gm.GetIP();
-        //sessionName.SetTextWithoutNotify(gm.GetSessionName());
+        if(ServiceLocator.Get<GameManager>().IsHost()) 
+        {
+            dropdown.interactable = true;
+            launchButton.SetActive(true);
+            TextDropDown.SetActive(true);
+        }
     }
 
     public void SetSessionNameWithoutNotify(string sessionName)

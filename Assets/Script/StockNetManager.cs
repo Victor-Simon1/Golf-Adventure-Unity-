@@ -10,7 +10,7 @@ public class StockNetManager : MonoRegistrable
     // Start is called before the first frame update
     public void Awake()
     {
-        ServiceLocator.Register<StockNetManager>(this);
+        ServiceLocator.Register<StockNetManager>(this, false);
     }
 
     public NetworkManager GetNetworkManager()
