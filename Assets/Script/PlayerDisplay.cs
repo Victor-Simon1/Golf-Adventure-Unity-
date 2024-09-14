@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerDisplay : MonoBehaviour
 {
 
     [SerializeField] private PlayerController pc;
+    [SerializeField] private Image image;
+
+    private void OnEnable()
+    {
+        image = transform.GetComponentInChildren<Button>().transform.GetChild(0).GetComponent<Image>();
+    }
 
     private void Update()
     {
@@ -18,6 +25,7 @@ public class PlayerDisplay : MonoBehaviour
         pc = npc;
         pc.SetDisplay(this);
         gameObject.SetActive(true);
+        transform.GetComponentInChildren<Button>().interactable = true;
     }
 
     public void SetName(string newName)
@@ -31,8 +39,8 @@ public class PlayerDisplay : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void ChangeColor(Color color)
+    public void SetColor(Color color)
     {
-        pc.SetColor(color);
+        image.color = color;
     }
 }

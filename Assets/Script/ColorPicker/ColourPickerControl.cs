@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Services;
 
 public class ColourPickerControl : MonoBehaviour
 {
@@ -16,7 +17,8 @@ public class ColourPickerControl : MonoBehaviour
     private Texture2D hueTexture, svTexture, outputTexture;
 
     [SerializeField]
-    MeshRenderer changeThisColour;
+    MeshRenderer changeThisColor;
+    Color finalColor;
 
     private void Start()
     {
@@ -24,9 +26,7 @@ public class ColourPickerControl : MonoBehaviour
 
         CreateSVImage();
 
-        CreateOutputImage();
-
-        UpdateOutputImage();
+        UpdateOutput();
     }
 
     private void CreateHueImage()
@@ -67,35 +67,13 @@ public class ColourPickerControl : MonoBehaviour
 
         satValImage.texture = svTexture;
     }
-    private void CreateOutputImage()
+    
+    private void UpdateOutput()
     {
-        outputTexture = new Texture2D(1, 16);
-        outputTexture.wrapMode = TextureWrapMode.Clamp;
-        outputTexture.name = "OutputTexture";
+        Color currentColor = Color.HSVToRGB(currentHue, currentSat, currentVal);
 
-        Color currentColour = Color.HSVToRGB(currentHue, currentSat, currentVal);
-
-        for (int i = 0; i < outputTexture.height; i++)
-        {
-            outputTexture.SetPixel(0, i, currentColour);
-        }
-
-        outputTexture.Apply();
-
-        outputImage.texture = outputTexture;
-    }
-
-    private void UpdateOutputImage()
-    {
-        Color currentColour = Color.HSVToRGB(currentHue, currentSat, currentVal);
-
-        for (int i = 0; i < outputTexture.height; i++)
-        {
-            outputTexture.SetPixel(0, i, currentColour);
-        }
-
-        outputTexture.Apply();
-        changeThisColour.material.SetColor("_Color", currentColour);
+        changeThisColor.material.SetColor("_Color", currentColor);
+        finalColor = currentColor;
     }
 
     public void SetSV(float S,  float V)
@@ -103,7 +81,7 @@ public class ColourPickerControl : MonoBehaviour
         currentSat = S;
         currentVal = V;
 
-        UpdateOutputImage();
+        UpdateOutput();
     }
 
     public void UpdateSVImage()
@@ -119,8 +97,13 @@ public class ColourPickerControl : MonoBehaviour
 
         svTexture.Apply();
 
-        UpdateOutputImage();
+        UpdateOutput();
 
+    }
+
+    public void ChangeColorPlayer()
+    {
+        ServiceLocator.Get<GameManager>().GetLocalPlayer().SetColor(finalColor);
     }
 
 }

@@ -45,7 +45,7 @@ public class GameManager : MonoRegistrable
     private void OnDestroy()
     {
         foreach (var player in players) { Destroy(player); }
-        //Destroy(networkManager.gameObject);
+        Destroy(networkManager.gameObject);
     }
 
     public void RegisterPlayer(PlayerController player)
@@ -97,6 +97,16 @@ public class GameManager : MonoRegistrable
     public List<PlayerController> GetListPlayer()
     {
         return players;
+    }
+
+    public PlayerController GetLocalPlayer()
+    {
+        foreach(PlayerController player in players)
+        {
+            if(player.isLocalPlayer) return player;
+        }
+
+        return null;
     }
 
     public void CreateParty(string PartyName)
@@ -177,6 +187,11 @@ public class GameManager : MonoRegistrable
     public void ThrowError(string message)
     {
         em.Error(message);
+    }
+
+    public void SetPlayerColor(Color color, int id) 
+    {
+        players[id].RpcSetColor(color);
     }
 
 }

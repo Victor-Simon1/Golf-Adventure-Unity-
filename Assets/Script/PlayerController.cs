@@ -31,7 +31,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         mat.SetFloat("_Glossiness", .8f);
         mat.SetFloat("_Metallic", 0f);
 
-        GetComponent<Renderer>().material = mat;
+        ball.GetComponent<Renderer>().material = mat;
     }
 
     [ClientRpc]
@@ -109,6 +109,19 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void SetColor(Color color)
     {
+        CmdSetColor(color, id);
+    }
+
+    [Command]
+    public void CmdSetColor(Color color,int id)
+    {
+        ServiceLocator.Get<GameManager>().SetPlayerColor(color,id);
+    }
+
+    [ClientRpc]
+    public void RpcSetColor(Color color)
+    {
+        display.SetColor(color);
         mat.color = color;
     }
 
