@@ -101,28 +101,6 @@ public class PlayerController : NetworkBehaviour, IComparable
         Destroy(gameObject);
     }
 
-    public void TPtoHole(Transform pos)
-    {
-        if(isLocalPlayer)
-        {
-            transform.position = pos.position;
-        }
-    }
-    [Client]
-    public void TeleportToPoint(Vector3 pos)
-    {
-        Debug.Log("Tp de " + GetName());
-        if (isLocalPlayer)
-        {
-            Debug.Log("Tp de " + GetName() + " vers2 " + pos);
-            transform.position = pos;
-            CmdTeleportToPoint(pos);
-        }
-        else
-            CmdTeleportToPoint(pos);
-    }
-
-    [Client]
     public void TpToLocation(Transform location)
     {
         Debug.Log("tp to " + location.position);
@@ -133,43 +111,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void SpawnBall()
     {
-        //if (isLocalPlayer)
-        {
-            Debug.Log("Active  de " + GetName());
-            ball.SetActive(true);
-            RpcSpawnBall();
-        }
-    }
-    [Command]
-    public void CmdTeleportToPoint(Vector3 pos)
-    {
-        Debug.Log("Tp de " + GetName());
-        //if (!isOwned)
-        {
-            Debug.Log("Tp de " + GetName() + " vers " + pos);
-            transform.position = pos;
-           // RpcTeleportToPoint(pos);
-        }
-    }
-    [ClientRpc]
-    public void RpcTeleportToPoint(Vector3 pos)
-    {
-        Debug.Log("Tp de " + GetName());
-        //if (!isOwned)
-        {
-            Debug.Log("Tp de " + GetName() + " vers " + pos);
-            transform.position = pos;
-
-        }
-    }
-    [Command]
-    public void RpcSpawnBall()
-    {
-        //if (isLocalPlayer)
-        {
-            Debug.Log("Active  de " + GetName());
-            ball.SetActive(true);
-        }
+        ball.SetActive(true);
     }
 
     public void DespawnBall()

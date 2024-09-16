@@ -15170,8 +15170,6 @@ MonoBehaviour:
   starts: []
   networkManager: {fileID: 0}
   em: {fileID: 747112140}
-  holesList: []
-  startList: []
   inGame: 0
   maps:
   - CampingForest

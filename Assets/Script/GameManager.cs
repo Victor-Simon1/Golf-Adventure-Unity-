@@ -15,15 +15,11 @@ public class GameManager : MonoRegistrable
 {
 
     [SerializeField] private List<PlayerController> players = new List<PlayerController>();
-    [SerializeField] private List<StartColliderScript> starts = new List<StartColliderScript>();
+    [SerializeField] private List<StartBehaviour> starts = new List<StartBehaviour>();
 
     [SerializeField] private NetworkManager networkManager;
 
     [SerializeField] private ErrorManager em;
-
-    [SerializeField] private List<HoleBehavior> holesList= new List<HoleBehavior>();
-
-    [SerializeField] private List<StartBehavior> startList = new List<StartBehavior>();
 
     private string hostIP;
     private string sessionName;
@@ -98,17 +94,15 @@ public class GameManager : MonoRegistrable
     {
         return players[playerId];
     }
+
     public PlayerController[] GetAllPlayer()
     {
         return players.ToArray();
     }
+
     public List<PlayerController> GetListPlayer()
     {
         return players;
-    }
-    public List<HoleBehavior> GetListHoles()
-    {
-        return holesList;
     }
 
     public PlayerController GetLocalPlayer()
@@ -153,13 +147,12 @@ public class GameManager : MonoRegistrable
         }
     }
 
-    public void AddStart(StartColliderScript newStart)
+    public void AddStart(StartBehaviour newStart)
     {
         starts.Add(newStart);
         starts.Sort();
-        if (starts.Count == StartColliderScript.max) TpPlayersToLocation();
+        if (starts.Count == StartBehaviour.max) TpPlayersToLocation();
     }
-
     private void TpPlayersToLocation()
     {
         Debug.Log("Here we go");
@@ -216,33 +209,6 @@ public class GameManager : MonoRegistrable
     public void ThrowError(string message)
     {
         em.Error(message);
-    }
-
-    public void AddHole(HoleBehavior hb)
-    {
-        holesList.Add(hb);
-      //  holesList.Sort();
-
-    }
-    public void AddStart(StartBehavior sb)
-    {
-        startList.Add(sb);
-        startList.Sort();
-
-    }
-    public void TeleportToPoint(int holeId)
-    {
-        //if(isHost)
-        {
-            Debug.Log("Je commence la tp + " +players.Count );
-            foreach (PlayerController p in players)
-            {
-                Debug.Log("Tp de " + p.GetName() + " vers " + startList[0].transform.position +"(" + startList[0] + ")");
-                p.TeleportToPoint(startList[0].transform.position);//*/.transform.position = startList[0].transform.position;
-                p.SpawnBall();
-            }
-        }
-      
     }
     public void SetPlayerColor(Color color, int id) 
     {
