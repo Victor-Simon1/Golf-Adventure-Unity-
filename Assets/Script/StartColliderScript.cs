@@ -20,11 +20,11 @@ public class StartColliderScript : MonoBehaviour, IComparable
 
     private void OnTriggerEnter(Collider other)
     {
-        BallControler bc= other.GetComponent<BallControler>();
+        /*BallControler bc= other.GetComponent<BallControler>();
         if(bc != null)
         {
             bc.IgnoreBalls();
-        }
+        }*/
     }
     
     private void OnTriggerExit(Collider other)

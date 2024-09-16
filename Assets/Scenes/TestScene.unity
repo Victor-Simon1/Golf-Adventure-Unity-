@@ -2714,8 +2714,7 @@ MonoBehaviour:
   satValImage: {fileID: 1778834269}
   outputImage: {fileID: 1683370357}
   hueSlider: {fileID: 1239682697}
-  hexInputField: {fileID: 0}
-  changeThisColour: {fileID: 1001012667}
+  changeThisColor: {fileID: 0}
 --- !u!1 &1325288918 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4752241548726016364, guid: d01ba1b7f9ce8e94691bdc508c239298,
