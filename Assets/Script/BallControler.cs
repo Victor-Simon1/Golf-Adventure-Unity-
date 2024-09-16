@@ -6,6 +6,7 @@ public class BallControler : MonoBehaviour
 {
     [Header("Control")]
     [Range(0.0f, 100.0f)]
+    [SerializeField] private float scaleForce = 100f;
     [SerializeField] private float force;
     [SerializeField] private float AbsMagn;
     private Rigidbody rb;
@@ -148,7 +149,7 @@ public class BallControler : MonoBehaviour
         audioSource.Play();
         lastPosition = transform.position;
         var vec = cam.transform.forward;
-        force = sliderForce.value;
+        force = sliderForce.value*scaleForce;
         vec = new Vector3(vec.x, 0, vec.z);
         rb.AddForce(vec * force, ForceMode.Impulse);
         //rb.velocity = vec * force;

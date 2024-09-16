@@ -175,7 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncDirection: 0
   syncMode: 0
-  syncInterval: 0
+  syncInterval: 0.1
   strokes: 0
   playerName: Player
   id: 0
@@ -334,6 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd019107ef72a3b4b9ce845e3dfaebae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaleForce: 100
   force: 100
   AbsMagn: 0
   offset: {x: 0, y: 0, z: 0}

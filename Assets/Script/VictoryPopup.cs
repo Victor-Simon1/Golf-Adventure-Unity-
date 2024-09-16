@@ -14,7 +14,7 @@ public class VictoryPopup : MonoBehaviour
     private void Start()
     {
         Vector3 scale = transform.parent.parent.localScale;
-        decalX *=scale.x;
+        decalX *= scale.x;
         decalY *= scale.y;
     }
     public void ChangeMessage(string str)

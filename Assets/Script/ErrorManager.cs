@@ -12,8 +12,9 @@ public class ErrorManager : MonoBehaviour
     private void Start()
     {
         quitter.onClick.AddListener(Quitter);
+        ServiceLocator.Get<GameManager>().SetErrorManager(this);
     }
-
+   
     private void Quitter()
     {
         var gm = ServiceLocator.Get<GameManager>();

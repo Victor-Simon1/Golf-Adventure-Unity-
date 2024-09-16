@@ -20,6 +20,10 @@ public class GameManager : MonoRegistrable
 
     [SerializeField] private ErrorManager em;
 
+    [SerializeField] private List<HoleBehavior> holesList= new List<HoleBehavior>();
+
+    [SerializeField] private List<StartBehavior> startList = new List<StartBehavior>();
+
     private string hostIP;
     private string sessionName;
     private bool isHost = false;
@@ -98,7 +102,10 @@ public class GameManager : MonoRegistrable
     {
         return players;
     }
-
+    public List<HoleBehavior> GetListHoles()
+    {
+        return holesList;
+    }
     public void CreateParty(string PartyName)
     {
         networkManager.StartHost();
@@ -174,9 +181,39 @@ public class GameManager : MonoRegistrable
         return mapId;
     }
 
+    public void SetErrorManager(ErrorManager _em)
+    {
+        em = _em;
+    }
     public void ThrowError(string message)
     {
         em.Error(message);
     }
 
+    public void AddHole(HoleBehavior hb)
+    {
+        holesList.Add(hb);
+      //  holesList.Sort();
+
+    }
+    public void AddStart(StartBehavior sb)
+    {
+        startList.Add(sb);
+        startList.Sort();
+
+    }
+    public void TeleportToPoint(int holeId)
+    {
+        //if(isHost)
+        {
+            Debug.Log("Je commence la tp + " +players.Count );
+            foreach (PlayerController p in players)
+            {
+                Debug.Log("Tp de " + p.GetName() + " vers " + startList[0].transform.position +"(" + startList[0] + ")");
+                p.TeleportToPoint(startList[0].transform.position);//*/.transform.position = startList[0].transform.position;
+                p.SpawnBall();
+            }
+        }
+      
+    }
 }
