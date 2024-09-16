@@ -15,6 +15,7 @@ public class GameManager : MonoRegistrable
 {
 
     [SerializeField] private List<PlayerController> players = new List<PlayerController>();
+    [SerializeField] private List<StartColliderScript> starts = new List<StartColliderScript>();
 
     [SerializeField] private NetworkManager networkManager;
 
@@ -28,12 +29,15 @@ public class GameManager : MonoRegistrable
     private string sessionName;
     private bool isHost = false;
 
+    public bool inGame;
+
     [SerializeField] private string[] maps;
     private int mapId;
 
     private void Awake()
     {
         ServiceLocator.Register<GameManager>(this, false);
+        starts.Clear();
     }
 
     private void Start()
@@ -43,13 +47,13 @@ public class GameManager : MonoRegistrable
 
     private void OnEnable()
     {
-       // Debug.Log(networkManager.name);
+        // Debug.Log(networkManager.name);
     }
 
     private void OnDestroy()
     {
         foreach (var player in players) { Destroy(player); }
-        //Destroy(networkManager.gameObject);
+        Destroy(networkManager.gameObject);
     }
 
     public void RegisterPlayer(PlayerController player)
@@ -106,6 +110,17 @@ public class GameManager : MonoRegistrable
     {
         return holesList;
     }
+
+    public PlayerController GetLocalPlayer()
+    {
+        foreach(PlayerController player in players)
+        {
+            if(player.isLocalPlayer) return player;
+        }
+
+        return null;
+    }
+
     public void CreateParty(string PartyName)
     {
         networkManager.StartHost();
@@ -136,6 +151,19 @@ public class GameManager : MonoRegistrable
                 player.RpcLaunch(maps[mapId]);
             }
         }
+    }
+
+    public void AddStart(StartColliderScript newStart)
+    {
+        starts.Add(newStart);
+        starts.Sort();
+        if (starts.Count == StartColliderScript.max) TpPlayersToLocation();
+    }
+
+    private void TpPlayersToLocation()
+    {
+        Debug.Log("Here we go");
+        players.ForEach(p => { p.TpToLocation(starts[0].transform); });
     }
 
     private string GetLocalIPAddress()
@@ -216,4 +244,9 @@ public class GameManager : MonoRegistrable
         }
       
     }
+    public void SetPlayerColor(Color color, int id) 
+    {
+        players[id].RpcSetColor(color);
+    }
+
 }

@@ -34,7 +34,7 @@ public class PlayerNetwork : NetworkBehaviour
         joinManager.Connected();
         netID = (int) transform.parent.GetComponent<NetworkIdentity>().netId;
 
-        transform.name = "Player " + netId;
+        transform.parent.name = "Player " + netId;
 
         PlayerController player = transform.parent.GetComponent<PlayerController>();
 
@@ -59,7 +59,6 @@ public class PlayerNetwork : NetworkBehaviour
             Debug.Log(username + " has joined !");
             player.SetName(username);
         }
-        Debug.Log("fin update name");
     }
 
     [Command]

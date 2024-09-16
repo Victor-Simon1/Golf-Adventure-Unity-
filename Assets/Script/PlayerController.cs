@@ -25,11 +25,17 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     private PlayerDisplay display;
 
+    private Material mat;
 
-    void Update()
+    private void Start()
     {
-       // Debug.Log("Player Name " + playerName  + " : "+ transform.position);
+        mat = new Material(Shader.Find("Standard"));
+        mat.SetFloat("_Glossiness", .8f);
+        mat.SetFloat("_Metallic", 0f);
+
+        ball.GetComponent<Renderer>().material = mat;
     }
+
     [ClientRpc]
     public void RpcAddStroke()
     {
@@ -66,7 +72,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [ClientRpc]
     public void RpcStopHost()
     {
-        ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+        ServiceLocator.Get<GameManager>().ThrowError("Vous avez ï¿½tï¿½ dï¿½connectï¿½ du serveur.");
     }
 
     public override void OnStopClient()
@@ -74,7 +80,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         base.OnStopClient();
         if (isLocalPlayer)
         {
-            ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+            ServiceLocator.Get<GameManager>().ThrowError("Vous avez ï¿½tï¿½ dï¿½connectï¿½ du serveur.");
         }
     }
 
@@ -83,6 +89,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         if(isLocalPlayer)
         {
+            ServiceLocator.Get<GameManager>().inGame = true;
             SceneManager.LoadScene(mapId);
             //SpawnBall();
         }
@@ -116,6 +123,14 @@ public class PlayerController : NetworkBehaviour, IComparable
     }
 
     [Client]
+    public void TpToLocation(Transform location)
+    {
+        Debug.Log("tp to " + location.position);
+        transform.position = location.position;
+        //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
+        SpawnBall();
+    }
+
     public void SpawnBall()
     {
         //if (isLocalPlayer)
@@ -160,6 +175,24 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void DespawnBall()
     {
         ball.SetActive(false);
+    }
+
+    public void SetColor(Color color)
+    {
+        CmdSetColor(color, id);
+    }
+
+    [Command]
+    public void CmdSetColor(Color color,int id)
+    {
+        ServiceLocator.Get<GameManager>().SetPlayerColor(color,id);
+    }
+
+    [ClientRpc]
+    public void RpcSetColor(Color color)
+    {
+        display.SetColor(color);
+        mat.color = color;
     }
 
     public void SetName(string newName)
