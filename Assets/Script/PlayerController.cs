@@ -3,9 +3,11 @@ using Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+
 
 public class PlayerController : NetworkBehaviour, IComparable
 {
@@ -23,6 +25,11 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     private PlayerDisplay display;
 
+
+    void Update()
+    {
+       // Debug.Log("Player Name " + playerName  + " : "+ transform.position);
+    }
     [ClientRpc]
     public void RpcAddStroke()
     {
@@ -77,6 +84,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         if(isLocalPlayer)
         {
             SceneManager.LoadScene(mapId);
+            //SpawnBall();
         }
     }
 
@@ -86,9 +94,67 @@ public class PlayerController : NetworkBehaviour, IComparable
         Destroy(gameObject);
     }
 
+    public void TPtoHole(Transform pos)
+    {
+        if(isLocalPlayer)
+        {
+            transform.position = pos.position;
+        }
+    }
+    [Client]
+    public void TeleportToPoint(Vector3 pos)
+    {
+        Debug.Log("Tp de " + GetName());
+        if (isLocalPlayer)
+        {
+            Debug.Log("Tp de " + GetName() + " vers2 " + pos);
+            transform.position = pos;
+            CmdTeleportToPoint(pos);
+        }
+        else
+            CmdTeleportToPoint(pos);
+    }
+
+    [Client]
     public void SpawnBall()
     {
-        ball.SetActive(true);
+        //if (isLocalPlayer)
+        {
+            Debug.Log("Active  de " + GetName());
+            ball.SetActive(true);
+            RpcSpawnBall();
+        }
+    }
+    [Command]
+    public void CmdTeleportToPoint(Vector3 pos)
+    {
+        Debug.Log("Tp de " + GetName());
+        //if (!isOwned)
+        {
+            Debug.Log("Tp de " + GetName() + " vers " + pos);
+            transform.position = pos;
+           // RpcTeleportToPoint(pos);
+        }
+    }
+    [ClientRpc]
+    public void RpcTeleportToPoint(Vector3 pos)
+    {
+        Debug.Log("Tp de " + GetName());
+        //if (!isOwned)
+        {
+            Debug.Log("Tp de " + GetName() + " vers " + pos);
+            transform.position = pos;
+
+        }
+    }
+    [Command]
+    public void RpcSpawnBall()
+    {
+        //if (isLocalPlayer)
+        {
+            Debug.Log("Active  de " + GetName());
+            ball.SetActive(true);
+        }
     }
 
     public void DespawnBall()
