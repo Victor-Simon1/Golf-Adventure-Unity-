@@ -15167,8 +15167,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   players: []
+  starts: []
   networkManager: {fileID: 0}
   em: {fileID: 747112140}
+  inGame: 0
   maps:
   - CampingForest
 --- !u!114 &7320203874447452711

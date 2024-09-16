@@ -87,6 +87,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         if(isLocalPlayer)
         {
+            ServiceLocator.Get<GameManager>().inGame = true;
             SceneManager.LoadScene(mapId);
         }
     }
@@ -95,6 +96,14 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         Destroy(display.gameObject);
         Destroy(gameObject);
+    }
+
+    public void TpToLocation(Transform location)
+    {
+        Debug.Log("tp to " + location.position);
+        transform.position = location.position;
+        //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
+        SpawnBall();
     }
 
     public void SpawnBall()

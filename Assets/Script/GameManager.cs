@@ -15,6 +15,7 @@ public class GameManager : MonoRegistrable
 {
 
     [SerializeField] private List<PlayerController> players = new List<PlayerController>();
+    [SerializeField] private List<StartColliderScript> starts = new List<StartColliderScript>();
 
     [SerializeField] private NetworkManager networkManager;
 
@@ -24,12 +25,15 @@ public class GameManager : MonoRegistrable
     private string sessionName;
     private bool isHost = false;
 
+    public bool inGame;
+
     [SerializeField] private string[] maps;
     private int mapId;
 
     private void Awake()
     {
         ServiceLocator.Register<GameManager>(this, false);
+        starts.Clear();
     }
 
     private void Start()
@@ -39,7 +43,7 @@ public class GameManager : MonoRegistrable
 
     private void OnEnable()
     {
-       // Debug.Log(networkManager.name);
+        // Debug.Log(networkManager.name);
     }
 
     private void OnDestroy()
@@ -139,6 +143,19 @@ public class GameManager : MonoRegistrable
                 player.RpcLaunch(maps[mapId]);
             }
         }
+    }
+
+    public void AddStart(StartColliderScript newStart)
+    {
+        starts.Add(newStart);
+        starts.Sort();
+        if (starts.Count == StartColliderScript.max) TpPlayersToLocation();
+    }
+
+    private void TpPlayersToLocation()
+    {
+        Debug.Log("Here we go");
+        players.ForEach(p => { p.TpToLocation(starts[0].transform); });
     }
 
     private string GetLocalIPAddress()
