@@ -903,6 +903,7 @@ MonoBehaviour:
   decalY: 40
   isRetracted: 1
   isMoving: 0
+  scoreboard: {fileID: 0}
 --- !u!114 &1962948087330282495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1684,7 +1685,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2761336014133134240}
+  - component: {fileID: 7472147654684027288}
   - component: {fileID: 2814484464229152400}
+  - component: {fileID: 7857264026212003830}
   m_Layer: 5
   m_Name: SliderForce
   m_TagString: Untagged
@@ -1713,6 +1716,19 @@ RectTransform:
   m_AnchoredPosition: {x: -85, y: -159}
   m_SizeDelta: {x: 71, y: 1200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7472147654684027288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7208038388519148519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfbc821ed9527a345946144e99b6ddef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPressed: 0
 --- !u!114 &2814484464229152400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1764,6 +1780,51 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7857264026212003830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7208038388519148519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7472147654684027288}
+          m_TargetAssemblyTypeName: SliderTouch, Assembly-CSharp
+          m_MethodName: IsPressed
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 14
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7472147654684027288}
+          m_TargetAssemblyTypeName: SliderTouch, Assembly-CSharp
+          m_MethodName: IsUnPressed
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &7315336374563040537
 GameObject:
   m_ObjectHideFlags: 0
