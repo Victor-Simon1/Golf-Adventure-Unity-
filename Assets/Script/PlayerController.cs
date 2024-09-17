@@ -73,7 +73,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [ClientRpc]
     public void RpcStopHost()
     {
-        ServiceLocator.Get<GameManager>().ThrowError("Vous avez �t� d�connect� du serveur.");
+        ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
     }
 
     public override void OnStopClient()
@@ -81,7 +81,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         base.OnStopClient();
         if (isLocalPlayer)
         {
-            ServiceLocator.Get<GameManager>().ThrowError("Vous avez �t� d�connect� du serveur.");
+            ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
         }
     }
 

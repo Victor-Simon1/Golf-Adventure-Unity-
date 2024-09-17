@@ -215,4 +215,9 @@ public class GameManager : MonoRegistrable
         players[id].RpcSetColor(color);
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
 }
