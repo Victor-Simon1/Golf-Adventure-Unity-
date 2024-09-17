@@ -24,6 +24,7 @@ public class ErrorManager : MonoBehaviour
 
     public void Error(string message)
     {
+        Debug.Log(message);
         text.text = message;
         gameObject.SetActive(true);
     }
