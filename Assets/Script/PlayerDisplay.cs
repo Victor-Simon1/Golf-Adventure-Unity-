@@ -25,7 +25,8 @@ public class PlayerDisplay : MonoBehaviour
         pc = npc;
         pc.SetDisplay(this);
         gameObject.SetActive(true);
-        transform.GetComponentInChildren<Button>().interactable = true;
+        if(npc.isLocalPlayer)
+            transform.GetComponentInChildren<Button>().interactable = true;
     }
 
     public void SetName(string newName)
