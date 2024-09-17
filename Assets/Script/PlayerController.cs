@@ -1,4 +1,5 @@
 using Mirror;
+using Mirror.Examples.Pong;
 using Services;
 using System;
 using System.Collections;
@@ -123,7 +124,11 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         CmdSetColor(color, id);
     }
-
+    [Command]
+    public void PushBall(Vector3 dir,float force)
+    {
+        ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+    }
     [Command]
     public void CmdSetColor(Color color,int id)
     {

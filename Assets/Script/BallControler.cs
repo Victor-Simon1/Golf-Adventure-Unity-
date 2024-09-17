@@ -9,7 +9,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private float scaleForce = 100f;
     [SerializeField] private float force;
     [SerializeField] private float AbsMagn;
-    private Rigidbody rb;
+    [SerializeField] private Rigidbody rb;
     private Vector3 sp;
     private Quaternion sr;
 
@@ -54,7 +54,7 @@ public class BallControler : MonoBehaviour
     {
         sp = transform.position;
         sr = transform.rotation;
-        rb = GetComponent<Rigidbody>();
+       // rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
         //bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
         //bStart.onClick.AddListener(TpStart);
@@ -151,11 +151,12 @@ public class BallControler : MonoBehaviour
         var vec = cam.transform.forward;
         force = sliderForce.value*scaleForce;
         vec = new Vector3(vec.x, 0, vec.z);
-        rb.AddForce(vec * force, ForceMode.Impulse);
+        pc.PushBall(vec, force);
+       // rb.AddForce(vec * force, ForceMode.Impulse);
         //rb.velocity = vec * force;
         moving = true;
     }
-
+   
     public void TpStart()
     {
         rb.velocity = Vector3.zero;
@@ -182,4 +183,31 @@ public class BallControler : MonoBehaviour
         GetComponent<SphereCollider>().excludeLayers = 0;
     }
 
+   /* private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(transform.parent.name+ " collide with " + collision.transform.parent.name);
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            //Debug.Log(transform.parent.name + " : " + rb.velocity );
+            //Debug.Log(collision.transform.parent.name + " : " );
+            //Debug.Log("Normal : " + collision.contacts[0].normal);
+            //Vector3 dir = collision.contacts[0].point - transform.position;
+            //Vector3 forceToChange = rb.velocity ;
+            //Debug.Log("Velocity" + rb.velocity);
+            //  rb.AddForce(-dir.normalized * collision.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.VelocityChange);
+            // Vector3 newVel = (rb.mass * collision.transform.GetComponent<Rigidbody>().velocity)/(rb.mass + collision.transform.GetComponent<Rigidbody>().mass) ;
+            //rb.velocity = Vector3.zero;
+            //collision.transform.GetComponent<Rigidbody>().AddForce(collision.contacts[0].normal*2, ForceMode.VelocityChange);
+            Rigidbody otherRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+            if (otherRigidbody != null)
+            {
+                Vector3 direction = collision.contacts[0].point - transform.position;
+                direction = -direction.normalized;
+                float forceRb = rb.velocity.magnitude;
+                Debug.Log("Speed " + forceRb);
+                otherRigidbody.AddForce(direction * forceRb, ForceMode.Impulse);
+                rb.velocity = Vector3.zero;
+            }
+        }
+    }*/
 }

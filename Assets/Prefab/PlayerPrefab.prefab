@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8826329815462632856}
   - component: {fileID: -3911127702487239908}
   - component: {fileID: 8651431653243201400}
+  - component: {fileID: 5011930699552639365}
   m_Layer: 3
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -68,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
   target: {fileID: 6273080394418404147}
@@ -103,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
   target: {fileID: 2141484749787794759}
@@ -138,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
   target: {fileID: 1814485469030891890}
@@ -192,6 +193,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3751a58b04846da4392744b3a499b1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5011930699552639365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922957054793802191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b20dc110904e47f8a154cdcf6433eae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 1814485469030891890}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  sendIntervalMultiplier: 1
+  timelineOffset: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  changedDetection: 1
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
 --- !u!1 &2280871444263343271
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +247,7 @@ GameObject:
   - component: {fileID: 4257657809144899257}
   m_Layer: 3
   m_Name: GolfBall
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,9 +370,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd019107ef72a3b4b9ce845e3dfaebae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleForce: 100
+  scaleForce: 50
   force: 100
   AbsMagn: 0
+  rb: {fileID: 6544871517458406900}
   offset: {x: 0, y: 0, z: 0}
   cam: {fileID: 2028859925345120222}
   zoomModifierSpeed: 0.1
@@ -345,7 +382,7 @@ MonoBehaviour:
   ballLayer:
     serializedVersion: 2
     m_Bits: 0
-  pc: {fileID: 0}
+  pc: {fileID: -3911127702487239908}
   audioSource: {fileID: 0}
 --- !u!114 &3308073455899982781
 MonoBehaviour:
@@ -386,9 +423,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2280871444263343271}
   serializedVersion: 4
-  m_Mass: 2.5
-  m_Drag: 0
-  m_AngularDrag: 0
+  m_Mass: 1
+  m_Drag: 1
+  m_AngularDrag: 0.3
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
