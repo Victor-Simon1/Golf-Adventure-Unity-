@@ -16,6 +16,7 @@ public class GameManager : MonoRegistrable
 
     [SerializeField] private List<PlayerController> players = new List<PlayerController>();
     [SerializeField] private List<StartBehaviour> starts = new List<StartBehaviour>();
+    [SerializeField] private List<HoleBehavior> holes = new List<HoleBehavior>();
 
     [SerializeField] private NetworkManager networkManager;
 
@@ -24,7 +25,8 @@ public class GameManager : MonoRegistrable
     private string hostIP;
     private string sessionName;
     private bool isHost = false;
-
+    public int actualHole = 0;
+    public int nbPlayerFinishHole = 0;
     public bool inGame;
 
     [SerializeField] private string[] maps;
@@ -136,6 +138,25 @@ public class GameManager : MonoRegistrable
         networkManager.StopClient();
     }
 
+    public void GoNextHole()
+    {
+        int playerFinish = 0;
+        for (int i = 0; i < players.Count; i++)
+            if (players[i] != null)
+                if (players[i].hasFinishHole)
+                    playerFinish++;
+        Debug.Log("Nombre de joueurs ayant fini"+ playerFinish);
+        if (playerFinish != players.Count)
+            return;
+        Debug.Log("Tp vers le prochain trou" + actualHole + 1);
+        if (actualHole == starts.Count)
+        {
+            Debug.Log("Map fini");
+            return;
+        }
+        actualHole++;
+        TpPlayersToLocation(actualHole);
+    }
     private void LaunchGame()
     {
         if(isHost)
@@ -153,10 +174,16 @@ public class GameManager : MonoRegistrable
         starts.Sort();
         if (starts.Count == StartBehaviour.max) TpPlayersToLocation();
     }
-    private void TpPlayersToLocation()
+
+    public void AddHole(HoleBehavior newHole)
     {
-        Debug.Log("Here we go");
-        players.ForEach(p => { p.TpToLocation(starts[0].transform); });
+        holes.Add(newHole);
+        holes.Sort();
+    }
+    private void TpPlayersToLocation(int idStart = 0)
+    {
+        Debug.Log("Here we go : " + idStart);
+        players.ForEach(p => { p.TpToLocation(starts[idStart].transform); });
     }
 
     private string GetLocalIPAddress()

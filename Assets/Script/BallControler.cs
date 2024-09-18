@@ -1,8 +1,6 @@
-using Mirror;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using Services;
 public class BallControler : MonoBehaviour
 {
     [Header("Control")]
@@ -13,7 +11,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     private Vector3 sp;
     private Quaternion sr;
-
+    public bool hasFinishHole = false;
     [SerializeField] private Vector3 offset;
 
     private bool moving;
@@ -96,7 +94,7 @@ public class BallControler : MonoBehaviour
 
 #else
         //Permet de tester l'orientation et le zomm dans le télephone
-        if(!sliderForce.GetComponent<SliderTouch>().isPressed)
+        //if(!sliderForce.GetComponent<SliderTouch>().isPressed)
         {
             if (Input.touchCount == 1)
             {
@@ -148,6 +146,8 @@ public class BallControler : MonoBehaviour
 
     public void Push()
     {
+        if (hasFinishHole)
+            return;
         audioSource.pitch = Random.Range(0.8f, 1.2f);
         audioSource.Play();
         lastPosition = transform.position;
@@ -186,31 +186,15 @@ public class BallControler : MonoBehaviour
         GetComponent<SphereCollider>().excludeLayers = 0;
     }
 
-   /* private void OnCollisionEnter(Collision collision)
+    public void OnTriggerEnter(Collider other)
     {
-        Debug.Log(transform.parent.name+ " collide with " + collision.transform.parent.name);
-        if (collision.gameObject.CompareTag("Player"))
+        Debug.Log("Une balle est rentré :" + pc.GetName());
+        HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
+        if (hole != null)
         {
-            //Debug.Log(transform.parent.name + " : " + rb.velocity );
-            //Debug.Log(collision.transform.parent.name + " : " );
-            //Debug.Log("Normal : " + collision.contacts[0].normal);
-            //Vector3 dir = collision.contacts[0].point - transform.position;
-            //Vector3 forceToChange = rb.velocity ;
-            //Debug.Log("Velocity" + rb.velocity);
-            //  rb.AddForce(-dir.normalized * collision.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.VelocityChange);
-            // Vector3 newVel = (rb.mass * collision.transform.GetComponent<Rigidbody>().velocity)/(rb.mass + collision.transform.GetComponent<Rigidbody>().mass) ;
-            //rb.velocity = Vector3.zero;
-            //collision.transform.GetComponent<Rigidbody>().AddForce(collision.contacts[0].normal*2, ForceMode.VelocityChange);
-            Rigidbody otherRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            if (otherRigidbody != null)
-            {
-                Vector3 direction = collision.contacts[0].point - transform.position;
-                direction = -direction.normalized;
-                float forceRb = rb.velocity.magnitude;
-                Debug.Log("Speed " + forceRb);
-                otherRigidbody.AddForce(direction * forceRb, ForceMode.Impulse);
-                rb.velocity = Vector3.zero;
-            }
+            pc.hasFinishHole = true;
+            ServiceLocator.Get<GameManager>().GoNextHole();
         }
-    }*/
+    }
+
 }

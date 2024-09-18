@@ -15,15 +15,17 @@ public class PlayerController : NetworkBehaviour, IComparable
     /*[Client]
     [ClientRpc]
     [Command]*/
-    public int strokes;
-
+    [SyncVar]
+    public List<int> strokes = new List<int>();
+    [SyncVar]
+    public int actualHole;
     [SyncVar]
     [SerializeField] private string playerName = "Player";
 
     public int id;
 
     [SerializeField] private GameObject ball;
-
+    public bool hasFinishHole = false;
     private PlayerDisplay display;
 
     private Material mat;
@@ -35,12 +37,13 @@ public class PlayerController : NetworkBehaviour, IComparable
         mat.SetFloat("_Metallic", 0f);
 
         ball.GetComponent<Renderer>().material = mat;
+        strokes.Add(0);
     }
 
     [ClientRpc]
     public void RpcAddStroke()
     {
-        strokes++;
+        //strokes++;
     }
 
     [ClientRpc]
@@ -105,6 +108,9 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void TpToLocation(Transform location)
     {
         Debug.Log("tp to " + location.position);
+        ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ball.transform.position = transform.localPosition;
+        ball.transform.rotation = Quaternion.identity;
         transform.position = location.position;
         //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
         SpawnBall();
@@ -128,6 +134,8 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void PushBall(Vector3 dir,float force)
     {
         ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+        strokes[actualHole]++;
+        Debug.Log(playerName + " : " + strokes[actualHole]);
     }
     [Command]
     public void CmdSetColor(Color color,int id)
