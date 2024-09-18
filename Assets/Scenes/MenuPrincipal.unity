@@ -16368,8 +16368,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players: []
   starts: []
+  holes: []
   networkManager: {fileID: 0}
   em: {fileID: 747112140}
+  actualHole: 0
+  nbPlayerFinishHole: 0
   inGame: 0
   maps:
   - CampingForest

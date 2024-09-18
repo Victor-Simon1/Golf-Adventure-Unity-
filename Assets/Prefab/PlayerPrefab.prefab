@@ -177,10 +177,12 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  strokes: 0
+  strokes: 
+  actualHole: 0
   playerName: Player
   id: 0
   ball: {fileID: 2280871444263343271}
+  hasFinishHole: 0
 --- !u!114 &8651431653243201400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +376,7 @@ MonoBehaviour:
   force: 100
   AbsMagn: 0
   rb: {fileID: 6544871517458406900}
+  hasFinishHole: 0
   offset: {x: 0, y: 0, z: 0}
   cam: {fileID: 2028859925345120222}
   zoomModifierSpeed: 0.1
@@ -425,7 +428,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 1
-  m_AngularDrag: 0.3
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
