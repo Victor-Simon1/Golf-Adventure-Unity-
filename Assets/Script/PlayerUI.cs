@@ -1,27 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using Services;
 
 public class PlayerUI : MonoBehaviour
 {
 
-     [SerializeField] private GameObject scoreboard;
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TextMeshProUGUI Title;
+    [SerializeField] private TextMeshProUGUI playerName;
+    [SerializeField] private TextMeshProUGUI strokes;
+
+    private void OnEnable()
     {
-        
+        var gm = ServiceLocator.Get<GameManager>();
+        var pc = gm.GetLocalPlayer();
+        pc.SetPlayerUI(this);
+        Title.text = gm.GetSessionName();
+        playerName.text = pc.GetName();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetStrokes(string strokes)
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
-        {
-            scoreboard.SetActive(true);
-        }
-        else if(Input.GetKeyUp(KeyCode.Tab)) 
-        {
-            scoreboard.SetActive(false);
-        }
+        this.strokes.text = strokes;
+    }
+
+    public void SetName(string newName)
+    {
+        this.playerName.text = newName;
     }
 }

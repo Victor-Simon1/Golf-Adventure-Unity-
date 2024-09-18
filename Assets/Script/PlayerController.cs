@@ -25,6 +25,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SerializeField] private GameObject ball;
 
     private PlayerDisplay display;
+    private PlayerUI playerUI;
 
     private Material mat;
 
@@ -35,6 +36,14 @@ public class PlayerController : NetworkBehaviour, IComparable
         mat.SetFloat("_Metallic", 0f);
 
         ball.GetComponent<Renderer>().material = mat;
+    }
+
+    private void Update()
+    {
+        if(playerUI != null)
+        {
+            playerUI.SetStrokes(strokes.ToString());
+        }
     }
 
     [ClientRpc]
@@ -169,5 +178,10 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void SetDisplay(PlayerDisplay display)
     {
         this.display = display;
+    }
+
+    public void SetPlayerUI(PlayerUI playerUI)
+    {
+        this.playerUI = playerUI;
     }
 }
