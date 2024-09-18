@@ -42,7 +42,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         if(playerUI != null)
         {
-            playerUI.SetStrokes(strokes.ToString());
+            playerUI.SetStrokes(strokes);
         }
     }
 

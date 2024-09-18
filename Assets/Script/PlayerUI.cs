@@ -20,9 +20,9 @@ public class PlayerUI : MonoBehaviour
         playerName.text = pc.GetName();
     }
 
-    public void SetStrokes(string strokes)
+    public void SetStrokes(int strokes)
     {
-        this.strokes.text = strokes;
+        this.strokes.text = "" + strokes;
     }
 
     public void SetName(string newName)
