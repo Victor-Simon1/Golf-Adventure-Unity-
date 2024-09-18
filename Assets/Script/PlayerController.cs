@@ -28,6 +28,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public bool hasFinishHole = false;
     private PlayerDisplay display;
     private PlayerUI playerUI;
+    private PlayerScoreboardItem playerScore;
 
     private Material mat;
 
@@ -46,6 +47,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         if(playerUI != null)
         {
             playerUI.SetStrokes(strokes[actualHole]);
+        }
+        if(playerScore != null)
+        {
+            playerScore.SetSum(GetSumStrokes());
         }
     }
 
@@ -111,6 +116,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     private void PlayerDestroy()
     {
         Destroy(display.gameObject);
+        Destroy(playerScore);
         Destroy(gameObject);
     }
 
@@ -191,5 +197,17 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void SetPlayerUI(PlayerUI playerUI)
     {
         this.playerUI = playerUI;
+    }
+
+    public void SetPlayerScoreboard(PlayerScoreboardItem playerScore)
+    {
+        this.playerScore = playerScore;
+    }
+
+    public int GetSumStrokes()
+    {
+        int sum = 0;
+        strokes.ForEach(s => sum += s) ;
+        return sum;
     }
 }

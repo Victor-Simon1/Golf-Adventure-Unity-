@@ -9,24 +9,18 @@ public class Scoreboard : MonoBehaviour
 
     [SerializeField] Transform playerScoreboardList;
 
-    private void OnEnable()
+    private void Awake()
     {
         //Recupere l'array du server 
-        PlayerController[] players = ServiceLocator.Get<GameManager>().GetAllPlayer(); 
+        List<PlayerController> players = ServiceLocator.Get<GameManager>().GetListPlayer(); 
         //Loop sur l'array et ajout de ligne
         foreach (PlayerController p in players)
         {
-            Debug.Log(p.name + " " + p.strokes);
             GameObject itemGo = Instantiate(playerScoreboardItem,playerScoreboardList);
+            itemGo.SetActive(true);
             PlayerScoreboardItem item = itemGo.GetComponent<PlayerScoreboardItem>();
-            if (item)
+            if (item != null)
                 item.Setup(p);
         }
-    }
-
-    private void OnDisable()
-    {
-        foreach(Transform child in playerScoreboardList)
-            Destroy(child.gameObject);
     }
 }
