@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Net;
 using Services;
 using System;
+using Unity.VisualScripting;
 
 public class GameManager : MonoRegistrable
 {
@@ -148,13 +149,15 @@ public class GameManager : MonoRegistrable
         Debug.Log("Nombre de joueurs ayant fini"+ playerFinish);
         if (playerFinish != players.Count)
             return;
-        Debug.Log("Tp vers le prochain trou" + actualHole + 1);
+        Debug.Log("Tp vers le prochain trou :" + (actualHole + 1));
         if (actualHole == starts.Count)
         {
             Debug.Log("Map fini");
             return;
         }
         actualHole++;
+        players.ForEach(p => { p.strokes.Add(0); });
+        players.ForEach(p => { p.actualHole = actualHole; });
         TpPlayersToLocation(actualHole);
     }
     private void LaunchGame()

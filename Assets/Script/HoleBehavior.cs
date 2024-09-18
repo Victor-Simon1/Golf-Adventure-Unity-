@@ -6,7 +6,7 @@ public class HoleBehavior : MonoBehaviour, IComparable
 {
     public int id;
     public static int max;
-
+    public int maxStrokes = 0;
     private void OnEnable()
     {
         max += 1;
