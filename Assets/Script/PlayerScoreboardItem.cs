@@ -12,9 +12,10 @@ public class PlayerScoreboardItem : MonoBehaviour
 
     public void Setup(PlayerController p)
     {
-        usernameText.text = p.name;
+        usernameText.text = p.GetName();
         strokeText.text = "0";
         p.SetPlayerScoreboard(this);
+        
     }
 
     public void SetSum(int sum)
