@@ -45,7 +45,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         if(playerUI != null)
         {
-            playerUI.SetStrokes(strokes);
+            playerUI.SetStrokes(strokes[actualHole]);
         }
     }
 
