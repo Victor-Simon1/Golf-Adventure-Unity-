@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class BallControler : MonoBehaviour
@@ -90,44 +91,46 @@ public class BallControler : MonoBehaviour
             rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
 
         }
-
-
         var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
         zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
+
 #else
         //Permet de tester l'orientation et le zomm dans le télephone
-        if (Input.touchCount == 1)
+        if(!sliderForce.GetComponent<SliderTouch>().isPressed)
         {
-            touch = Input.GetTouch(0);
-
-            if(touch.phase == TouchPhase.Moved)
+            if (Input.touchCount == 1)
             {
-                var mouseMovement = new Vector2(-touch.deltaPosition.y * 3f, touch.deltaPosition.x * 3f);
-                rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
-                rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+                touch = Input.GetTouch(0);
+
+                if(touch.phase == TouchPhase.Moved)
+                {
+                    var mouseMovement = new Vector2(-touch.deltaPosition.y * 3f, touch.deltaPosition.x * 3f);
+                    rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
+                    rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+                }
             }
-        }
-        else if (Input.touchCount == 2)
-        {
-            //Récuperation des deux entrés
-            Touch firstTouch = Input.GetTouch(0);
-            Touch secondTouch = Input.GetTouch(1);
+            else if (Input.touchCount == 2)
+            {
+                //Récuperation des deux entrés
+                Touch firstTouch = Input.GetTouch(0);
+                Touch secondTouch = Input.GetTouch(1);
 
-            //Calcul des différences(savoir si on zoom/dezoom)
-            firstTouchPrevPos = firstTouch.position - firstTouch.deltaPosition;
-            secondTouchPrevPos = secondTouch.position - secondTouch.deltaPosition;
+                //Calcul des différences(savoir si on zoom/dezoom)
+                firstTouchPrevPos = firstTouch.position - firstTouch.deltaPosition;
+                secondTouchPrevPos = secondTouch.position - secondTouch.deltaPosition;
 
-            touchesPrevPosDifference = (firstTouchPrevPos - secondTouchPrevPos).magnitude;
-			touchesCurPosDifference = (firstTouch.position - secondTouch.position).magnitude;
+                touchesPrevPosDifference = (firstTouchPrevPos - secondTouchPrevPos).magnitude;
+			    touchesCurPosDifference = (firstTouch.position - secondTouch.position).magnitude;
 
-			zoomModifier = (firstTouch.deltaPosition - secondTouch.deltaPosition).magnitude * zoomModifierSpeed;
-            //Application
-			if (touchesPrevPosDifference > touchesCurPosDifference)
-				zoomLevel += zoomModifier;
-			if (touchesPrevPosDifference < touchesCurPosDifference)
-				zoomLevel-= zoomModifier;
+			    zoomModifier = (firstTouch.deltaPosition - secondTouch.deltaPosition).magnitude * zoomModifierSpeed;
+                //Application
+			    if (touchesPrevPosDifference > touchesCurPosDifference)
+				    zoomLevel += zoomModifier;
+			    if (touchesPrevPosDifference < touchesCurPosDifference)
+				    zoomLevel-= zoomModifier;
 
-                zoomLevel = Mathf.Clamp (zoomLevel, 1f, 10f);
+                    zoomLevel = Mathf.Clamp (zoomLevel, 1f, 10f);
+             }
          }
 
 #endif
