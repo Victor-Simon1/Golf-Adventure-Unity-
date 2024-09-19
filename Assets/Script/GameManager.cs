@@ -156,7 +156,7 @@ public class GameManager : MonoRegistrable
             return;
         }
         actualHole++;
-        players.ForEach(p => { p.strokes.Add(0); });
+        //players.ForEach(p => { p.strokes.Add(0); });
         players.ForEach(p => { p.actualHole = actualHole; });
         TpPlayersToLocation(actualHole);
     }
