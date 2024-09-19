@@ -186,7 +186,10 @@ public class GameManager : MonoRegistrable
     private void TpPlayersToLocation(int idStart = 0)
     {
         Debug.Log("Here we go : " + idStart);
-        players.ForEach(p => { p.TpToLocation(starts[idStart].transform); });
+        players.ForEach(p => { 
+            p.TpToLocation(starts[idStart].transform);
+            p.hasFinishHole = false;
+        });
     }
 
     private string GetLocalIPAddress()

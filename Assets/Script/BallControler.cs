@@ -12,6 +12,9 @@ public class BallControler : MonoBehaviour
     private Vector3 sp;
     private Quaternion sr;
     public bool hasFinishHole = false;
+
+    [SerializeField] private bool isOutOfLimit = false;
+
     [SerializeField] private Vector3 offset;
 
     private bool moving;
@@ -148,18 +151,21 @@ public class BallControler : MonoBehaviour
     {
         if (hasFinishHole)
             return;
-        audioSource.pitch = Random.Range(0.8f, 1.2f);
-        audioSource.Play();
+        DoSound();
         lastPosition = transform.position;
         var vec = cam.transform.forward;
         force = sliderForce.value*scaleForce;
         vec = new Vector3(vec.x, 0, vec.z);
+        //pc.strokes[pc.actualHole]++;
+        //Debug.Log(pc.GetName()+ " : " + pc.strokes[pc.actualHole]);
         pc.PushBall(vec, force);
-       // rb.AddForce(vec * force, ForceMode.Impulse);
-        //rb.velocity = vec * force;
         moving = true;
     }
-   
+    private void DoSound()
+    {
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
+        audioSource.Play();
+    }
     public void TpStart()
     {
         rb.velocity = Vector3.zero;
@@ -174,6 +180,12 @@ public class BallControler : MonoBehaviour
         Debug.Log("Ball stopped");
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        if(isOutOfLimit) 
+        {
+            Debug.Log("En dehors des limites... Tps vers la dernieres positions");
+            pc.TpToLocation(lastPosition);
+            isOutOfLimit = false;
+        }
     }
 
     public void IgnoreBalls()
@@ -186,6 +198,13 @@ public class BallControler : MonoBehaviour
         GetComponent<SphereCollider>().excludeLayers = 0;
     }
 
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Ground"))
+        {
+            isOutOfLimit = true;
+        }
+    }
     public void OnTriggerEnter(Collider other)
     {
         Debug.Log("Une balle est rentré :" + pc.GetName());
@@ -195,6 +214,7 @@ public class BallControler : MonoBehaviour
             pc.hasFinishHole = true;
             ServiceLocator.Get<GameManager>().GoNextHole();
         }
+     
     }
 
 }
