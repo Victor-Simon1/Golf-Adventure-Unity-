@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Mirror;
 using Mirror.Examples.Pong;
 using Services;
@@ -15,9 +16,9 @@ public class PlayerController : NetworkBehaviour, IComparable
     /*[Client]
     [ClientRpc]
     [Command]*/
-    [SyncVar]
-    public List<int> strokes = new List<int>();
-    public int actualHole;
+   // [SyncVar]
+    [SerializeField] public List<int> strokes = new List<int>();
+    [SyncVar] public int actualHole;
     [SyncVar]
     [SerializeField] private string playerName = "Player";
 
@@ -37,8 +38,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         mat.SetFloat("_Glossiness", .8f);
         mat.SetFloat("_Metallic", 0f);
 
+
         ball.GetComponent<Renderer>().material = mat;
-        strokes.Add(0);
+
+        InitStrokes();
     }
 
     private void Update()
@@ -52,11 +55,20 @@ public class PlayerController : NetworkBehaviour, IComparable
             playerScore.SetSum(GetSumStrokes());
         }
     }
-
+    //[Command]
+    void InitStrokes()
+    {
+        
+        for(int i = 0; i < 18; i++)
+        {
+            strokes.Add(0);
+        }
+    }
+  
     [ClientRpc]
     public void RpcAddStroke()
     {
-        //strokes++;
+        strokes[actualHole]++;
     }
 
     [ClientRpc]
@@ -131,7 +143,15 @@ public class PlayerController : NetworkBehaviour, IComparable
         //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
         SpawnBall();
     }
-
+    public void TpToLocation(Vector3 location)
+    {
+        ball.GetComponent<Rigidbody>().freezeRotation = true;
+        ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ball.transform.position = transform.localPosition;
+        ball.transform.rotation = Quaternion.identity;
+        transform.position = location;
+        ball.GetComponent<Rigidbody>().freezeRotation = false;
+    }
     public void SpawnBall()
     {
         ball.SetActive(true);
@@ -150,8 +170,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void PushBall(Vector3 dir,float force)
     {
         ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
-        strokes[actualHole]++;
-        Debug.Log(playerName + " : " + strokes[actualHole]);
+        RpcAddStroke();
     }
     [Command]
     public void CmdSetColor(Color color,int id)
@@ -210,5 +229,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         int sum = 0;
         strokes.ForEach(s => sum += s) ;
         return sum;
+    }
+
+    public GameObject GetBall()
+    {
+        return ball;
     }
 }
