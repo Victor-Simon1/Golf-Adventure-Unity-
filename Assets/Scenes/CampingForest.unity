@@ -1423,7 +1423,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 415911814}
-  - component: {fileID: 415911817}
   - component: {fileID: 415911815}
   m_Layer: 0
   m_Name: Cube (2)
@@ -1468,14 +1467,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &415911817
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 415911813}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &439954722 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5989963592811166396, guid: 49a222b06343c1b478e144dd7d8890a6,
@@ -3183,7 +3174,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -3193,7 +3184,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
-  m_ShadowAngle: 0
+  m_ShadowAngle: 20
 --- !u!4 &705507995
 Transform:
   m_ObjectHideFlags: 0
@@ -3218,7 +3209,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 714339263}
-  - component: {fileID: 714339266}
   - component: {fileID: 714339264}
   m_Layer: 0
   m_Name: Cube
@@ -3263,14 +3253,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &714339266
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 714339262}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &722336933
 GameObject:
   m_ObjectHideFlags: 0
@@ -3825,7 +3807,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 200
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -3852,13 +3834,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.2781668, y: 0.25597924, z: -0.07705756, w: 0.9225834}
+  m_LocalPosition: {x: 27.22779, y: 42.225414, z: -33.47779}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1488211690}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 35.963, z: 0}
 --- !u!1001 &985744114
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5643,7 +5625,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1444428279}
-  - component: {fileID: 1444428282}
   - component: {fileID: 1444428280}
   m_Layer: 0
   m_Name: Cube (3)
@@ -5688,14 +5669,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &1444428282
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444428278}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1445704802 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5660657151126133106, guid: 49a222b06343c1b478e144dd7d8890a6,
@@ -5934,7 +5907,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1490101359}
-  - component: {fileID: 1490101362}
   - component: {fileID: 1490101360}
   m_Layer: 0
   m_Name: Cube (1)
@@ -5979,14 +5951,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &1490101362
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1490101358}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1505618721 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1434106622943472934, guid: 49a222b06343c1b478e144dd7d8890a6,
