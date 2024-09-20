@@ -5510,6 +5510,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 49db3522e234af24384acc0e77890364, type: 2}
+    - target: {fileID: -1283763024406839385, guid: 9995f9f3f522a0f4daa17d3b2b84a825,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 49db3522e234af24384acc0e77890364, type: 2}
     - target: {fileID: 919132149155446097, guid: 9995f9f3f522a0f4daa17d3b2b84a825,
         type: 3}
       propertyPath: m_Name
@@ -8824,6 +8829,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4636840233377163946, guid: cd48909c1a6330c4a823cbccece114a0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 49db3522e234af24384acc0e77890364, type: 2}
     - target: {fileID: -4007646332340414245, guid: cd48909c1a6330c4a823cbccece114a0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -8844,6 +8854,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trou5
       objectReference: {fileID: 0}
+    - target: {fileID: 6983509377319408887, guid: cd48909c1a6330c4a823cbccece114a0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 49db3522e234af24384acc0e77890364, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
