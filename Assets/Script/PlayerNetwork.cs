@@ -32,11 +32,11 @@ public class PlayerNetwork : NetworkBehaviour
         joinManager = ServiceLocator.Get<JoinManager>();
 
         joinManager.Connected();
-        netID = (int) transform.parent.GetComponent<NetworkIdentity>().netId;
+        netID = (int) transform.parent.parent.GetComponent<NetworkIdentity>().netId;
 
         transform.parent.name = "Player " + netId;
 
-        PlayerController player = transform.parent.GetComponent<PlayerController>();
+        PlayerController player = transform.parent.parent.GetComponent<PlayerController>();
 
         player.id = netID - 1;
 

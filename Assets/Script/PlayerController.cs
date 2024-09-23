@@ -27,7 +27,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SerializeField] private GameObject ball;
     public bool hasFinishHole = false;
     private PlayerDisplay display;
-    private PlayerUI playerUI;
+    [SerializeField] private PlayerUI playerUI;
     private PlayerScoreboardItem playerScore;
 
     private Material mat;

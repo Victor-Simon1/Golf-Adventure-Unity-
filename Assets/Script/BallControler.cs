@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Services;
+using TMPro;
 public class BallControler : MonoBehaviour
 {
     [Header("Control")]
@@ -51,6 +52,16 @@ public class BallControler : MonoBehaviour
     [SerializeField] private PlayerController pc;
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
+
+    [Header("Slope")]
+    public Transform rearRayPos;
+    public Transform frontRayPos;
+    public LayerMask layerMask;
+
+    public float surfaceAngle;
+    public bool uphill;
+    public bool flatSurface;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,21 +71,31 @@ public class BallControler : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         //bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
         //bStart.onClick.AddListener(TpStart);
+        var temp = GameObject.Find("ButtonPush");
+        if (temp == null)
+            Debug.LogError("Error the variable temp is not assigned");
 
-        bPush = GameObject.Find("ButtonPush").GetComponent<Button>();
+        bPush = temp.GetComponent<Button>();
+        if (bPush == null)
+            Debug.LogError("Error the variable bPush is not assigned");
         bPush.onClick.AddListener(Push);
 
         sliderForce = GameObject.Find("SliderForce").GetComponent <Slider>();
-
-        cam = transform.parent.GetChild(0).GetComponent<Camera>();
+        if (sliderForce == null)
+            Debug.LogError("Error the variable sliderForce is not assigned");
+        cam = transform.parent.parent.GetChild(0).GetComponent<Camera>();
+        if (cam == null)
+            Debug.LogError("Error the variable cam is not assigned");
     }
 
     // Update is called once per frame
     void Update()
     {
 
+       
+        //Speed
         AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
-
+       
         if(!magnHasChanged && AbsMagn > 0.1) 
             magnHasChanged = true;
         if(magnHasChanged && AbsMagn == 0) 
@@ -137,7 +158,67 @@ public class BallControler : MonoBehaviour
 #endif
         var curRotation = Quaternion.Euler(rotationValues);
         var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
-        cam.transform.SetPositionAndRotation(lookPosition, curRotation);
+        if (cam)
+            cam.transform.SetPositionAndRotation(lookPosition, curRotation);
+
+        //Detecting slope
+        float camX = cam.transform.forward.x/7f;
+        float camZ = cam.transform.forward.z/7f;
+        //Debug.Log(camX + " : " + camZ);
+        frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
+        rearRayPos.position= transform.position + new Vector3(- camX, 0, -camZ);
+        //rearRayPos.rotation = Quaternion.Euler(-cam.transform.rotation.x, 0f, 0f);
+        //frontRayPos.rotation = Quaternion.Euler(-cam.transform.rotation.x, 0f, 0f);
+        if(moving)
+        {
+            RaycastHit rearHit;
+            if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
+            {
+                //Debug.DrawRay(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up) * rearHit.distance, Color.yellow);
+                surfaceAngle = Vector3.Angle(rearHit.normal, Vector3.up);
+                /// Debug.Log(surfaceAngle);
+            }
+            else
+            {
+                //Debug.DrawRay(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up) * 1000, Color.red);
+                uphill = false;
+                flatSurface = false;
+                //Debug.Log("Downhill1");
+            }
+
+            RaycastHit frontHit;
+            Vector3 frontRayStartPos = new Vector3(frontRayPos.position.x, frontRayPos.position.y, frontRayPos.position.z);
+            if (Physics.Raycast(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up), out frontHit, 1f, layerMask))
+            {
+               // Debug.DrawRay(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up) * rearHit.distance, Color.yellow);
+            }
+            else
+            {
+                //Debug.DrawRay(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up) * 1000, Color.red);
+                uphill = true;
+                flatSurface = false;
+                //Debug.Log("Uphill1");
+            }
+           // Debug.Log(frontHit.distance + " : " + rearHit.distance);
+            if(Mathf.Abs(rearHit.distance - frontHit.distance) < 0.02f)
+            {
+                flatSurface = true;
+                uphill = false;//  Debug.LogWarning("Surface");
+            }
+            else if (frontHit.distance < rearHit.distance)
+            {
+                uphill = true;
+                flatSurface = false;
+                //Debug.Log("Uphill2");
+            }
+            else if (frontHit.distance > rearHit.distance)
+            {
+                uphill = false;
+                flatSurface = false;
+               // Debug.Log("Downhill2");
+            }
+       }
+       
     }
 
     private void OnEnable()
@@ -155,7 +236,13 @@ public class BallControler : MonoBehaviour
         lastPosition = transform.position;
         var vec = cam.transform.forward;
         force = sliderForce.value*scaleForce;
-        vec = new Vector3(vec.x, 0, vec.z);
+        float sensY = rb.velocity.normalized.y;
+        if(uphill)
+            sensY = Mathf.Abs(sensY);
+        if (flatSurface)
+            sensY = 0f;
+        Debug.Log("Je pousse de :" + sensY);
+        vec = new Vector3(vec.x, sensY, vec.z);
         //pc.strokes[pc.actualHole]++;
         //Debug.Log(pc.GetName()+ " : " + pc.strokes[pc.actualHole]);
         pc.PushBall(vec, force);

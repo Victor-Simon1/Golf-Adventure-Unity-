@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.007046886, g: 0.035367783, b: 0.097079724, a: 0.1}
+  m_IndirectSpecularColor: {r: 0.007059414, g: 0.035376534, b: 0.09707824, a: 0.1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -607,6 +607,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 551d56903605edc438be5e046c25f81f, type: 2}
+    - target: {fileID: -4717364873722405314, guid: 10daff00197f92045972fbdee8274bfc,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -3286672406097446742, guid: 10daff00197f92045972fbdee8274bfc,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -632,6 +637,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 49db3522e234af24384acc0e77890364, type: 2}
+    - target: {fileID: 4934158210875164535, guid: 10daff00197f92045972fbdee8274bfc,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1829,6 +1839,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 551d56903605edc438be5e046c25f81f, type: 2}
+    - target: {fileID: -4717364873722405314, guid: ff9d9fdbacc79ff4c8e0bbf5417802aa,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -3286672406097446742, guid: ff9d9fdbacc79ff4c8e0bbf5417802aa,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1854,6 +1869,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 49db3522e234af24384acc0e77890364, type: 2}
+    - target: {fileID: 4934158210875164535, guid: ff9d9fdbacc79ff4c8e0bbf5417802aa,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3919,6 +3939,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trou8
       objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: 7e0a775a8c3f917489a7d04d50266421,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4852,6 +4877,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Trou2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: 9995f9f3f522a0f4daa17d3b2b84a825,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6720,6 +6750,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trou6
       objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: 5d542556bf562f64ea3785878d7a9521,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7126,6 +7161,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trou3
       objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: 83e97280e85c94e47b7b3c224a98482a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7442,6 +7482,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trou1
       objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: d01ba1b7f9ce8e94691bdc508c239298,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7628,6 +7673,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trou5
       objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: cd48909c1a6330c4a823cbccece114a0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6983509377319408887, guid: cd48909c1a6330c4a823cbccece114a0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -7680,37 +7730,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5286541931224594320, guid: df5de10c64b99454f9e586a887d9e9c0, type: 3}
---- !u!1 &1939701953
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1939701954}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1939701954
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1939701953}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 31.350006, y: 9.59321, z: -3.6917393}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1971716401 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2339100516897051069, guid: 49a222b06343c1b478e144dd7d8890a6,
@@ -7872,6 +7891,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Trou9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: 05581bf4849c72646a8d5ee5463f14b9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8132,6 +8156,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Trou4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752241548726016364, guid: b79a8c32f80be324d866e462aa5e42e0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8437,4 +8466,3 @@ SceneRoots:
   - {fileID: 476578834}
   - {fileID: 1774608933}
   - {fileID: 884644960}
-  - {fileID: 1939701954}

@@ -175,7 +175,8 @@ public class GameManager : MonoRegistrable
     {
         starts.Add(newStart);
         starts.Sort();
-        if (starts.Count == StartBehaviour.max) TpPlayersToLocation();
+        if (starts.Count == StartBehaviour.max) 
+            TpPlayersToLocation();
     }
 
     public void AddHole(HoleBehavior newHole)
