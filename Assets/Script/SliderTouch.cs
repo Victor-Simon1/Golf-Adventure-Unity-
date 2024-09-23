@@ -4,23 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class SliderTouch : MonoBehaviour,IPointerDownHandler
+public class SliderTouch : MonoBehaviour,IPointerDownHandler, IPointerUpHandler
 {
 
     public bool isPressed;
 
- 
-    public void IsPressed()
-    {
-        isPressed = true;
-    }
-    public void IsUnPressed()
-    {
-        isPressed=false;
-    }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         isPressed = true;
+    }
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isPressed = false;
     }
 }
