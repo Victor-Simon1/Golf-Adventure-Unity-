@@ -34,7 +34,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     private void Start()
     {
-        mat = new Material(Shader.Find("Standard"));
+        mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
         mat.SetFloat("_Glossiness", .8f);
         mat.SetFloat("_Metallic", 0f);
 
@@ -186,7 +186,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void RpcSetColor(Color color)
     {
         display.SetColor(color);
-        mat.color = color;
+        mat.SetColor("_BaseColor", color);
     }
 
     public void SetName(string newName)

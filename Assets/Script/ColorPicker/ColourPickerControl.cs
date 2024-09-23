@@ -72,7 +72,7 @@ public class ColourPickerControl : MonoBehaviour
     {
         Color currentColor = Color.HSVToRGB(currentHue, currentSat, currentVal);
 
-        changeThisColor.material.SetColor("_Color", currentColor);
+        changeThisColor.material.SetColor("_BaseColor", currentColor);
         finalColor = currentColor;
     }
 

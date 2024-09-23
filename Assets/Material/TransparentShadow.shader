@@ -2,101 +2,98 @@ Shader "Custom/TransparentShadow"
 {
     Properties
     {
-        _ShadowColor("Shadow Color", Color) = (0.2, 0.2, 0.2, 0.8)
+        _ShadowColor("Shadow Color", Color) = (0.35,0.4,0.45,1.0)
     }
-
-        CGINCLUDE
-
-#include "UnityCG.cginc"
-#include "AutoLight.cginc"
-
-        struct v2f
-    {
-        float4 pos : SV_POSITION;
-        float3 worldPos : TEXCOORD0;
-        UNITY_LIGHTING_COORDS(1, 2)
-    };
-
-    fixed4 _ShadowColor;
-
-    v2f vert(appdata_full v)
-    {
-        v2f o;
-        o.pos = UnityObjectToClipPos(v.vertex);
-        o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-        UNITY_TRANSFER_LIGHTING(o, v.texcoord1);
-        return o;
-    }
-
-    fixed4 frag(v2f i) : SV_Target
-    {
-
-        float atten = 1 - UNITY_SHADOW_ATTENUATION(i, i.worldPos);
-        return fixed4(_ShadowColor.rgb, _ShadowColor.a * atten);
-    }
-
-        ENDCG
-
 
         SubShader
     {
-        Tags{ "Queue" = "Geometry" }
-            Pass
+        Tags
         {
-            ColorMask 0
-            ZWrite on
-            CGPROGRAM
-            #pragma vertex vert_no
-            #pragma fragment frag_no
-
-            struct v2f_no {
-                float4 pos : SV_POSITION;
-            };
-
-            v2f_no vert_no(appdata_full v)
-            {
-                v2f_no o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                return o;
-            }
-
-            fixed4 frag_no(v2f_no i) : SV_Target
-            {
-                return fixed4(0,0,0,0);
-            }
-
-            ENDCG
+            "RenderPipeline" = "UniversalPipeline"
+            "RenderType" = "Transparent"
+            "Queue" = "Transparent-1"
         }
 
+        Pass
+        {
+            Name "ForwardLit"
+            Tags { "LightMode" = "UniversalForward" }
 
-            // directional light (only one)
-                Pass
+            Blend DstColor Zero, Zero One
+            Cull Back
+            ZTest LEqual
+            ZWrite Off
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
+            #pragma target 2.0
+
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _SHADOWS_SOFT
+            #pragma multi_compile_fog
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+            CBUFFER_START(UnityPerMaterial)
+            float4 _ShadowColor;
+            CBUFFER_END
+
+            struct Attributes
             {
-                Tags { "Queue" = "Transparent" "LightMode" = "ForwardBase" }
-                Blend SrcAlpha OneMinusSrcAlpha
-                ZWrite off
+                float4 positionOS : POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
 
-                CGPROGRAM
-                #pragma vertex vert
-                #pragma fragment frag
-                #pragma multi_compile_fwdbase
-                ENDCG
+            struct Varyings
+            {
+                float4 positionCS               : SV_POSITION;
+                float3 positionWS               : TEXCOORD0;
+                float fogCoord : TEXCOORD1;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output = (Varyings)0;
+
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_TRANSFER_INSTANCE_ID(input, output);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
+                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+                output.positionCS = vertexInput.positionCS;
+                output.positionWS = vertexInput.positionWS;
+                output.fogCoord = ComputeFogFactor(vertexInput.positionCS.z);
+
+                return output;
             }
 
-                // other lights (point lights, spot lights ...etc)
-                pass
+            half4 frag(Varyings input) : SV_Target
             {
-                Tags{ "Queue" = "Transparent" "LightMode" = "ForwardAdd" }
-                    Blend SrcAlpha OneMinusSrcAlpha
-                    ZWrite off
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                    CGPROGRAM
-#pragma vertex vert
-#pragma fragment frag
-#pragma multi_compile_fwdadd_fullshadows
-                    ENDCG
+                half4 color = half4(1,1,1,1);
+
+            #ifdef _MAIN_LIGHT_SHADOWS
+                VertexPositionInputs vertexInput = (VertexPositionInputs)0;
+                vertexInput.positionWS = input.positionWS;
+
+                float4 shadowCoord = GetShadowCoord(vertexInput);
+                half shadowAttenutation = MainLightRealtimeShadow(shadowCoord);
+                color = lerp(half4(1,1,1,1), _ShadowColor, (1.0 - shadowAttenutation) * _ShadowColor.a);
+                color.rgb = MixFogColor(color.rgb, half3(1,1,1), input.fogCoord);
+            #endif
+                return color;
             }
+
+            ENDHLSL
+        }
     }
-
-    Fallback "VertexLit"
 }
