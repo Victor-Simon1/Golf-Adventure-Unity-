@@ -42,6 +42,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private Button bPush;
     [Header("Slider")]
     [SerializeField] private Slider sliderForce;
+    [SerializeField] private SliderTouch sliderTouch;
     [Header("Gameplay")]
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
     private bool endFirstPut;//Pour remettre les collisions entre les balles
@@ -80,9 +81,14 @@ public class BallControler : MonoBehaviour
             Debug.LogError("Error the variable bPush is not assigned");
         bPush.onClick.AddListener(Push);
 
-        sliderForce = GameObject.Find("SliderForce").GetComponent <Slider>();
+        sliderForce = GameObject.Find("SliderForce").GetComponent<Slider>();
         if (sliderForce == null)
             Debug.LogError("Error the variable sliderForce is not assigned");
+
+        sliderTouch = GameObject.Find("SliderForce").GetComponent<SliderTouch>();
+        if (sliderTouch == null)
+            Debug.LogError("Error the variable sliderTouch is not assigned");
+
         cam = transform.parent.parent.GetChild(0).GetComponent<Camera>();
         if (cam == null)
             Debug.LogError("Error the variable cam is not assigned");
@@ -91,8 +97,6 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-       
         //Speed
         AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
        
@@ -103,7 +107,7 @@ public class BallControler : MonoBehaviour
 
         if (moving && magnHasChanged && AbsMagn < limitForce) 
             Stopped();
-
+        Debug.Log("Slider pressed : " + sliderTouch.isPressed/*.GetComponent<SliderTouch>().isPressed*/);
 #if UNITY_EDITOR
         //Permet de tester l'orientation et le zomm dans l'éditeur
         if (Input.GetMouseButton(1))
@@ -118,7 +122,7 @@ public class BallControler : MonoBehaviour
 
 #else
         //Permet de tester l'orientation et le zomm dans le télephone
-        //if(!sliderForce.GetComponent<SliderTouch>().isPressed)
+        if(!sliderTouch.isPressed)
         {
             if (Input.touchCount == 1)
             {
@@ -164,12 +168,9 @@ public class BallControler : MonoBehaviour
         //Detecting slope
         float camX = cam.transform.forward.x/7f;
         float camZ = cam.transform.forward.z/7f;
-        //Debug.Log(camX + " : " + camZ);
+
         frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
-        rearRayPos.position= transform.position + new Vector3(- camX, 0, -camZ);
-        //rearRayPos.rotation = Quaternion.Euler(-cam.transform.rotation.x, 0f, 0f);
-        //frontRayPos.rotation = Quaternion.Euler(-cam.transform.rotation.x, 0f, 0f);
-        if(moving)
+        rearRayPos.position= transform.position + new Vector3(-camX, 0, -camZ);
         {
             RaycastHit rearHit;
             if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
