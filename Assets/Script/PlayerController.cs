@@ -64,7 +64,11 @@ public class PlayerController : NetworkBehaviour, IComparable
             strokes.Add(0);
         }
     }
-  
+    public int GetActualStrokes()
+    {
+        return strokes[actualHole];
+
+    }
     [ClientRpc]
     public void RpcAddStroke()
     {
