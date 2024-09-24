@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Services;
 using TMPro;
+using System.Collections;
 public class BallControler : MonoBehaviour
 {
     [Header("Control")]
@@ -53,7 +54,8 @@ public class BallControler : MonoBehaviour
     [SerializeField] private PlayerController pc;
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
-
+    [Header("UI")]
+    [SerializeField] private GameObject resultHoleText;
     [Header("Slope")]
     public Transform rearRayPos;
     public Transform frontRayPos;
@@ -92,6 +94,11 @@ public class BallControler : MonoBehaviour
         cam = transform.parent.parent.GetChild(0).GetComponent<Camera>();
         if (cam == null)
             Debug.LogError("Error the variable cam is not assigned");
+
+        resultHoleText = GameObject.Find("ResultHole").transform.GetChild(0).gameObject;
+        if (resultHoleText == null)
+            Debug.LogError("Error the variable resultHoleText is not assigned");
+
     }
 
     // Update is called once per frame
@@ -300,9 +307,42 @@ public class BallControler : MonoBehaviour
         if (hole != null)
         {
             pc.hasFinishHole = true;
+            StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(),hole.maxStrokes));
             ServiceLocator.Get<GameManager>().GoNextHole();
         }
      
+    }
+    private string GetTextResultHole(int actualStrokes, int maxStrokes)
+    {
+        int result = actualStrokes- maxStrokes;
+
+        if (actualStrokes == 1)
+           return "HOLE IN ONE";
+        else if (result == -4)
+            return "CONDOR";
+        else if (result == -3)
+            return "ALBATROS";
+        else if (result == -2)
+            return "EAGLE";
+        else if (result == -1)
+            return "BIRDIE";
+        else if (result == 0)
+            return "PAR";
+        else if (result == 1)
+            return "BOGEY";
+        else if (result == 2)
+            return "DOUBLE BOGEY";
+        else
+            return "X BOGEY";
+    }
+    private IEnumerator CouroutineShowResultHole(int actualStrokes,int maxStrokes)
+    {
+        yield return null;
+        string result = GetTextResultHole(actualStrokes, maxStrokes);
+        resultHoleText.GetComponent<TextMeshProUGUI>().text = result;
+        resultHoleText.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        resultHoleText.SetActive(false);
     }
 
 }
