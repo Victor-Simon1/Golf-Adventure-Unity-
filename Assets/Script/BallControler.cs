@@ -251,8 +251,6 @@ public class BallControler : MonoBehaviour
             sensY = 0f;
         Debug.Log("Je pousse de :" + sensY);
         vec = new Vector3(vec.x, sensY, vec.z);
-        //pc.strokes[pc.actualHole]++;
-        //Debug.Log(pc.GetName()+ " : " + pc.strokes[pc.actualHole]);
         pc.PushBall(vec, force);
         moving = true;
     }

@@ -467,11 +467,13 @@ MonoBehaviour:
   zoomModifierSpeed: 0.1
   bPush: {fileID: 0}
   sliderForce: {fileID: 0}
+  sliderTouch: {fileID: 0}
   ballLayer:
     serializedVersion: 2
     m_Bits: 0
   pc: {fileID: -3911127702487239908}
   audioSource: {fileID: 0}
+  resultHoleText: {fileID: 0}
   rearRayPos: {fileID: 4625549186324499230}
   frontRayPos: {fileID: 949351933684107696}
   layerMask:
@@ -550,7 +552,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 17cf9d605cf8d754e9f738bfda6b5bc6, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.53
+  m_Volume: 0.05
   m_Pitch: 1
   Loop: 0
   Mute: 0
