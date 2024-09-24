@@ -341,6 +341,7 @@ public class BallControler : MonoBehaviour
         string result = GetTextResultHole(actualStrokes, maxStrokes);
         resultHoleText.GetComponent<TextMeshProUGUI>().text = result;
         resultHoleText.SetActive(true);
+        resultHoleText.GetComponent<Animator>().Play("New Animation");
         yield return new WaitForSeconds(1f);
         resultHoleText.SetActive(false);
     }
