@@ -48,6 +48,7 @@ public class BallControler : MonoBehaviour
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
     private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
+    [SerializeField] private float timeOutLimit = 0f;
     [Header("Movement")]
     private float limitForce = 0.5f;
 
@@ -106,6 +107,12 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isOutOfLimit)
+            timeOutLimit += Time.deltaTime;
+        if(timeOutLimit>5f)
+        {
+            TpToLastLocation();
+        }
         //Speed
         AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
        
@@ -240,7 +247,7 @@ public class BallControler : MonoBehaviour
 
     public void Push()
     {
-        if (hasFinishHole)
+        if (hasFinishHole || isOutOfLimit)
             return;
         DoSound();
         lastPosition = transform.position;
@@ -277,12 +284,17 @@ public class BallControler : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         if(isOutOfLimit) 
         {
-            Debug.Log("En dehors des limites... Tps vers la dernieres positions");
-            pc.TpToLocation(lastPosition);
-            isOutOfLimit = false;
+            TpToLastLocation();
         }
     }
 
+    private void TpToLastLocation()
+    {
+        Debug.Log("En dehors des limites... Tps vers la dernieres positions");
+        pc.TpToLocation(lastPosition);
+        isOutOfLimit = false;
+        timeOutLimit = 0f;
+    }
     public void IgnoreBalls()
     {
         GetComponent<SphereCollider>().excludeLayers = 3;
