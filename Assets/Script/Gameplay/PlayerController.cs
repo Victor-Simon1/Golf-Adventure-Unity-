@@ -217,7 +217,10 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         this.display = display;
     }
-
+    public PlayerUI GetPlayerUI()
+    {
+        return playerUI;
+    }
     public void SetPlayerUI(PlayerUI playerUI)
     {
         this.playerUI = playerUI;

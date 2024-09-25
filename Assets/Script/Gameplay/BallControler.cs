@@ -48,12 +48,15 @@ public class BallControler : MonoBehaviour
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
     private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
+    [SerializeField] private float timeOutLimit = 0f;
     [Header("Movement")]
     private float limitForce = 0.5f;
 
     [SerializeField] private PlayerController pc;
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource goodHoleSound;
+    [SerializeField] private AudioSource badHoleSound;
     [Header("UI")]
     [SerializeField] private GameObject resultHoleText;
     [Header("Slope")]
@@ -71,7 +74,7 @@ public class BallControler : MonoBehaviour
         sp = transform.position;
         sr = transform.rotation;
        // rb = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
         //bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
         //bStart.onClick.AddListener(TpStart);
         var temp = GameObject.Find("ButtonPush");
@@ -104,6 +107,12 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isOutOfLimit)
+            timeOutLimit += Time.deltaTime;
+        if(timeOutLimit>5f)
+        {
+            TpToLastLocation();
+        }
         //Speed
         AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
        
@@ -238,7 +247,7 @@ public class BallControler : MonoBehaviour
 
     public void Push()
     {
-        if (hasFinishHole)
+        if (hasFinishHole || isOutOfLimit)
             return;
         DoSound();
         lastPosition = transform.position;
@@ -275,12 +284,17 @@ public class BallControler : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         if(isOutOfLimit) 
         {
-            Debug.Log("En dehors des limites... Tps vers la dernieres positions");
-            pc.TpToLocation(lastPosition);
-            isOutOfLimit = false;
+            TpToLastLocation();
         }
     }
 
+    private void TpToLastLocation()
+    {
+        Debug.Log("En dehors des limites... Tps vers la dernieres positions");
+        pc.TpToLocation(lastPosition);
+        isOutOfLimit = false;
+        timeOutLimit = 0f;
+    }
     public void IgnoreBalls()
     {
         GetComponent<SphereCollider>().excludeLayers = 3;
@@ -304,9 +318,10 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
+            goodHoleSound.Play();
             pc.hasFinishHole = true;
             StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(),hole.maxStrokes));
-            ServiceLocator.Get<GameManager>().GoNextHole();
+            StartCoroutine(ServiceLocator.Get<GameManager>().GoNextHole());
         }
      
     }

@@ -16,6 +16,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private GameObject arrows;
 
     private PlayerController player;
+    [SerializeField] private VictoryPopup scoreboard;
 
     private void OnEnable()
     {
@@ -108,5 +109,9 @@ public class PlayerUI : MonoBehaviour
     public void SetName(string newName)
     {
         this.playerName.text = newName;
+    }
+    public VictoryPopup GetScoreboard()
+    {
+        return scoreboard;
     }
 }
