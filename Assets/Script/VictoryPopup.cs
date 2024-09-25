@@ -24,11 +24,11 @@ public class VictoryPopup : MonoBehaviour
         text.text = str;
     }
 
-    public void Pop()
+    public void Pop(float _duration = 2f)
     {
         Vector3 startPosition = GetComponent<RectTransform>().position;
         Vector3 endPosition;
-    
+        duration = _duration;
         if (isRetracted)
         {
             text.text = "<";

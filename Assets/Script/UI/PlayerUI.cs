@@ -11,6 +11,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerName;
     [SerializeField] private TextMeshProUGUI strokes;
 
+    [SerializeField] private VictoryPopup scoreboard;
+
     private void OnEnable()
     {
         var gm = ServiceLocator.Get<GameManager>();
@@ -28,5 +30,9 @@ public class PlayerUI : MonoBehaviour
     public void SetName(string newName)
     {
         this.playerName.text = newName;
+    }
+    public VictoryPopup GetScoreboard()
+    {
+        return scoreboard;
     }
 }

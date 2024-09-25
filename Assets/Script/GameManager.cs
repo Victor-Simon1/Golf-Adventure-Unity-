@@ -139,7 +139,7 @@ public class GameManager : MonoRegistrable
         networkManager.StopClient();
     }
 
-    public void GoNextHole()
+    public /*void*/IEnumerator GoNextHole()
     {
         int playerFinish = 0;
         for (int i = 0; i < players.Count; i++)
@@ -148,17 +148,33 @@ public class GameManager : MonoRegistrable
                     playerFinish++;
         Debug.Log("Nombre de joueurs ayant fini"+ playerFinish);
         if (playerFinish != players.Count)
-            return;
-        Debug.Log("Tp vers le prochain trou :" + (actualHole + 1));
-        if (actualHole == starts.Count)
+            yield return null;
+        else
         {
-            Debug.Log("Map fini");
-            return;
+            Debug.Log("Tp vers le prochain trou :" + (actualHole + 1));
+            if (actualHole == starts.Count)
+            {
+                Debug.Log("Map fini");
+                yield return null;
+            }
+            else
+            {
+                actualHole++;
+                yield return new WaitForSeconds(1f);
+
+                GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
+                yield return new WaitForSeconds(3f) ;
+
+                players.ForEach(p => { p.actualHole = actualHole; });
+                TpPlayersToLocation(actualHole);
+                yield return new WaitForSeconds(0.5f);
+
+                GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
+                yield return null;
+            }
+          
         }
-        actualHole++;
-        //players.ForEach(p => { p.strokes.Add(0); });
-        players.ForEach(p => { p.actualHole = actualHole; });
-        TpPlayersToLocation(actualHole);
+     
     }
     private void LaunchGame()
     {

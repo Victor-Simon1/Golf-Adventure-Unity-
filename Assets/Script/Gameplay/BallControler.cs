@@ -54,6 +54,8 @@ public class BallControler : MonoBehaviour
     [SerializeField] private PlayerController pc;
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource goodHoleSound;
+    [SerializeField] private AudioSource badHoleSound;
     [Header("UI")]
     [SerializeField] private GameObject resultHoleText;
     [Header("Slope")]
@@ -71,7 +73,7 @@ public class BallControler : MonoBehaviour
         sp = transform.position;
         sr = transform.rotation;
        // rb = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
         //bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
         //bStart.onClick.AddListener(TpStart);
         var temp = GameObject.Find("ButtonPush");
@@ -304,9 +306,10 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
+            goodHoleSound.Play();
             pc.hasFinishHole = true;
             StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(),hole.maxStrokes));
-            ServiceLocator.Get<GameManager>().GoNextHole();
+            StartCoroutine(ServiceLocator.Get<GameManager>().GoNextHole());
         }
      
     }
