@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Hole
   - Ground
+  - Green
   layers:
   - Default
   - TransparentFX

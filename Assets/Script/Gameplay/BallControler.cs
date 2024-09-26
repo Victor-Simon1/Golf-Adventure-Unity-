@@ -16,7 +16,7 @@ public class BallControler : MonoBehaviour
     public bool hasFinishHole = false;
 
     [SerializeField] private bool isOutOfLimit = false;
-
+    [SerializeField] private bool isOnGreen = true;
     [SerializeField] private Vector3 offset;
 
     private bool moving;
@@ -73,10 +73,7 @@ public class BallControler : MonoBehaviour
     {
         sp = transform.position;
         sr = transform.rotation;
-       // rb = GetComponent<Rigidbody>();
-        //audioSource = GetComponent<AudioSource>();
-        //bStart = GameObject.Find("ButtonStart").GetComponent<Button>();
-        //bStart.onClick.AddListener(TpStart);
+
         var temp = GameObject.Find("ButtonPush");
         if (temp == null)
             Debug.LogError("Error the variable temp is not assigned");
@@ -191,48 +188,38 @@ public class BallControler : MonoBehaviour
             RaycastHit rearHit;
             if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
             {
-                //Debug.DrawRay(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up) * rearHit.distance, Color.yellow);
                 surfaceAngle = Vector3.Angle(rearHit.normal, Vector3.up);
-                /// Debug.Log(surfaceAngle);
             }
             else
             {
-                //Debug.DrawRay(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up) * 1000, Color.red);
                 uphill = false;
                 flatSurface = false;
-                //Debug.Log("Downhill1");
             }
 
             RaycastHit frontHit;
             Vector3 frontRayStartPos = new Vector3(frontRayPos.position.x, frontRayPos.position.y, frontRayPos.position.z);
             if (Physics.Raycast(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up), out frontHit, 1f, layerMask))
             {
-               // Debug.DrawRay(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up) * rearHit.distance, Color.yellow);
             }
             else
             {
-                //Debug.DrawRay(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up) * 1000, Color.red);
                 uphill = true;
                 flatSurface = false;
-                //Debug.Log("Uphill1");
             }
-           // Debug.Log(frontHit.distance + " : " + rearHit.distance);
             if(Mathf.Abs(rearHit.distance - frontHit.distance) < 0.02f)
             {
                 flatSurface = true;
-                uphill = false;//  Debug.LogWarning("Surface");
+                uphill = false;
             }
             else if (frontHit.distance < rearHit.distance)
             {
                 uphill = true;
                 flatSurface = false;
-                //Debug.Log("Uphill2");
             }
             else if (frontHit.distance > rearHit.distance)
             {
                 uphill = false;
                 flatSurface = false;
-               // Debug.Log("Downhill2");
             }
        }
        
@@ -258,7 +245,6 @@ public class BallControler : MonoBehaviour
             sensY = Mathf.Abs(sensY);
         if (flatSurface)
             sensY = 0f;
-        Debug.Log("Je pousse de :" + sensY);
         vec = new Vector3(vec.x, sensY, vec.z);
         pc.PushBall(vec, force);
         moving = true;
@@ -278,16 +264,23 @@ public class BallControler : MonoBehaviour
 
     private void Stopped()
     {
-        moving = false;
-        Debug.Log("Ball stopped");
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        if(isOnGreen)
+        {
+            moving = false;
+            Debug.Log("Ball stopped");
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
         if(isOutOfLimit) 
         {
             TpToLastLocation();
         }
     }
 
+    public void SetLastPosition(Vector3 position)
+    {
+        lastPosition = position;
+    }
     private void TpToLastLocation()
     {
         Debug.Log("En dehors des limites... Tps vers la dernieres positions");
@@ -310,6 +303,10 @@ public class BallControler : MonoBehaviour
         if (collision.transform.CompareTag("Ground"))
         {
             isOutOfLimit = true;
+        }
+        if (collision.transform.CompareTag("Green"))
+        {
+            isOnGreen = true;
         }
     }
     public void OnTriggerEnter(Collider other)
