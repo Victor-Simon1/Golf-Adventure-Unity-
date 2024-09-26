@@ -2273,10 +2273,10 @@ RectTransform:
   - {fileID: 7508111202868404791}
   m_Father: {fileID: 8373456957285997236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 131.24852, y: -66.06}
+  m_SizeDelta: {x: 262.49704, y: 132.12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7376385588691525256
 CanvasRenderer:
@@ -2511,7 +2511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8373456957285997236
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2607,7 +2607,10 @@ MonoBehaviour:
   Title: {fileID: 7379745920182678187}
   playerName: {fileID: 3774273398318772970}
   strokes: {fileID: 2171083390806973345}
-  scoreboard: {fileID: 7440253732997044648}
+  pushButton: {fileID: 0}
+  slider: {fileID: 0}
+  arrows: {fileID: 0}
+  scoreboard: {fileID: 0}
 --- !u!1 &7062090005903479545
 GameObject:
   m_ObjectHideFlags: 0
@@ -2992,10 +2995,10 @@ RectTransform:
   - {fileID: 1696317664620460678}
   m_Father: {fileID: 8373456957285997236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 333.74554, y: -66.06}
+  m_SizeDelta: {x: 262.49704, y: 132.12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3913376997273921635
 CanvasRenderer:

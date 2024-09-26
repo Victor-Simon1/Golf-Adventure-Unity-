@@ -32,6 +32,9 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     private Material mat;
 
+    [SerializeField] private GameObject camObj;
+    [SerializeField] private GameObject ballObj;
+
     private void Start()
     {
         mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
