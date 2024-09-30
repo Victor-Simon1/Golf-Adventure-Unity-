@@ -11,6 +11,7 @@ using System.Net;
 using Services;
 using System;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class GameManager : MonoRegistrable
 {
@@ -55,6 +56,14 @@ public class GameManager : MonoRegistrable
         Destroy(networkManager.gameObject);
     }
 
+    public void ResetManager()
+    {
+        starts.Clear();
+        holes.Clear();
+        actualHole = 0;
+        nbPlayerFinishHole = 0;
+        StartBehaviour.max = 0;
+    }
     public void RegisterPlayer(PlayerController player)
     {
         if(player.id < players.Count && players[player.id] == null)
@@ -152,12 +161,36 @@ public class GameManager : MonoRegistrable
         else
         {
             Debug.Log("Tp vers le prochain trou :" + (actualHole + 1) +" / " + starts.Count);
-            if ((actualHole+1) == starts.Count)
+            if ((actualHole+1) > 1/*starts.Count*/)
             {
                 Debug.Log("Map fini");
                 yield return new WaitForSeconds(1f);
 
                 GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
+                
+                GameObject gmNextMap = GameObject.Find("NextMap");
+                gmNextMap.transform.GetChild(0).gameObject.SetActive(true);
+                TMPro.TMP_Dropdown dropdown = gmNextMap.transform.GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                dropdown.onValueChanged.AddListener(
+                    delegate
+                    {
+                        SetMapID(dropdown.value);
+                    });
+                gmNextMap.transform.GetChild(1).gameObject.SetActive(true);
+                gmNextMap.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(
+                    delegate
+                    {
+                        LaunchGame();
+                        foreach (var player in players)
+                        {
+                            //TpPlayersToLocation(0);
+                            //player.SpawnBall();
+                        }
+                           
+                    });
+                foreach(var player in players)
+                    player.DespawnBall();
+                ResetManager();
             }
             else
             {
@@ -182,6 +215,7 @@ public class GameManager : MonoRegistrable
     {
         if(isHost)
         {
+            Debug.LogWarning("Chargement de la map");
             foreach (PlayerController player in players)
             {
                 player.RpcLaunch(maps[mapId]);
@@ -193,8 +227,13 @@ public class GameManager : MonoRegistrable
     {
         starts.Add(newStart);
         starts.Sort();
-        if (starts.Count == StartBehaviour.max) 
+        Debug.Log("Add " + starts.Count + " : "  + StartBehaviour.max);
+        if (starts.Count == StartBehaviour.max)
+        {
+            Debug.Log("Tp vers le premier trou");
             TpPlayersToLocation();
+        }
+           
     }
 
     public void AddHole(HoleBehavior newHole)

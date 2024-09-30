@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using Services;
 using TMPro;
 using System.Collections;
+using Unity.VisualScripting;
 public class BallControler : MonoBehaviour
 {
     [Header("Control")]
@@ -71,6 +72,37 @@ public class BallControler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+      /*  sp = transform.position;
+        sr = transform.rotation;
+
+        var temp = GameObject.Find("ButtonPush");
+        if (temp == null)
+            Debug.LogError("Error the variable temp is not assigned");
+
+        bPush = temp.GetComponent<Button>();
+        if (bPush == null)
+            Debug.LogError("Error the variable bPush is not assigned");
+        bPush.onClick.AddListener(Push);
+
+        sliderForce = GameObject.Find("SliderForce").GetComponent<Slider>();
+        if (sliderForce == null)
+            Debug.LogError("Error the variable sliderForce is not assigned");
+
+        sliderTouch = GameObject.Find("SliderForce").GetComponent<SliderTouch>();
+        if (sliderTouch == null)
+            Debug.LogError("Error the variable sliderTouch is not assigned");
+
+        cam = transform.parent.parent.GetChild(0).GetComponent<Camera>();
+        if (cam == null)
+            Debug.LogError("Error the variable cam is not assigned");
+
+        resultHoleText = GameObject.Find("ResultHole").transform.GetChild(0).gameObject;
+        if (resultHoleText == null)
+            Debug.LogError("Error the variable resultHoleText is not assigned");
+      */
+    }
+    private void OnEnable()
+    {
         sp = transform.position;
         sr = transform.rotation;
 
@@ -98,9 +130,9 @@ public class BallControler : MonoBehaviour
         resultHoleText = GameObject.Find("ResultHole").transform.GetChild(0).gameObject;
         if (resultHoleText == null)
             Debug.LogError("Error the variable resultHoleText is not assigned");
-
+        rotationValues = new Vector2(15, 0);
+        zoomLevel = 10;
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -120,7 +152,7 @@ public class BallControler : MonoBehaviour
 
         if (moving && magnHasChanged && AbsMagn < limitForce) 
             Stopped();
-        Debug.Log("Slider pressed : " + sliderTouch.isPressed/*.GetComponent<SliderTouch>().isPressed*/);
+        //Debug.Log("Slider pressed : " + sliderTouch.isPressed/*.GetComponent<SliderTouch>().isPressed*/);
 #if UNITY_EDITOR
         //Permet de tester l'orientation et le zomm dans l'éditeur
         if (Input.GetMouseButton(1))
@@ -225,12 +257,12 @@ public class BallControler : MonoBehaviour
        
     }
 
-    private void OnEnable()
+  /*  private void OnEnable()
     {
         cam = Camera.main;
         rotationValues = new Vector2(15, 0);
         zoomLevel = 10;
-    }
+    }*/
 
     public void Push()
     {
