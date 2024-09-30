@@ -248,7 +248,7 @@ public class GameManager : MonoRegistrable
     {
         Debug.Log("Here we go : " + idStart);
         players.ForEach(p => {
-            //p.GetBall().GetComponent<BallControler>().IgnoreBalls();
+            p.GetBall().GetComponent<BallControler>().IgnoreBalls();
             p.TpToLocation(starts[idStart].transform);
             p.hasFinishHole = false;
         });

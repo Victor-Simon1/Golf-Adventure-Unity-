@@ -288,7 +288,7 @@ public class BallControler : MonoBehaviour
     public void IgnoreBalls()
     {
         Debug.Log("J'ignore les autres balls");
-        GetComponent<SphereCollider>().excludeLayers = 3;
+        GetComponent<SphereCollider>().excludeLayers = ballLayer;
     }
 
     public void DontIgnoreBalls()
