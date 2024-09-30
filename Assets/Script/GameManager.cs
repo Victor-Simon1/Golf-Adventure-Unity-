@@ -168,26 +168,29 @@ public class GameManager : MonoRegistrable
 
                 GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
                 
-                GameObject gmNextMap = GameObject.Find("NextMap");
-                gmNextMap.transform.GetChild(0).gameObject.SetActive(true);
-                TMPro.TMP_Dropdown dropdown = gmNextMap.transform.GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
-                dropdown.onValueChanged.AddListener(
-                    delegate
-                    {
-                        SetMapID(dropdown.value);
-                    });
-                gmNextMap.transform.GetChild(1).gameObject.SetActive(true);
-                gmNextMap.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(
-                    delegate
-                    {
-                        LaunchGame();
-                        foreach (var player in players)
+                if(isHost)
+                {
+                    GameObject gmNextMap = GameObject.Find("NextMap");
+                    gmNextMap.transform.GetChild(0).gameObject.SetActive(true);
+                    TMPro.TMP_Dropdown dropdown = gmNextMap.transform.GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                    dropdown.onValueChanged.AddListener(
+                        delegate
                         {
-                            //TpPlayersToLocation(0);
-                            //player.SpawnBall();
-                        }
-                           
-                    });
+                            SetMapID(dropdown.value);
+                        });
+                    gmNextMap.transform.GetChild(1).gameObject.SetActive(true);
+                    gmNextMap.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(
+                        delegate
+                        {
+                            LaunchGame();
+                            foreach (var player in players)
+                            {
+                                //TpPlayersToLocation(0);
+                                //player.SpawnBall();
+                            }
+
+                        });
+                }
                 foreach(var player in players)
                     player.DespawnBall();
                 ResetManager();
@@ -244,7 +247,8 @@ public class GameManager : MonoRegistrable
     private void TpPlayersToLocation(int idStart = 0)
     {
         Debug.Log("Here we go : " + idStart);
-        players.ForEach(p => { 
+        players.ForEach(p => {
+            //p.GetBall().GetComponent<BallControler>().IgnoreBalls();
             p.TpToLocation(starts[idStart].transform);
             p.hasFinishHole = false;
         });
