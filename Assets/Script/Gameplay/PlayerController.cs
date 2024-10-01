@@ -28,8 +28,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     private Material mat;
 
-    [SerializeField] private GameObject camObj;
-    [SerializeField] private GameObject ballObj;
+    [SerializeField] private Camera camObj;
 
     private void Start()
     {
@@ -254,12 +253,13 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void ActivateAll(bool b)
     {
-        camObj.SetActive(b);
-        ballObj.SetActive(b);
+        camObj.enabled = b;
+        ball.GetComponent<BallControler>().enabled = b;
     }
 
-    public void NextPlayer()
+    public void OnHoleEntered()
     {
+        playerUI.Spectate(true);
         playerUI.NextPlayer();
     }
 }

@@ -27,14 +27,16 @@ public class PlayerUI : MonoBehaviour
         SetActualPlayer(gm.GetLocalPlayer());
     }
 
+    public void Spectate(bool b)
+    {
+        pushButton.SetActive(!b);
+        slider.SetActive(!b);
+        arrows.SetActive(b);
+    }
+
     public void SetActualPlayer(PlayerController pc)
     {
         player = pc;
-        SetPlayer(player);
-    }
-
-    public void ResetPlayer()
-    {
         SetPlayer(player);
     }
 
@@ -51,11 +53,9 @@ public class PlayerUI : MonoBehaviour
         displayedPlayer.ActivateAll(true);
     }
 
-    public void Spectate(bool b)
+    public void ResetPlayer()
     {
-        pushButton.SetActive(b);
-        slider.SetActive(b);
-        arrows.SetActive(!b);
+        SetPlayer(player);
     }
 
     public void NextPlayer()
@@ -124,6 +124,12 @@ public class PlayerUI : MonoBehaviour
             }
         }
         SetPlayer(pc);
+    }
+
+    public void ResetAllUI()
+    {
+        ResetPlayer();
+        Spectate(false);
     }
 
     public void SetStrokes(int strokes)

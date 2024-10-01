@@ -313,22 +313,19 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
-            if (pc.isLocalPlayer)
-            {
-                pc.NextPlayer();
-            }
-            goodHoleSound.Play();
-            pc.hasFinishHole = true;
-            StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(),hole.maxStrokes));
-            //ServiceLocator.Get<GameManager>().nbPlayerFinishHole ++;
-            
             pc.hasFinishHole = true;
             if (ServiceLocator.Get<GameManager>().GetLocalPlayer().netIdentity == pc.netIdentity)
             {
                 goodHoleSound.Play();
                 StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(), hole.maxStrokes));
             }
+
+            if (pc.isLocalPlayer && ServiceLocator.Get<GameManager>().GetListPlayer().Count > 1)
+            {
+                pc.OnHoleEntered();
+            }
             StartCoroutine(ServiceLocator.Get<GameManager>().GoNextHole());
+            gameObject.SetActive(false);
         }
      
     }
