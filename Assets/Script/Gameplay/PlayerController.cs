@@ -247,4 +247,15 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         return ball;
     }
+
+    public void ActivateAll(bool b)
+    {
+        camObj.SetActive(b);
+        ballObj.SetActive(b);
+    }
+
+    public void NextPlayer()
+    {
+        playerUI.NextPlayer();
+    }
 }

@@ -267,6 +267,8 @@ MonoBehaviour:
   ball: {fileID: 2280871444263343271}
   hasFinishHole: 0
   playerUI: {fileID: 0}
+  camObj: {fileID: 8167517089024093975}
+  ballObj: {fileID: 2280871444263343271}
 --- !u!114 &8651431653243201400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,6 +466,7 @@ MonoBehaviour:
   rb: {fileID: 6544871517458406900}
   hasFinishHole: 0
   isOutOfLimit: 0
+  isOnGreen: 1
   offset: {x: 0, y: 0, z: 0}
   cam: {fileID: 0}
   zoomModifierSpeed: 0.1

@@ -2607,10 +2607,10 @@ MonoBehaviour:
   Title: {fileID: 7379745920182678187}
   playerName: {fileID: 3774273398318772970}
   strokes: {fileID: 2171083390806973345}
-  pushButton: {fileID: 0}
-  slider: {fileID: 0}
-  arrows: {fileID: 0}
-  scoreboard: {fileID: 0}
+  pushButton: {fileID: 3663857835972009235}
+  slider: {fileID: 7208038388519148519}
+  arrows: {fileID: 6727091264332636736}
+  scoreboard: {fileID: 7440253732997044648}
 --- !u!1 &7062090005903479545
 GameObject:
   m_ObjectHideFlags: 0

@@ -151,6 +151,7 @@ public class GameManager : MonoRegistrable
             yield return null;
         else
         {
+            ServiceLocator.Get<UIManager>().GetPlayerUI().ResetPlayer();
             Debug.Log("Tp vers le prochain trou :" + (actualHole + 1) +" / " + starts.Count);
             if ((actualHole+1) == starts.Count)
             {
@@ -163,7 +164,6 @@ public class GameManager : MonoRegistrable
             {
                 actualHole++;
                 yield return new WaitForSeconds(1f);
-
                 GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
                 yield return new WaitForSeconds(3f) ;
 

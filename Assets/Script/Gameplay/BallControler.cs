@@ -120,7 +120,7 @@ public class BallControler : MonoBehaviour
 
         if (moving && magnHasChanged && AbsMagn < limitForce) 
             Stopped();
-        Debug.Log("Slider pressed : " + sliderTouch.isPressed/*.GetComponent<SliderTouch>().isPressed*/);
+        //Debug.Log("Slider pressed : " + sliderTouch.isPressed/*.GetComponent<SliderTouch>().isPressed*/);
 #if UNITY_EDITOR
         //Permet de tester l'orientation et le zomm dans l'éditeur
         if (Input.GetMouseButton(1))
@@ -315,9 +315,14 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
+            if (pc.isLocalPlayer)
+            {
+                pc.NextPlayer();
+            }
             goodHoleSound.Play();
             pc.hasFinishHole = true;
             StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(),hole.maxStrokes));
+            //ServiceLocator.Get<GameManager>().nbPlayerFinishHole ++;
             StartCoroutine(ServiceLocator.Get<GameManager>().GoNextHole());
         }
      
