@@ -475,7 +475,7 @@ MonoBehaviour:
   sliderTouch: {fileID: 0}
   ballLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   timeOutLimit: 0
   pc: {fileID: -3911127702487239908}
   audioSource: {fileID: 4257657809144899257}

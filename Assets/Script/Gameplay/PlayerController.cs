@@ -13,10 +13,6 @@ using UnityEngine.TextCore.Text;
 
 public class PlayerController : NetworkBehaviour, IComparable
 {
-    /*[Client]
-    [ClientRpc]
-    [Command]*/
-   // [SyncVar]
     [SerializeField] public List<int> strokes = new List<int>();
     [SyncVar] public int actualHole;
     [SyncVar]
@@ -57,6 +53,14 @@ public class PlayerController : NetworkBehaviour, IComparable
         {
             playerScore.SetSum(GetSumStrokes());
         }
+    }
+
+    public void Reset()
+    {
+        actualHole = 0;
+        hasFinishHole = false;
+        strokes.Clear();
+        InitStrokes() ;
     }
     //[Command]
     void InitStrokes()

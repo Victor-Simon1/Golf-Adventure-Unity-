@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.0070657097, g: 0.035382297, b: 0.09707603, a: 0.1}
+  m_IndirectSpecularColor: {r: 0.0070610144, g: 0.035376437, b: 0.09707826, a: 0.1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2976,6 +2976,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1751104672}
     m_Modifications:
+    - target: {fileID: 4109700428178124, guid: 6701b412790c6f745a1b8fd7ccc607e5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 464
+      objectReference: {fileID: 0}
+    - target: {fileID: 4109700428178124, guid: 6701b412790c6f745a1b8fd7ccc607e5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -242
+      objectReference: {fileID: 0}
     - target: {fileID: 1987894909291953618, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_IsActive
@@ -3039,32 +3047,32 @@ PrefabInstance:
     - target: {fileID: 4569596918839569316, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4569596918839569316, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4569596918839569316, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 262.49704
       objectReference: {fileID: 0}
     - target: {fileID: 4569596918839569316, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 132.12
       objectReference: {fileID: 0}
     - target: {fileID: 4569596918839569316, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 333.74554
       objectReference: {fileID: 0}
     - target: {fileID: 4569596918839569316, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -66.06
       objectReference: {fileID: 0}
     - target: {fileID: 4954901380342580961, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
@@ -3211,31 +3219,41 @@ PrefabInstance:
     - target: {fileID: 8215319018587169320, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8215319018587169320, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8215319018587169320, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 262.49704
       objectReference: {fileID: 0}
     - target: {fileID: 8215319018587169320, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 132.12
       objectReference: {fileID: 0}
     - target: {fileID: 8215319018587169320, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 131.24852
       objectReference: {fileID: 0}
     - target: {fileID: 8215319018587169320, guid: 6701b412790c6f745a1b8fd7ccc607e5,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: -66.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 8240347382367887562, guid: 6701b412790c6f745a1b8fd7ccc607e5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8629685884075951381, guid: 6701b412790c6f745a1b8fd7ccc607e5,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
