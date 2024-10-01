@@ -52,8 +52,9 @@ public class BallControler : MonoBehaviour
     [SerializeField] private float timeOutLimit = 0f;
     private float MaxTimeOutOfLimit = 5f;
     [Header("Movement")]
-    private float limitForce = 0.5f;
-
+    private float limitForce = 0.3f;
+    [SerializeField] private float maxAngularVelocity = 0.9f;
+    [SerializeField] private float coeffAngularVelocity = 0.9f;
     [SerializeField] private PlayerController pc;
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
@@ -115,16 +116,7 @@ public class BallControler : MonoBehaviour
         {
             TpToLastLocation();
         }
-        //Speed
-        AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
        
-        if(!magnHasChanged && AbsMagn > 0.1) 
-            magnHasChanged = true;
-        if(magnHasChanged && AbsMagn == 0) 
-            magnHasChanged = false;
-
-        if (moving && magnHasChanged && AbsMagn < limitForce) 
-            Stopped();
 #if UNITY_EDITOR
         //Permet de tester l'orientation et le zomm dans l'éditeur
         if (Input.GetMouseButton(1))
@@ -228,7 +220,19 @@ public class BallControler : MonoBehaviour
        }
        
     }
+    private void FixedUpdate()
+    {
+        //Speed
+        AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
 
+        if (!magnHasChanged && AbsMagn > 0.1)
+            magnHasChanged = true;
+        if (magnHasChanged && AbsMagn == 0)
+            magnHasChanged = false;
+
+        if (moving && magnHasChanged && AbsMagn < limitForce)
+            Stopped();
+    }
     public void Push()
     {
         if (hasFinishHole || isOutOfLimit)
@@ -263,10 +267,16 @@ public class BallControler : MonoBehaviour
     {
         if(isOnGreen)
         {
-            moving = false;
-            Debug.Log("Ball stopped");
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            if(AbsMagn <0.05f)
+            {
+                moving = false;
+                Debug.Log("Ball stopped");
+            }
+            else
+                Debug.Log("Ball is stopping");
+            rb.velocity = rb.velocity * coeffAngularVelocity; //* Time.deltaTime;
+            coeffAngularVelocity = coeffAngularVelocity -coeffAngularVelocity * (0.001f / 100)*Time.fixedDeltaTime;//0.99f;
+
         }
         if(isOutOfLimit) 
         {
