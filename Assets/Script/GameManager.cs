@@ -150,18 +150,20 @@ public class GameManager : MonoRegistrable
 
     public IEnumerator GoNextHole()
     {
-        int playerFinish = 0;
-        for (int i = 0; i < players.Count; i++)
-            if (players[i] != null)
-                if (players[i].hasFinishHole)
-                    playerFinish++;
-        Debug.Log("Nombre de joueurs ayant fini"+ playerFinish);
-        if (playerFinish != players.Count)
+        nbPlayerFinishHole++;
+        Debug.Log("Nombre de joueurs ayant fini "+ nbPlayerFinishHole);
+        if (nbPlayerFinishHole != players.Count)
             yield return null;
         else
         {
+            nbPlayerFinishHole = 0;
+
+            if (players.Count > 1)
+            {
+                ServiceLocator.Get<UIManager>().GetPlayerUI().ResetAllUI();
+            }
             Debug.Log("Tp vers le prochain trou :" + (actualHole + 1) +" / " + starts.Count);
-            if ((actualHole+1) > 1/*starts.Count*/)
+            if ((actualHole+1) == starts.Count)
             {
                 Debug.Log("Map fini");
                 yield return new WaitForSeconds(1f);
@@ -199,7 +201,6 @@ public class GameManager : MonoRegistrable
             {
                 actualHole++;
                 yield return new WaitForSeconds(1f);
-
                 GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
                 yield return new WaitForSeconds(3f) ;
 
@@ -250,6 +251,7 @@ public class GameManager : MonoRegistrable
         players.ForEach(p => {
             p.GetBall().GetComponent<BallControler>().IgnoreBalls();
             p.TpToLocation(starts[idStart].transform);
+            p.GetBall().gameObject.SetActive(true);
             p.hasFinishHole = false;
         });
     }

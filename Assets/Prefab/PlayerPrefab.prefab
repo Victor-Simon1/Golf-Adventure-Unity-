@@ -267,8 +267,8 @@ MonoBehaviour:
   ball: {fileID: 2280871444263343271}
   hasFinishHole: 0
   playerUI: {fileID: 0}
-  camObj: {fileID: 0}
-  ballObj: {fileID: 0}
+  camObj: {fileID: 2028859925345120222}
+  ballObj: {fileID: 2280871444263343271}
 --- !u!114 &8651431653243201400
 MonoBehaviour:
   m_ObjectHideFlags: 0

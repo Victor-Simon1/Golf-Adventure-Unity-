@@ -15,6 +15,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private GameObject slider;
     [SerializeField] private GameObject arrows;
 
+    private PlayerController displayedPlayer;
     private PlayerController player;
     [SerializeField] private VictoryPopup scoreboard;
 
@@ -23,19 +24,43 @@ public class PlayerUI : MonoBehaviour
         var gm = ServiceLocator.Get<GameManager>();
         Title.text = gm.GetSessionName();
 
-        SetPlayer(gm.GetLocalPlayer());
+        SetActualPlayer(gm.GetLocalPlayer());
+    }
+
+    public void Spectate(bool b)
+    {
+        pushButton.SetActive(!b);
+        slider.SetActive(!b);
+        arrows.SetActive(b);
+    }
+
+    public void SetActualPlayer(PlayerController pc)
+    {
+        player = pc;
+        SetPlayer(player);
     }
 
     public void SetPlayer(PlayerController pc)
     {
+        if(displayedPlayer != null)
+        {
+            displayedPlayer.ActivateAll(false);
+            displayedPlayer.SetPlayerUI(null);
+        }
         pc.SetPlayerUI(this);
         playerName.text = pc.GetName();
-        player = pc;
+        displayedPlayer = pc;
+        displayedPlayer.ActivateAll(true);
+    }
+
+    public void ResetPlayer()
+    {
+        SetPlayer(player);
     }
 
     public void NextPlayer()
     {
-        player.SetPlayerUI(null);
+        displayedPlayer.SetPlayerUI(null);
         var pl = ServiceLocator.Get<GameManager>().GetListPlayer();
         PlayerController pc = null;
 
@@ -47,7 +72,7 @@ public class PlayerUI : MonoBehaviour
         {
                 if (!pl[i].hasFinishHole)
                 {
-                    if (pl[i].id > player.id)
+                    if (pl[i].id > displayedPlayer.id)
                     {
                         pc = pl[i];
                     }
@@ -69,7 +94,7 @@ public class PlayerUI : MonoBehaviour
 
     public void PreviousPlayer()
     {
-        player.SetPlayerUI(null);
+        displayedPlayer.SetPlayerUI(null);
         var pl = ServiceLocator.Get<GameManager>().GetListPlayer();
         PlayerController pc = null;
 
@@ -81,7 +106,7 @@ public class PlayerUI : MonoBehaviour
         {
                 if (!pl[i].hasFinishHole)
                 {
-                    if (pl[i].id > player.id)
+                    if (pl[i].id > displayedPlayer.id)
                     {
                         pc = pl[i];
                     }
@@ -99,6 +124,12 @@ public class PlayerUI : MonoBehaviour
             }
         }
         SetPlayer(pc);
+    }
+
+    public void ResetAllUI()
+    {
+        ResetPlayer();
+        Spectate(false);
     }
 
     public void SetStrokes(int strokes)

@@ -27,7 +27,7 @@ public class BallControler : MonoBehaviour
     [Header("Camera")]
     [SerializeField] private Camera cam;
     private Vector2 rotationValues = new Vector2(0,0);
-    //La sensibilité n'est pas la même dans l'éditeur que sur téléphone
+    //La sensibilitï¿½ n'est pas la mï¿½me dans l'ï¿½diteur que sur tï¿½lï¿½phone
 #if UNITY_EDITOR
     private float RotationSensitivity = 100f;
 #else
@@ -46,7 +46,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private Slider sliderForce;
     [SerializeField] private SliderTouch sliderTouch;
     [Header("Gameplay")]
-    private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacé la balle en cas de sortie de terrain
+    private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replacï¿½ la balle en cas de sortie de terrain
     private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
     [SerializeField] private float timeOutLimit = 0f;
@@ -109,7 +109,7 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Si on est en dehors des limits, tp dans le temps donné
+        //Si on est en dehors des limits, tp dans le temps donnï¿½
         if (isOutOfLimit)
             timeOutLimit += Time.deltaTime;
         if(timeOutLimit>MaxTimeOutOfLimit)
@@ -118,7 +118,7 @@ public class BallControler : MonoBehaviour
         }
        
 #if UNITY_EDITOR
-        //Permet de tester l'orientation et le zomm dans l'éditeur
+        //Permet de tester l'orientation et le zomm dans l'ï¿½diteur
         if (Input.GetMouseButton(1))
         {
             var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
@@ -130,7 +130,7 @@ public class BallControler : MonoBehaviour
         zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
 
 #else
-        //Permet de tester l'orientation et le zomm dans le télephone
+        //Permet de tester l'orientation et le zomm dans le tï¿½lephone
         if(!sliderTouch.isPressed)
         {
             if (Input.touchCount == 1)
@@ -146,11 +146,11 @@ public class BallControler : MonoBehaviour
             }
             else if (Input.touchCount == 2)
             {
-                //Récuperation des deux entrés
+                //Rï¿½cuperation des deux entrï¿½s
                 Touch firstTouch = Input.GetTouch(0);
                 Touch secondTouch = Input.GetTouch(1);
 
-                //Calcul des différences(savoir si on zoom/dezoom)
+                //Calcul des diffï¿½rences(savoir si on zoom/dezoom)
                 firstTouchPrevPos = firstTouch.position - firstTouch.deltaPosition;
                 secondTouchPrevPos = secondTouch.position - secondTouch.deltaPosition;
 
@@ -319,18 +319,23 @@ public class BallControler : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Une balle est rentré :" + pc.GetName());
+        Debug.Log("Une balle est rentrï¿½ :" + pc.GetName());
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
-            
             pc.hasFinishHole = true;
             if (ServiceLocator.Get<GameManager>().GetLocalPlayer().netIdentity == pc.netIdentity)
             {
                 goodHoleSound.Play();
                 StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(), hole.maxStrokes));
             }
+
+            if (pc.isLocalPlayer && ServiceLocator.Get<GameManager>().GetListPlayer().Count > 1)
+            {
+                pc.OnHoleEntered();
+            }
             StartCoroutine(ServiceLocator.Get<GameManager>().GoNextHole());
+            gameObject.SetActive(false);
         }
      
     }
