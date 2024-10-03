@@ -268,7 +268,6 @@ MonoBehaviour:
   hasFinishHole: 0
   playerUI: {fileID: 0}
   camObj: {fileID: 2028859925345120222}
-  ballObj: {fileID: 2280871444263343271}
 --- !u!114 &8651431653243201400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +476,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   timeOutLimit: 0
+  maxAngularVelocity: 0.9
+  coeffAngularVelocity: 0.9
   pc: {fileID: -3911127702487239908}
   audioSource: {fileID: 4257657809144899257}
   goodHoleSound: {fileID: 4100992949102334233}
@@ -557,7 +558,8 @@ AudioSource:
   m_GameObject: {fileID: 2280871444263343271}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 5972609651038953852, guid: ae0f56f256451454aa8577e8e82ea456,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 17cf9d605cf8d754e9f738bfda6b5bc6, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.05
@@ -749,7 +751,8 @@ AudioSource:
   m_GameObject: {fileID: 2280871444263343271}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 5972609651038953852, guid: ae0f56f256451454aa8577e8e82ea456,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 5f75b7a6e4c07ea429088651faeba07e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.05

@@ -2,15 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
-public class MusicManager : MonoBehaviour
+using Services;
+public class MusicManager : MonoRegistrable
 {
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClip;
     private int nextSong;
+    private float minVolume = 0f;
+    private float maxVolume = 0.02f;
     // Start is called before the first frame update
     void Start()
     {
+        ServiceLocator.Register<MusicManager>(this,false) ;
         audioSource = GetComponent<AudioSource>();
         nextSong = -1;
         ShuffleSong();
@@ -49,5 +53,18 @@ public class MusicManager : MonoBehaviour
             nextSong = 0;
         audioSource.clip = audioClip[nextSong];
         audioSource.Play();
+    }
+
+    public AudioSource GetAudioSource()
+    {
+        return audioSource;
+    }
+    public float GetMaxVolume()
+    {
+        return maxVolume;
+    }
+    public float GetMinVolume()
+    {
+        return minVolume;
     }
 }

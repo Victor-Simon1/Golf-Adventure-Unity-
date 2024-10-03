@@ -224,6 +224,7 @@ public class GameManager : MonoRegistrable
             {
                 player.RpcLaunch(maps[mapId]);
             }
+           
         }
     }
 
