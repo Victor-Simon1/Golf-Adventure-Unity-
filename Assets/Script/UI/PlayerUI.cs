@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Services;
+using Mirror.Examples.Basic;
+using System.Linq;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -36,21 +38,27 @@ public class PlayerUI : MonoBehaviour
 
     public void SetActualPlayer(PlayerController pc)
     {
+        pc.SetResultHoleText(transform.GetChild(0).Find("ResultHole").GetChild(0).GetComponent<TextMeshProUGUI>());
+
         player = pc;
         SetPlayer(player);
     }
 
     public void SetPlayer(PlayerController pc)
     {
-        if(displayedPlayer != null)
+        if(pc != null)
         {
-            displayedPlayer.ActivateAll(false);
-            displayedPlayer.SetPlayerUI(null);
+            if (displayedPlayer != null)
+            {
+                displayedPlayer.ActivateAll(false);
+                displayedPlayer.SetPlayerUI(null);
+            }
+            Debug.Log("UI updated to player: " + pc.GetName());
+            pc.SetPlayerUI(this);
+            playerName.text = pc.GetName();
+            displayedPlayer = pc;
+            displayedPlayer.ActivateAll(true);
         }
-        pc.SetPlayerUI(this);
-        playerName.text = pc.GetName();
-        displayedPlayer = pc;
-        displayedPlayer.ActivateAll(true);
     }
 
     public void ResetPlayer()
@@ -60,36 +68,40 @@ public class PlayerUI : MonoBehaviour
 
     public void NextPlayer()
     {
-        displayedPlayer.SetPlayerUI(null);
-        var pl = ServiceLocator.Get<GameManager>().GetListPlayer();
-        PlayerController pc = null;
+        var gm = ServiceLocator.Get<GameManager>();
+        if (gm.GetListPlayer().Count > 1)
+        {
+            displayedPlayer.SetPlayerUI(null);
+            var pl = gm.GetListPlayer();
+            PlayerController pc = null;
 
-        if(pl.Count == 1)
-        {
-            pc = pl[0];
-        }
-        else for (int i = pl.Count - 1; i >= 0; i--)
-        {
-                if (!pl[i].hasFinishHole)
+            if (pl.Count == 1)
+            {
+                pc = pl[0];
+            }
+            else for (int i = pl.Count - 1; i >= 0; i--)
                 {
-                    if (pl[i].id > displayedPlayer.id)
+                    if (!pl[i].hasFinishHole)
                     {
-                        pc = pl[i];
+                        if (pl[i].id > displayedPlayer.id)
+                        {
+                            pc = pl[i];
+                        }
                     }
                 }
-        }
 
-        if(pc == null)
-        {
-            for (int j = 0; j < pl.Count; j++)
+            if (pc == null)
             {
-                if (!pl[j].hasFinishHole)
+                for (int j = 0; j < pl.Count; j++)
                 {
-                    pc = pl[j];
+                    if (!pl[j].hasFinishHole)
+                    {
+                        pc = pl[j];
+                    }
                 }
             }
+            SetPlayer(pc);
         }
-        SetPlayer(pc);
     }
 
     public void PreviousPlayer()

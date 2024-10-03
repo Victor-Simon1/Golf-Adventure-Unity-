@@ -57,10 +57,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private PlayerController pc;
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioSource goodHoleSound;
     [SerializeField] private AudioSource badHoleSound;
-    [Header("UI")]
-    [SerializeField] private GameObject resultHoleText;
     [Header("Slope")]
     public Transform rearRayPos;
     public Transform frontRayPos;
@@ -79,29 +76,26 @@ public class BallControler : MonoBehaviour
         sr = transform.rotation;
 
         var temp = GameObject.Find("ButtonPush");
-        if (temp == null)
+        if (temp == null && !hasFinishHole)
             Debug.LogError("Error the variable temp is not assigned");
 
         bPush = temp.GetComponent<Button>();
-        if (bPush == null)
+        if (bPush == null && !hasFinishHole)
             Debug.LogError("Error the variable bPush is not assigned");
         bPush.onClick.AddListener(Push);
 
         sliderForce = GameObject.Find("SliderForce").GetComponent<Slider>();
-        if (sliderForce == null)
+        if (sliderForce == null && !hasFinishHole)
             Debug.LogError("Error the variable sliderForce is not assigned");
 
         sliderTouch = GameObject.Find("SliderForce").GetComponent<SliderTouch>();
-        if (sliderTouch == null)
+        if (sliderTouch == null && !hasFinishHole)
             Debug.LogError("Error the variable sliderTouch is not assigned");
 
         cam = transform.parent.parent.GetChild(0).GetComponent<Camera>();
-        if (cam == null)
+        if (cam == null && !hasFinishHole)
             Debug.LogError("Error the variable cam is not assigned");
 
-        resultHoleText = GameObject.Find("ResultHole").transform.GetChild(0).gameObject;
-        if (resultHoleText == null)
-            Debug.LogError("Error the variable resultHoleText is not assigned");
         rotationValues = new Vector2(15, 0);
         zoomLevel = 10;
     }
@@ -307,60 +301,14 @@ public class BallControler : MonoBehaviour
             isOnGreen = true;
         }
     }
+
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Une balle est rentr� :" + pc.GetName());
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
-        if (hole != null)
+        if (hole != null) 
         {
-            pc.hasFinishHole = true;
-            if (ServiceLocator.Get<GameManager>().GetLocalPlayer().netIdentity == pc.netIdentity)
-            {
-                goodHoleSound.Play();
-                StartCoroutine(CouroutineShowResultHole(pc.GetActualStrokes(), hole.maxStrokes));
-            }
-
-            if (pc.isLocalPlayer && ServiceLocator.Get<GameManager>().GetListPlayer().Count > 1)
-            {
-                pc.OnHoleEntered();
-            }
-            StartCoroutine(ServiceLocator.Get<GameManager>().GoNextHole());
+            pc.OnHoleEntered(hole.maxStrokes);
             gameObject.SetActive(false);
         }
-     
     }
-    private string GetTextResultHole(int actualStrokes, int maxStrokes)
-    {
-        int result = actualStrokes- maxStrokes;
-
-        if (actualStrokes == 1)
-           return "HOLE IN ONE";
-        else if (result == -4)
-            return "CONDOR";
-        else if (result == -3)
-            return "ALBATROS";
-        else if (result == -2)
-            return "EAGLE";
-        else if (result == -1)
-            return "BIRDIE";
-        else if (result == 0)
-            return "PAR";
-        else if (result == 1)
-            return "BOGEY";
-        else if (result == 2)
-            return "DOUBLE BOGEY";
-        else
-            return "X BOGEY";
-    }
-    private IEnumerator CouroutineShowResultHole(int actualStrokes,int maxStrokes)
-    {
-        yield return null;
-        string result = GetTextResultHole(actualStrokes, maxStrokes);
-        resultHoleText.GetComponent<TextMeshProUGUI>().text = result;
-        resultHoleText.SetActive(true);
-        resultHoleText.GetComponent<Animator>().Play("New Animation");
-        yield return new WaitForSeconds(1f);
-        resultHoleText.SetActive(false);
-    }
-
 }
