@@ -21,6 +21,7 @@ public class GameManager : MonoRegistrable
     [SerializeField] private List<HoleBehavior> holes = new List<HoleBehavior>();
 
     [SerializeField] private NetworkManager networkManager;
+    [SerializeField] private UIManager uiManager;
 
     [SerializeField] private ErrorManager em;
 
@@ -148,9 +149,13 @@ public class GameManager : MonoRegistrable
         networkManager.StopClient();
     }
 
-    public IEnumerator GoNextHole()
+    public void PlayerFinished()
     {
         nbPlayerFinishHole++;
+    }
+
+    public IEnumerator GoNextHole()
+    {
         Debug.Log("Nombre de joueurs ayant fini "+ nbPlayerFinishHole);
         if (nbPlayerFinishHole != players.Count)
             yield return null;
@@ -158,17 +163,13 @@ public class GameManager : MonoRegistrable
         {
             nbPlayerFinishHole = 0;
 
-            if (players.Count > 1)
-            {
-                ServiceLocator.Get<UIManager>().GetPlayerUI().ResetAllUI();
-            }
             Debug.Log("Tp vers le prochain trou :" + (actualHole + 1) +" / " + starts.Count);
             if ((actualHole+1) == starts.Count)
             {
                 Debug.Log("Map fini");
                 yield return new WaitForSeconds(1f);
 
-                GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
+                uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
                 
                 if(isHost)
                 {
@@ -187,8 +188,8 @@ public class GameManager : MonoRegistrable
                             LaunchGame();
                             foreach (var player in players)
                             {
-                                //TpPlayersToLocation(0);
-                                //player.SpawnBall();
+                                TpPlayersToLocation(0);
+                                player.SpawnBall();
                             }
 
                         });
@@ -201,14 +202,15 @@ public class GameManager : MonoRegistrable
             {
                 actualHole++;
                 yield return new WaitForSeconds(1f);
-                GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
+                uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
                 yield return new WaitForSeconds(3f) ;
 
                 players.ForEach(p => { p.actualHole = actualHole; });
+                uiManager.GetPlayerUI().ResetAllUI();
                 TpPlayersToLocation(actualHole);
                 yield return new WaitForSeconds(0.5f);
 
-                GetLocalPlayer().GetPlayerUI().GetScoreboard().Pop(1f);
+                uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
                 yield return null;
             }
           
@@ -316,6 +318,11 @@ public class GameManager : MonoRegistrable
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void setUIManager(UIManager uiManager)
+    {
+        this.uiManager = uiManager;
     }
 
 }

@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: -3911127702487239908}
   - component: {fileID: 8651431653243201400}
   - component: {fileID: 5011930699552639365}
+  - component: {fileID: 2093450403390913769}
   m_Layer: 3
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -266,8 +267,10 @@ MonoBehaviour:
   id: 0
   ball: {fileID: 2280871444263343271}
   hasFinishHole: 0
-  playerUI: {fileID: 0}
   camObj: {fileID: 2028859925345120222}
+  goodHoleSound: {fileID: 2093450403390913769}
+  playerUI: {fileID: 0}
+  resultHoleText: {fileID: 0}
 --- !u!114 &8651431653243201400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +318,102 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
+--- !u!82 &2093450403390913769
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922957054793802191}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 5f75b7a6e4c07ea429088651faeba07e, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.05
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2280871444263343271
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,7 +432,6 @@ GameObject:
   - component: {fileID: 6544871517458406900}
   - component: {fileID: 4257657809144899257}
   - component: {fileID: 3925394259920804709}
-  - component: {fileID: 4100992949102334233}
   m_Layer: 3
   m_Name: GolfBall
   m_TagString: Player
@@ -480,9 +578,7 @@ MonoBehaviour:
   coeffAngularVelocity: 0.9
   pc: {fileID: -3911127702487239908}
   audioSource: {fileID: 4257657809144899257}
-  goodHoleSound: {fileID: 4100992949102334233}
   badHoleSound: {fileID: 3925394259920804709}
-  resultHoleText: {fileID: 0}
   rearRayPos: {fileID: 4625549186324499230}
   frontRayPos: {fileID: 949351933684107696}
   layerMask:
@@ -1048,7 +1144,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8167517089024093975}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!114 &516927409505989049
 MonoBehaviour:
   m_ObjectHideFlags: 0

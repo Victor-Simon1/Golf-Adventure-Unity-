@@ -16885,6 +16885,7 @@ MonoBehaviour:
   starts: []
   holes: []
   networkManager: {fileID: 0}
+  uiManager: {fileID: 0}
   em: {fileID: 747112140}
   actualHole: 0
   nbPlayerFinishHole: 0

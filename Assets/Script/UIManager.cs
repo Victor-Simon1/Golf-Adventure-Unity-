@@ -11,6 +11,11 @@ public class UIManager : MonoRegistrable
         ServiceLocator.Register<UIManager>(this);
     }
 
+    private void OnEnable()
+    {
+        ServiceLocator.Get<GameManager>().setUIManager(this);
+    }
+
     public PlayerUI GetPlayerUI()
     {
         return playerUI;

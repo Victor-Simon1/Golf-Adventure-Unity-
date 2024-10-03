@@ -5,6 +5,7 @@ using Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,20 +23,24 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     [SerializeField] private GameObject ball;
     public bool hasFinishHole = false;
-    private PlayerDisplay display;
-    [SerializeField] private PlayerUI playerUI;
     private PlayerScoreboardItem playerScore;
 
     private Material mat;
 
     [SerializeField] private Camera camObj;
 
+    [SerializeField] private AudioSource goodHoleSound;
+
+    [Header("UI")]
+    private PlayerDisplay display;
+    [SerializeField] private PlayerUI playerUI;
+    [SerializeField] private TextMeshProUGUI resultHoleText;
+
     private void Start()
     {
         mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
         mat.SetFloat("_Glossiness", .8f);
         mat.SetFloat("_Metallic", 0f);
-
 
         ball.GetComponent<Renderer>().material = mat;
 
@@ -234,6 +239,11 @@ public class PlayerController : NetworkBehaviour, IComparable
         this.playerUI = playerUI;
     }
 
+    public void SetResultHoleText(TextMeshProUGUI textMeshProUGUI)
+    {
+        resultHoleText = textMeshProUGUI;
+    }
+
     public void SetPlayerScoreboard(PlayerScoreboardItem playerScore)
     {
         this.playerScore = playerScore;
@@ -257,9 +267,57 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.GetComponent<BallControler>().enabled = b;
     }
 
-    public void OnHoleEntered()
+    public void OnHoleEntered(int maxStrokes)
     {
-        playerUI.Spectate(true);
+        Debug.Log("Une balle est rentrée : " + playerName);
+        var gm = ServiceLocator.Get<GameManager>();
+        hasFinishHole = true;
+        if (gm.GetLocalPlayer().netIdentity == netIdentity)
+        {
+            Debug.Log("play sound");
+            goodHoleSound.Play();
+            Debug.Log("play animation");
+            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], maxStrokes));
+            playerUI.Spectate(true);
+        }
+
+        gm.PlayerFinished();
+        StartCoroutine(gm.GoNextHole());
+
+    }
+    private string GetTextResultHole(int actualStrokes, int maxStrokes)
+    {
+        int result = actualStrokes - maxStrokes;
+
+        if (actualStrokes == 1)
+            return "HOLE IN ONE";
+        else if (result == -4)
+            return "CONDOR";
+        else if (result == -3)
+            return "ALBATROS";
+        else if (result == -2)
+            return "EAGLE";
+        else if (result == -1)
+            return "BIRDIE";
+        else if (result == 0)
+            return "PAR";
+        else if (result == 1)
+            return "BOGEY";
+        else if (result == 2)
+            return "DOUBLE BOGEY";
+        else
+            return "X BOGEY";
+    }
+    private IEnumerator CouroutineShowResultHole(int actualStrokes, int maxStrokes)
+    {
+        yield return null;
+        string result = GetTextResultHole(actualStrokes, maxStrokes);
+        Debug.Log(result);
+        resultHoleText.text = result;
+        resultHoleText.gameObject.SetActive(true);
+        resultHoleText.GetComponent<Animator>().Play("New Animation");
+        yield return new WaitForSeconds(1f);
+        resultHoleText.gameObject.SetActive(false);
         playerUI.NextPlayer();
     }
 }
