@@ -152,13 +152,17 @@ public class PlayerController : NetworkBehaviour, IComparable
         
         ball.GetComponent<Rigidbody>().freezeRotation = true;
         ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+      
         ball.transform.position = transform.localPosition;
         ball.transform.rotation = Quaternion.identity;
+
+       
         transform.position = location.position;
         ball.GetComponent<Rigidbody>().freezeRotation = false;
         //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
         SpawnBall();
         ball.GetComponent<BallControler>().SetLastPosition(transform.localPosition);
+        ball.GetComponent<BallControler>().SetRotationValueY(location.rotation.eulerAngles.y);
     }
     public void TpToLocation(Vector3 location)
     {

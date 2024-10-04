@@ -70,6 +70,7 @@ public class BallControler : MonoBehaviour
 
     void Start()
     {
+        rotationValues = new Vector2(15, 0);
     }
     private void OnEnable()
     {
@@ -97,7 +98,7 @@ public class BallControler : MonoBehaviour
         if (cam == null && !hasFinishHole)
             Debug.LogError("Error the variable cam is not assigned");
 
-        rotationValues = new Vector2(15, 0);
+        
         zoomLevel = 10;
     }
     // Update is called once per frame
@@ -163,6 +164,7 @@ public class BallControler : MonoBehaviour
          }
 
 #endif
+        Debug.Log("Rotation2 :" + rotationValues);
         var curRotation = Quaternion.Euler(rotationValues);
         var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
         if (cam)
@@ -278,6 +280,12 @@ public class BallControler : MonoBehaviour
         }
     }
 
+    public void SetRotationValueY(float y)
+    {
+        rotationValues.x = 15;
+        rotationValues.y = y;
+        Debug.Log("Rotation :" + rotationValues);
+    }
     public void SetLastPosition(Vector3 position)
     {
         lastPosition = position;
