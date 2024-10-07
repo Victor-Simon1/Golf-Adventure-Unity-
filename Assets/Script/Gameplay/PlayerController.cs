@@ -14,27 +14,32 @@ using UnityEngine.TextCore.Text;
 
 public class PlayerController : NetworkBehaviour, IComparable
 {
+    [Header("Holes")]
     [SerializeField] public List<int> strokes = new List<int>();
     [SyncVar] public int actualHole;
-    [SyncVar]
-    [SerializeField] private string playerName = "Player";
+    public bool hasFinishHole = false;
 
+    [Header("Player info")]
+    [SyncVar] [SerializeField] private string playerName = "Player";
     public int id;
 
+    [Header("Gameobjects")]
     [SerializeField] private GameObject ball;
-    public bool hasFinishHole = false;
-    private PlayerScoreboardItem playerScore;
-
-    private Material mat;
-
     [SerializeField] private Camera camObj;
 
+    [Header("Material")]
+    private Material mat;
+
+    [Header("Audio")]
     [SerializeField] private AudioSource goodHoleSound;
 
     [Header("UI")]
-    private PlayerDisplay display;
-    [SerializeField] private PlayerUI playerUI;
     [SerializeField] private TextMeshProUGUI resultHoleText;
+
+    [Header("Scripts")]
+    private PlayerScoreboardItem playerScore;
+    [SerializeField] private PlayerUI playerUI;
+    private PlayerDisplay display;
 
     private void Start()
     {

@@ -9,6 +9,8 @@ public class MusicManager : MonoRegistrable
     private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClip;
     private int nextSong;
+
+    [Header("Volume")]
     private float minVolume = 0f;
     private float maxVolume = 0.02f;
     // Start is called before the first frame update

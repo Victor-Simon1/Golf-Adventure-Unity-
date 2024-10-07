@@ -16,14 +16,13 @@ public class BallControler : MonoBehaviour
     private Quaternion sr;
     public bool hasFinishHole = false;
 
-    [SerializeField] private bool isOutOfLimit = false;
-    [SerializeField] private bool isOnGreen = true;
     [SerializeField] private Vector3 offset;
 
     private bool moving;
     private bool magnHasChanged;
 
     private Touch touch;
+
     [Header("Camera")]
     [SerializeField] private Camera cam;
     private Vector2 rotationValues = new Vector2(0,0);
@@ -40,25 +39,32 @@ public class BallControler : MonoBehaviour
     float zoomModifierSpeed = 0.1f;
 
     [Header("Button")]
-  //  [SerializeField] private Button bStart;
     [SerializeField] private Button bPush;
+
     [Header("Slider")]
     [SerializeField] private Slider sliderForce;
     [SerializeField] private SliderTouch sliderTouch;
+
     [Header("Gameplay")]
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replac� la balle en cas de sortie de terrain
     private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
     [SerializeField] private float timeOutLimit = 0f;
     private float MaxTimeOutOfLimit = 5f;
+
+    [SerializeField] private bool isOutOfLimit = false;
+    [SerializeField] private bool isOnGreen = true;
+
     [Header("Movement")]
     private float limitForce = 0.3f;
     [SerializeField] private float maxAngularVelocity = 0.9f;
     [SerializeField] private float coeffAngularVelocity = 0.9f;
     [SerializeField] private PlayerController pc;
+
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioSource badHoleSound;
+
     [Header("Slope")]
     public Transform rearRayPos;
     public Transform frontRayPos;
