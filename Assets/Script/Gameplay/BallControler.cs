@@ -231,7 +231,7 @@ public class BallControler : MonoBehaviour
     }
     public void Push()
     {
-        if (hasFinishHole || isOutOfLimit)
+        if (hasFinishHole || isOutOfLimit || !isOnGreen)
             return;
         DoSound();
         lastPosition = transform.position;
@@ -319,7 +319,13 @@ public class BallControler : MonoBehaviour
             isOnGreen = true;
         }
     }
-
+    public void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.CompareTag("Green"))
+        {
+            isOnGreen = false;
+        }
+    }
     public void OnTriggerEnter(Collider other)
     {
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
