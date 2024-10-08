@@ -25,6 +25,9 @@ public class BallControler : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private Camera cam;
+
+    [SerializeField] private Transform lineVisual;
+
     private Vector2 rotationValues = new Vector2(0,0);
     //La sensibilit� n'est pas la m�me dans l'�diteur que sur t�l�phone
 #if UNITY_EDITOR
@@ -74,6 +77,8 @@ public class BallControler : MonoBehaviour
     public bool uphill;
     public bool flatSurface;
 
+    private bool firstEnable = true;
+
     void Start()
     {
         rotationValues = new Vector2(15, 0);
@@ -82,31 +87,48 @@ public class BallControler : MonoBehaviour
     {
         sp = transform.position;
         sr = transform.rotation;
+        if(pc.isLocalPlayer)
+        {
+            lineVisual.gameObject.SetActive(true);
 
-        var temp = GameObject.Find("ButtonPush");
-        if (temp == null && !hasFinishHole)
-            Debug.LogError("Error the variable temp is not assigned");
+            if (!hasFinishHole && firstEnable)
+            {
 
-        bPush = temp.GetComponent<Button>();
-        if (bPush == null && !hasFinishHole)
-            Debug.LogError("Error the variable bPush is not assigned");
-        bPush.onClick.AddListener(Push);
 
-        sliderForce = GameObject.Find("SliderForce").GetComponent<Slider>();
-        if (sliderForce == null && !hasFinishHole)
-            Debug.LogError("Error the variable sliderForce is not assigned");
+                var temp = GameObject.Find("ButtonPush");
+                if (temp == null)
+                    Debug.LogError("Error the variable temp is not assigned");
 
-        sliderTouch = GameObject.Find("SliderForce").GetComponent<SliderTouch>();
-        if (sliderTouch == null && !hasFinishHole)
-            Debug.LogError("Error the variable sliderTouch is not assigned");
+                bPush = temp.GetComponent<Button>();
+                if (bPush == null)
+                    Debug.LogError("Error the variable bPush is not assigned");
+                bPush.onClick.AddListener(Push);
 
-        cam = transform.parent.parent.GetChild(0).GetComponent<Camera>();
-        if (cam == null && !hasFinishHole)
-            Debug.LogError("Error the variable cam is not assigned");
+                sliderForce = GameObject.Find("SliderForce").GetComponent<Slider>();
+                if (sliderForce == null)
+                    Debug.LogError("Error the variable sliderForce is not assigned");
 
+                sliderTouch = GameObject.Find("SliderForce").GetComponent<SliderTouch>();
+                if (sliderTouch == null)
+                    Debug.LogError("Error the variable sliderTouch is not assigned");
+
+                cam = transform.parent.parent.GetChild(0).GetComponent<Camera>();
+                if (cam == null)
+                    Debug.LogError("Error the variable cam is not assigned");
+                firstEnable = false;
+            }
+        }
+        
+        rotationValues = new Vector2(15, 0);
         
         zoomLevel = 10;
     }
+
+    private void OnDisable()
+    {
+        lineVisual.gameObject.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -125,7 +147,6 @@ public class BallControler : MonoBehaviour
             var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
             rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
             rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
-
         }
         var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
         zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
@@ -175,7 +196,12 @@ public class BallControler : MonoBehaviour
         var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
         if (cam)
             cam.transform.SetPositionAndRotation(lookPosition, curRotation);
-
+        if (lineVisual)
+        {
+            var pos = transform.position;
+            lineVisual.SetPositionAndRotation(new Vector3 (pos.x, pos.y - 0.0499f, pos.z), Quaternion.Euler(new Vector3 (90, rotationValues.y, 0)));
+            
+        }
         //Detecting slope
         float camX = cam.transform.forward.x/7f;
         float camZ = cam.transform.forward.z/7f;
@@ -237,6 +263,8 @@ public class BallControler : MonoBehaviour
     }
     public void Push()
     {
+        lineVisual.gameObject.SetActive(false);
+        Debug.Log("Push the ball: " + pc.GetName());
         if (hasFinishHole || isOutOfLimit || !isOnGreen)
             return;
         DoSound();
@@ -267,6 +295,8 @@ public class BallControler : MonoBehaviour
 
     private void Stopped()
     {
+        if(pc.isLocalPlayer) 
+            lineVisual.gameObject.SetActive(true);
         if(isOnGreen)
         {
             if(AbsMagn <0.05f)
