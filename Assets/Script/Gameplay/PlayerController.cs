@@ -14,27 +14,32 @@ using UnityEngine.TextCore.Text;
 
 public class PlayerController : NetworkBehaviour, IComparable
 {
+    [Header("Holes")]
     [SerializeField] public List<int> strokes = new List<int>();
     [SyncVar] public int actualHole;
-    [SyncVar]
-    [SerializeField] private string playerName = "Player";
+    public bool hasFinishHole = false;
 
+    [Header("Player info")]
+    [SyncVar] [SerializeField] private string playerName = "Player";
     public int id;
 
+    [Header("Gameobjects")]
     [SerializeField] private GameObject ball;
-    public bool hasFinishHole = false;
-    private PlayerScoreboardItem playerScore;
-
-    private Material mat;
-
     [SerializeField] private Camera camObj;
 
+    [Header("Material")]
+    private Material mat;
+
+    [Header("Audio")]
     [SerializeField] private AudioSource goodHoleSound;
 
     [Header("UI")]
-    private PlayerDisplay display;
-    [SerializeField] private PlayerUI playerUI;
     [SerializeField] private TextMeshProUGUI resultHoleText;
+
+    [Header("Scripts")]
+    private PlayerScoreboardItem playerScore;
+    [SerializeField] private PlayerUI playerUI;
+    private PlayerDisplay display;
 
     private void Start()
     {
@@ -152,13 +157,17 @@ public class PlayerController : NetworkBehaviour, IComparable
         
         ball.GetComponent<Rigidbody>().freezeRotation = true;
         ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+      
         ball.transform.position = transform.localPosition;
         ball.transform.rotation = Quaternion.identity;
+
+       
         transform.position = location.position;
         ball.GetComponent<Rigidbody>().freezeRotation = false;
         //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
         SpawnBall();
         ball.GetComponent<BallControler>().SetLastPosition(transform.localPosition);
+        ball.GetComponent<BallControler>().SetRotationValueY(location.rotation.eulerAngles.y);
     }
     public void TpToLocation(Vector3 location)
     {

@@ -15,23 +15,27 @@ using UnityEngine.UI;
 
 public class GameManager : MonoRegistrable
 {
-
+    [Header("List")]
     [SerializeField] private List<PlayerController> players = new List<PlayerController>();
     [SerializeField] private List<StartBehaviour> starts = new List<StartBehaviour>();
     [SerializeField] private List<HoleBehavior> holes = new List<HoleBehavior>();
-
+    
+    [Header("Other Managers")]
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private UIManager uiManager;
-
     [SerializeField] private ErrorManager em;
 
+    [Header("Network Variables")]
     private string hostIP;
     private string sessionName;
     private bool isHost = false;
+
+    [Header("Gameplay Variables")]
     public int actualHole = 0;
     public int nbPlayerFinishHole = 0;
     public bool inGame;
 
+    [Header("Maps Variables")]
     [SerializeField] private string[] maps;
     private int mapId;
 

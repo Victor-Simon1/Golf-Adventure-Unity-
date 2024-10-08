@@ -16,14 +16,13 @@ public class BallControler : MonoBehaviour
     private Quaternion sr;
     public bool hasFinishHole = false;
 
-    [SerializeField] private bool isOutOfLimit = false;
-    [SerializeField] private bool isOnGreen = true;
     [SerializeField] private Vector3 offset;
 
     private bool moving;
     private bool magnHasChanged;
 
     private Touch touch;
+
     [Header("Camera")]
     [SerializeField] private Camera cam;
 
@@ -43,25 +42,32 @@ public class BallControler : MonoBehaviour
     float zoomModifierSpeed = 0.1f;
 
     [Header("Button")]
-  //  [SerializeField] private Button bStart;
     [SerializeField] private Button bPush;
+
     [Header("Slider")]
     [SerializeField] private Slider sliderForce;
     [SerializeField] private SliderTouch sliderTouch;
+
     [Header("Gameplay")]
     private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replac� la balle en cas de sortie de terrain
     private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
     [SerializeField] private float timeOutLimit = 0f;
     private float MaxTimeOutOfLimit = 5f;
+
+    [SerializeField] private bool isOutOfLimit = false;
+    [SerializeField] private bool isOnGreen = true;
+
     [Header("Movement")]
     private float limitForce = 0.3f;
     [SerializeField] private float maxAngularVelocity = 0.9f;
     [SerializeField] private float coeffAngularVelocity = 0.9f;
     [SerializeField] private PlayerController pc;
+
     [Header("Sound")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioSource badHoleSound;
+
     [Header("Slope")]
     public Transform rearRayPos;
     public Transform frontRayPos;
@@ -75,6 +81,7 @@ public class BallControler : MonoBehaviour
 
     void Start()
     {
+        rotationValues = new Vector2(15, 0);
     }
     private void OnEnable()
     {
@@ -113,6 +120,7 @@ public class BallControler : MonoBehaviour
         }
         
         rotationValues = new Vector2(15, 0);
+        
         zoomLevel = 10;
     }
 
@@ -183,6 +191,7 @@ public class BallControler : MonoBehaviour
          }
 
 #endif
+        Debug.Log("Rotation2 :" + rotationValues);
         var curRotation = Quaternion.Euler(rotationValues);
         var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
         if (cam)
@@ -256,7 +265,7 @@ public class BallControler : MonoBehaviour
     {
         lineVisual.gameObject.SetActive(false);
         Debug.Log("Push the ball: " + pc.GetName());
-        if (hasFinishHole || isOutOfLimit)
+        if (hasFinishHole || isOutOfLimit || !isOnGreen)
             return;
         DoSound();
         lastPosition = transform.position;
@@ -307,6 +316,12 @@ public class BallControler : MonoBehaviour
         }
     }
 
+    public void SetRotationValueY(float y)
+    {
+        rotationValues.x = 15;
+        rotationValues.y = y;
+        Debug.Log("Rotation :" + rotationValues);
+    }
     public void SetLastPosition(Vector3 position)
     {
         lastPosition = position;
@@ -340,7 +355,13 @@ public class BallControler : MonoBehaviour
             isOnGreen = true;
         }
     }
-
+    public void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.CompareTag("Green"))
+        {
+            isOnGreen = false;
+        }
+    }
     public void OnTriggerEnter(Collider other)
     {
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
