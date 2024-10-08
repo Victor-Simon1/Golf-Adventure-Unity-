@@ -263,14 +263,14 @@ MonoBehaviour:
   syncInterval: 0.1
   strokes: 
   actualHole: 0
+  hasFinishHole: 0
   playerName: Player
   id: 0
   ball: {fileID: 2280871444263343271}
-  hasFinishHole: 0
   camObj: {fileID: 2028859925345120222}
   goodHoleSound: {fileID: 2093450403390913769}
-  playerUI: {fileID: 0}
   resultHoleText: {fileID: 0}
+  playerUI: {fileID: 0}
 --- !u!114 &8651431653243201400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,6 +432,7 @@ GameObject:
   - component: {fileID: 6544871517458406900}
   - component: {fileID: 4257657809144899257}
   - component: {fileID: 3925394259920804709}
+  - component: {fileID: 4100992949102334233}
   m_Layer: 3
   m_Name: GolfBall
   m_TagString: Player
@@ -562,8 +563,6 @@ MonoBehaviour:
   AbsMagn: 0
   rb: {fileID: 6544871517458406900}
   hasFinishHole: 0
-  isOutOfLimit: 0
-  isOnGreen: 1
   offset: {x: 0, y: 0, z: 0}
   cam: {fileID: 0}
   zoomModifierSpeed: 0.1
@@ -574,6 +573,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   timeOutLimit: 0
+  isOutOfLimit: 0
+  isOnGreen: 1
   maxAngularVelocity: 0.9
   coeffAngularVelocity: 0.9
   pc: {fileID: -3911127702487239908}
@@ -627,7 +628,7 @@ Rigidbody:
   m_GameObject: {fileID: 2280871444263343271}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0.5
+  m_Drag: 0.18
   m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
