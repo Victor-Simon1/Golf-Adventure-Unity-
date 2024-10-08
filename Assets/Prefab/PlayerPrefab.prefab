@@ -263,14 +263,14 @@ MonoBehaviour:
   syncInterval: 0.1
   strokes: 
   actualHole: 0
+  hasFinishHole: 0
   playerName: Player
   id: 0
   ball: {fileID: 2280871444263343271}
-  hasFinishHole: 0
   camObj: {fileID: 2028859925345120222}
   goodHoleSound: {fileID: 2093450403390913769}
-  playerUI: {fileID: 0}
   resultHoleText: {fileID: 0}
+  playerUI: {fileID: 0}
 --- !u!114 &8651431653243201400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,8 +562,6 @@ MonoBehaviour:
   AbsMagn: 0
   rb: {fileID: 6544871517458406900}
   hasFinishHole: 0
-  isOutOfLimit: 0
-  isOnGreen: 1
   offset: {x: 0, y: 0, z: 0}
   cam: {fileID: 2028859925345120222}
   lineVisual: {fileID: 5048026304379257237}
@@ -575,6 +573,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   timeOutLimit: 0
+  isOutOfLimit: 0
+  isOnGreen: 1
   maxAngularVelocity: 0.9
   coeffAngularVelocity: 0.9
   pc: {fileID: -3911127702487239908}
@@ -645,7 +645,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!82 &4257657809144899257
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1189,7 +1189,7 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 20.78461
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -1204,7 +1204,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
