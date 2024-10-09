@@ -9,6 +9,8 @@ public class Scoreboard : MonoBehaviour
 
     [SerializeField] Transform playerScoreboardList;
 
+    [SerializeField] List<PlayerScoreboardItem> ScoreboardItems = new List<PlayerScoreboardItem>();
+
     private void Awake()
     {
         //Recupere l'array du server 
@@ -19,8 +21,19 @@ public class Scoreboard : MonoBehaviour
             GameObject itemGo = Instantiate(playerScoreboardItem,playerScoreboardList);
             itemGo.SetActive(true);
             PlayerScoreboardItem item = itemGo.GetComponent<PlayerScoreboardItem>();
+            ScoreboardItems.Add(item);
             if (item != null)
                 item.Setup(p);
+        }
+    }
+
+    public void TriPlayer()
+    {
+        ScoreboardItems.Sort();
+        int i = 1;
+        foreach (PlayerScoreboardItem item in ScoreboardItems)
+        {
+            item.transform.SetSiblingIndex(i++);
         }
     }
 }
