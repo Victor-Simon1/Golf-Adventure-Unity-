@@ -19,7 +19,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private Vector3 offset;
 
     private bool moving;
-    private bool magnHasChanged;
+    [SerializeField] private bool magnHasChanged;
 
     private Touch touch;
 
@@ -262,6 +262,8 @@ public class BallControler : MonoBehaviour
     }
     public void Push()
     {
+        //When the ball is moving and under the limit,it dont pass to false so its reactiviting the stopped function
+        magnHasChanged = false;
         lineVisual.gameObject.SetActive(false);
         Debug.Log("Push the ball: " + pc.GetName());
         if (hasFinishHole || isOutOfLimit || !isOnGreen)
@@ -294,12 +296,16 @@ public class BallControler : MonoBehaviour
 
     private void Stopped()
     {
-        if(pc.isLocalPlayer) 
-            lineVisual.gameObject.SetActive(true);
+       
         if(isOnGreen)
         {
             if(AbsMagn <0.05f)
             {
+                if (pc.isLocalPlayer)
+                {
+                    Debug.Log("Debug line");
+                    lineVisual.gameObject.SetActive(true);
+                }
                 moving = false;
                 Debug.Log("Ball stopped");
             }
