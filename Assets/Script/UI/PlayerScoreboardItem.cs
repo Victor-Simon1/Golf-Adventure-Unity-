@@ -42,14 +42,4 @@ public class PlayerScoreboardItem : MonoBehaviour,IComparable
         return 0;
     }
 
-    public int CompareTo(object obj)
-    {
-        var a = this;
-        var b = obj as PlayerScoreboardItem;
-        if (a.nbStrokes < b.nbStrokes)
-            return -1;
-        if (a.nbStrokes > b.nbStrokes)
-            return 1;
-        return 0;
-    }
 }

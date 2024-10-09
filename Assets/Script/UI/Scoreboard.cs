@@ -10,8 +10,6 @@ public class Scoreboard : MonoBehaviour
     [SerializeField] Transform playerScoreboardList;
     [SerializeField] List<PlayerScoreboardItem> ScoreboardItems = new List<PlayerScoreboardItem>();
 
-    [SerializeField] List<PlayerScoreboardItem> ScoreboardItems = new List<PlayerScoreboardItem>();
-
     private void Awake()
     {
         Init();
