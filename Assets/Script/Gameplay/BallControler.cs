@@ -191,7 +191,6 @@ public class BallControler : MonoBehaviour
          }
 
 #endif
-        Debug.Log("Rotation2 :" + rotationValues);
         var curRotation = Quaternion.Euler(rotationValues);
         var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
         if (cam)
