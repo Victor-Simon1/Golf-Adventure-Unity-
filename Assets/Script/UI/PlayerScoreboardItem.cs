@@ -11,6 +11,7 @@ public class PlayerScoreboardItem : MonoBehaviour,IComparable
     [SerializeField] TextMeshProUGUI strokeText;
 
     private int nbStrokes;
+    
     public void Setup(PlayerController p)
     {
         usernameText.text = p.GetName();
@@ -24,6 +25,21 @@ public class PlayerScoreboardItem : MonoBehaviour,IComparable
     {
         nbStrokes = sum;
         strokeText.text = sum.ToString();
+        nbStrokes = sum;
+    }
+
+    public int CompareTo(object obj)
+    {
+        var a = this;
+        var b = obj as PlayerScoreboardItem;
+
+        if (a.nbStrokes < b.nbStrokes)
+            return -1;
+
+        if (a.nbStrokes > b.nbStrokes)
+            return 1;
+
+        return 0;
     }
 
     public int CompareTo(object obj)
