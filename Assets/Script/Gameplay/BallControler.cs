@@ -28,7 +28,7 @@ public class BallControler : MonoBehaviour
 
     [SerializeField] private Transform lineVisual;
 
-    private Vector2 rotationValues = new Vector2(0,0);
+    [SerializeField] private Vector2 rotationValues = new Vector2(0,0);
     //La sensibilit� n'est pas la m�me dans l'�diteur que sur t�l�phone
 #if UNITY_EDITOR
     private float RotationSensitivity = 100f;
@@ -146,7 +146,7 @@ public class BallControler : MonoBehaviour
         {
             var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
             rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
-            rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+            rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, /*-80f*/10f, 80f), rotationValues.y);
         }
         var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
         zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
@@ -163,7 +163,7 @@ public class BallControler : MonoBehaviour
                 {
                     var mouseMovement = new Vector2(-touch.deltaPosition.y * 3f, touch.deltaPosition.x * 3f);
                     rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
-                    rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+                    rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, /*-80f*/10f, 80f),rotationValues.y);
                 }
             }
             else if (Input.touchCount == 2)
