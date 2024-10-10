@@ -11,12 +11,15 @@ public class VictoryPopup : MonoBehaviour
     [SerializeField] private bool isRetracted= true;
     [SerializeField] private bool isMoving = false;
     [SerializeField] private GameObject scoreboard;
+    [SerializeField] private GameObject playerList;
 
     private void Start()
     {
         Vector3 scale = transform.parent.parent.localScale;
         decalX *= scale.x;
         decalY *= scale.y;
+
+        playerList = transform.GetChild(2).GetChild(1).gameObject;
     }
 
     public void ChangeMessage(string str)
@@ -33,6 +36,7 @@ public class VictoryPopup : MonoBehaviour
         {
             text.text = "<";
             scoreboard.SetActive(true);
+         
             endPosition = startPosition + new Vector3(decalX, decalY, 0);
         }
         else
@@ -49,6 +53,7 @@ public class VictoryPopup : MonoBehaviour
     IEnumerator Animate(Vector3 startPosition,Vector3 endPosition,float duration)
     {
         var timeElapsed = 0f;
+        scoreboard.GetComponent<Scoreboard>().TriPlayer();
         isMoving = true;
         while (timeElapsed < duration)
         {

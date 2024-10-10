@@ -19,7 +19,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private Vector3 offset;
 
     private bool moving;
-    private bool magnHasChanged;
+    [SerializeField] private bool magnHasChanged;
 
     private Touch touch;
 
@@ -28,7 +28,7 @@ public class BallControler : MonoBehaviour
 
     [SerializeField] private Transform lineVisual;
 
-    private Vector2 rotationValues = new Vector2(0,0);
+    [SerializeField] private Vector2 rotationValues = new Vector2(0,0);
     //La sensibilit� n'est pas la m�me dans l'�diteur que sur t�l�phone
 #if UNITY_EDITOR
     private float RotationSensitivity = 100f;
@@ -148,7 +148,7 @@ public class BallControler : MonoBehaviour
         {
             var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
             rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
-            rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+            rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, /*-80f*/10f, 80f), rotationValues.y);
         }
         var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
         zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
@@ -165,7 +165,7 @@ public class BallControler : MonoBehaviour
                 {
                     var mouseMovement = new Vector2(-touch.deltaPosition.y * 3f, touch.deltaPosition.x * 3f);
                     rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
-                    rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, -80f, 80f), rotationValues.y);
+                    rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, /*-80f*/10f, 80f),rotationValues.y);
                 }
             }
             else if (Input.touchCount == 2)
@@ -193,7 +193,6 @@ public class BallControler : MonoBehaviour
          }
 
 #endif
-        //Debug.Log("Rotation2 :" + rotationValues);
         var curRotation = Quaternion.Euler(rotationValues);
         var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
         if (cam)
@@ -263,6 +262,8 @@ public class BallControler : MonoBehaviour
     }
     public void Push()
     {
+        //When the ball is moving and under the limit,it dont pass to false so its reactiviting the stopped function
+        magnHasChanged = false;
         lineVisual.gameObject.SetActive(false);
         Debug.Log("Push the ball: " + pc.GetName());
         if (hasFinishHole || isOutOfLimit || !isOnGreen)
