@@ -7,13 +7,19 @@ public class HoleBehavior : MonoBehaviour, IComparable
     public int id;
     public static int max;
     public int maxStrokes = 0;
-    private void OnEnable()
+
+    private void Awake()
     {
         max += 1;
         Debug.Log("Register Hole " + id);
+    }
 
+    private void Start()
+    {
         ServiceLocator.Get<GameManager>().AddHole(this);
     }
+
+
     public int CompareTo(object obj)
     {
         var a = this;
