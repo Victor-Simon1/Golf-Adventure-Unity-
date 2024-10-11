@@ -7,13 +7,14 @@ using static UnityEngine.Rendering.DebugUI;
 public class SettingsManager : MonoRegistrable
 {
     [SerializeField] private AudioMixer audioMixer;
-
+    //[SerializeField] private AudioMixer audioMixer;
     [SerializeField] public bool vibrateOn;
     [SerializeField] public float sfxVolume = 0.5f,musicVolume = 0.5f;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
+        //Set Float of AudioMixer dont work in awake
         DontDestroyOnLoad(this);
         ServiceLocator.Register<SettingsManager>(this, false);
         if(PlayerPrefs.HasKey("Vibration"))

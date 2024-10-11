@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Services;
+using System;
 
 public class ColourPickerControl : MonoBehaviour
 {
@@ -41,7 +42,10 @@ public class ColourPickerControl : MonoBehaviour
         }
 
         hueTexture.Apply();
-        currentHue = 0;
+        if (!PlayerPrefs.HasKey("CurrentHue"))
+            currentHue = 0;
+        else
+            currentHue = PlayerPrefs.GetFloat("CurrentHue");
 
         hueImage.texture = hueTexture;
     }
@@ -61,9 +65,17 @@ public class ColourPickerControl : MonoBehaviour
         }
 
         svTexture.Apply();
+        if (!PlayerPrefs.HasKey("CurrentSat"))
+        {
+            currentSat = 0;
+            currentVal = 0;
+        }
+        else
+        {
+            currentSat = PlayerPrefs.GetFloat("CurrentSat");
+            currentVal = PlayerPrefs.GetFloat("CurrentVal");
+        }
 
-        currentSat = 0;
-        currentVal = 0;
 
         satValImage.texture = svTexture;
     }
@@ -103,7 +115,17 @@ public class ColourPickerControl : MonoBehaviour
 
     public void ChangeColorPlayer()
     {
+        SaveColor();
         ServiceLocator.Get<GameManager>().GetLocalPlayer().SetColor(finalColor);
+    }
+
+    public void SaveColor()
+    {
+        PlayerPrefs.SetFloat("CurrentHue", currentHue);
+
+        PlayerPrefs.SetFloat("CurrentSat", currentSat);
+
+        PlayerPrefs.SetFloat("CurrentVal", currentVal);
     }
 
 }

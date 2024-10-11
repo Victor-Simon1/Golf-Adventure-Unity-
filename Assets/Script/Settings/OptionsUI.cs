@@ -49,14 +49,11 @@ public class OptionsUI : MonoBehaviour
     {
         if (!startDone)
             return;
-       
-
         mSettings = ServiceLocator.Get<SettingsManager>();
         mSettings.ApplySound();
         if (mSettings == null)
             Debug.LogError("Settings Manager was not found ! ");
         musicSlider.value = mSettings.musicVolume;
-        Debug.Log("Set options :" + mSettings.musicVolume);
         musicSlider.onValueChanged.AddListener(
                        delegate
                        {
@@ -65,7 +62,6 @@ public class OptionsUI : MonoBehaviour
                        });
 
         effectsSlider.value = mSettings.sfxVolume;
-        Debug.Log("Set options :" + mSettings.sfxVolume);
         effectsSlider.onValueChanged.AddListener(
                       delegate
                       {
