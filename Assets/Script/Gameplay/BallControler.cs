@@ -59,7 +59,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private bool isOnGreen = true;
 
     [Header("Movement")]
-    private float limitForce = 0.3f;
+    [SerializeField] private float limitForce = 0.35f;
     [SerializeField] private float maxAngularVelocity = 0.9f;
     [SerializeField] private float coeffAngularVelocity = 0.9f;
     [SerializeField] private PlayerController pc;
@@ -82,6 +82,8 @@ public class BallControler : MonoBehaviour
     void Start()
     {
         rotationValues = new Vector2(15, 0);
+        //rb.inertiaTensor = new Vector3(0, 0, 0);
+        //rb.inertiaTensorRotation = new Quaternion(0.1f, 0.1f, 0.1f, 0f);
     }
     private void OnEnable()
     {
@@ -250,14 +252,12 @@ public class BallControler : MonoBehaviour
     private void FixedUpdate()
     {
         //Speed
-        AbsMagn = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
-
+        AbsMagn = Vector3.Magnitude(rb.velocity);
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)
             magnHasChanged = false;
-
-        if (moving && magnHasChanged && AbsMagn < limitForce)
+        if (moving && magnHasChanged && AbsMagn < 0.4)
             Stopped();
     }
     public void Push()
@@ -273,11 +273,11 @@ public class BallControler : MonoBehaviour
         var vec = cam.transform.forward;
         force = sliderForce.value*scaleForce;
         float sensY = rb.velocity.normalized.y;
-        if(uphill)
+        /*if(uphill)
             sensY = Mathf.Abs(sensY);
         if (flatSurface)
-            sensY = 0f;
-        vec = new Vector3(vec.x, sensY, vec.z);
+            sensY = 0f;*/
+        vec = new Vector3(vec.x, /*sensY*/ 0, vec.z);
         pc.PushBall(vec, force);
         moving = true;
     }
@@ -296,29 +296,22 @@ public class BallControler : MonoBehaviour
 
     private void Stopped()
     {
-       
-        if(isOnGreen)
+        if (AbsMagn < 0.04f)
         {
-            if(AbsMagn <0.05f)
+            Debug.Log("Ball stopped");
+            rb.Sleep();
+            if (pc.isLocalPlayer)
+                lineVisual.gameObject.SetActive(true);
+            moving = false;
+            if (isOutOfLimit)
             {
+                TpToLastLocation();
                 if (pc.isLocalPlayer)
-                {
-                    Debug.Log("Debug line");
                     lineVisual.gameObject.SetActive(true);
-                }
-                moving = false;
-                Debug.Log("Ball stopped");
             }
-            else
-                Debug.Log("Ball is stopping");
-            rb.velocity = rb.velocity * coeffAngularVelocity; //* Time.deltaTime;
-            coeffAngularVelocity = coeffAngularVelocity -coeffAngularVelocity * (0.001f / 100)*Time.fixedDeltaTime;//0.99f;
-
         }
-        if(isOutOfLimit) 
-        {
-            TpToLastLocation();
-        }
+        rb.velocity = rb.velocity * coeffAngularVelocity; //* Time.deltaTime;
+        coeffAngularVelocity = coeffAngularVelocity -coeffAngularVelocity * (0.001f / 100)*Time.fixedDeltaTime;//0.99f;
     }
 
     public void SetRotationValueY(float y)

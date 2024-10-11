@@ -10,13 +10,17 @@ public class StartBehaviour : MonoBehaviour, IComparable
     public int id;
     public static int max;
 
-    private void OnEnable()
+    private void Awake()
     {
         max += 1;
         Debug.Log("Register Start " + id);
+    }
 
+    private void Start()
+    {
         ServiceLocator.Get<GameManager>().AddStart(this);
     }
+
     public int CompareTo(object obj)
     {
         var a = this;
