@@ -283,6 +283,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         hasFinishHole = true;
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
+//#if UNITY_ANDROID //&& !UNITY_EDITOR
+            Debug.Log("Je vibre");
+            Handheld.Vibrate();
+//#endif
             Debug.Log("play sound");
             goodHoleSound.Play();
             Debug.Log("play animation");
