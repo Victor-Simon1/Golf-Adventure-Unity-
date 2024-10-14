@@ -346,6 +346,7 @@ public class BallControler : MonoBehaviour
     {
         if (collision.transform.CompareTag("Ground"))
         {
+            Debug.Log("Hors limit... " +collision.gameObject.name); 
             isOutOfLimit = true;
         }
         if (collision.transform.CompareTag("Green"))
