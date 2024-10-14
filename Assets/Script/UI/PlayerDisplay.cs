@@ -12,7 +12,7 @@ public class PlayerDisplay : MonoBehaviour
 
     private void Start()
     {
-        if(pc.isLocalPlayer)
+        if(pc.isLocalPlayer && PlayerPrefs.HasKey("CurrentHue"))
         {
             Color currentColor = Color.HSVToRGB(PlayerPrefs.GetFloat("CurrentHue"), PlayerPrefs.GetFloat("CurrentSat"), PlayerPrefs.GetFloat("CurrentVal"));
             image.color = currentColor;

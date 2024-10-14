@@ -53,7 +53,7 @@ public class BallControler : MonoBehaviour
     private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
     [SerializeField] private float timeOutLimit = 0f;
-    private float MaxTimeOutOfLimit = 5f;
+    private float MaxTimeOutOfLimit = 3f;
 
     [SerializeField] private bool isOutOfLimit = false;
     [SerializeField] private bool isOnGreen = true;
