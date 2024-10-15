@@ -177,12 +177,14 @@ public class PlayerController : NetworkBehaviour, IComparable
     }
     public void TpToLocation(Vector3 location)
     {
+        //Debug.Log("Deubt tp to location:" + ball.transform.position);
         ball.GetComponent<Rigidbody>().freezeRotation = true;
         ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        ball.transform.position = transform.localPosition;
+        ball.transform.position = location;//transform.localPosition;
         ball.transform.rotation = Quaternion.identity;
-        transform.position = location;
+        //transform.position = location;
         ball.GetComponent<Rigidbody>().freezeRotation = false;
+        //Debug.Log("Fin tp to location" + ball.transform.position);
     }
     public void SpawnBall()
     {
