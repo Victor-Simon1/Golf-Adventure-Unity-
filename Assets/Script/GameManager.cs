@@ -12,6 +12,7 @@ using Services;
 using System;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using System.Net.NetworkInformation;
 
 public class GameManager : MonoRegistrable
 {
@@ -48,6 +49,8 @@ public class GameManager : MonoRegistrable
     private void Start()
     {
         networkManager = ServiceLocator.Get<StockNetManager>().GetNetworkManager();
+
+        Display();
     }
 
     private void OnEnable()
@@ -265,15 +268,46 @@ public class GameManager : MonoRegistrable
 
     private string GetLocalIPAddress()
     {
-        var host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (var ip in host.AddressList)
+        foreach(UnicastIPAddressInformation add in NetworkInterface.GetAllNetworkInterfaces()[0].GetIPProperties().UnicastAddresses)
         {
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            Debug.Log(add.Address.ToString());
+            if (add.Address.AddressFamily == AddressFamily.InterNetwork)
             {
-                return ip.ToString();
+                return add.Address.ToString();
             }
         }
-        throw new System.Exception("No network adapters with an IPv4 address in the system!");
+        /*var host = Dns.GetHostEntry(Dns.GetHostName());
+       Debug.Log(Dns.GetHostName());
+       foreach (var ip in host.AddressList)
+       {
+           Debug.Log(ip.ToString());
+           if (ip.AddressFamily == AddressFamily.InterNetwork)
+           {
+               return ip.ToString();
+           }
+       }
+       throw new System.Exception("No network adapters with an IPv4 address in the system!");*/
+        return "";
+    }
+
+    public void Display()
+    {
+        foreach (NetworkInterface netInterface in
+        NetworkInterface.GetAllNetworkInterfaces())
+            {
+                Debug.Log("Name: " + netInterface.Name);
+                Debug.Log("Description: " + netInterface.Description);
+                Debug.Log("Addresses: ");
+
+                IPInterfaceProperties ipProps = netInterface.GetIPProperties();
+
+                foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
+                {
+                    Debug.Log(" " + addr.Address.ToString());
+                }
+
+                Debug.Log("");
+            }
     }
 
     public string GetIP()

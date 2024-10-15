@@ -92,7 +92,6 @@ public class BallControler : MonoBehaviour
         if(pc.isLocalPlayer)
         {
             lineVisual.gameObject.SetActive(true);
-
             if (!hasFinishHole && firstEnable)
             {
 
@@ -278,6 +277,7 @@ public class BallControler : MonoBehaviour
         if (flatSurface)
             sensY = 0f;*/
         vec = new Vector3(vec.x, /*sensY*/ 0, vec.z);
+        //rb.AddForce(vec * force, ForceMode.Impulse);
         pc.PushBall(vec, force);
         moving = true;
     }

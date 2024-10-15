@@ -5262,6 +5262,11 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 778045979305346330, guid: 70be4e7f5e604d94f9c0510c1a196131,
         type: 3}
+      propertyPath: networkAddress
+      value: 192.168.0.0
+      objectReference: {fileID: 0}
+    - target: {fileID: 778045979305346330, guid: 70be4e7f5e604d94f9c0510c1a196131,
+        type: 3}
       propertyPath: dontDestroyOnLoad
       value: 1
       objectReference: {fileID: 0}
@@ -5273,6 +5278,11 @@ PrefabInstance:
     - target: {fileID: 1793743812315104206, guid: 70be4e7f5e604d94f9c0510c1a196131,
         type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1941190877715089650, guid: 70be4e7f5e604d94f9c0510c1a196131,
+        type: 3}
+      propertyPath: DualMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2265881221828086928, guid: 70be4e7f5e604d94f9c0510c1a196131,

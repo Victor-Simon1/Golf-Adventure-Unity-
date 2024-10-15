@@ -41,6 +41,12 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SerializeField] private PlayerUI playerUI;
     private PlayerDisplay display;
 
+    [Header("Network")]
+    [SerializeField] private Behaviour nrbLocal;
+    [SerializeField] private Behaviour nrbNotLocal;
+    [SerializeField] private Behaviour nTransformLocal;
+    [SerializeField] private Behaviour nTransformNotLocal;
+
     private void Start()
     {
         mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
@@ -195,7 +201,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [Command]
     public void PushBall(Vector3 dir,float force)
     {
-        ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.VelocityChange);
+        ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
         RpcAddStroke();
     }
     [Command]
