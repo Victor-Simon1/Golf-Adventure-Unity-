@@ -49,7 +49,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private SliderTouch sliderTouch;
 
     [Header("Gameplay")]
-    private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replac� la balle en cas de sortie de terrain
+    [SerializeField] private Vector3 lastPosition;//Position avant de tirer afin de pouvoir replac� la balle en cas de sortie de terrain
     private bool endFirstPut;//Pour remettre les collisions entre les balles
     [SerializeField] private LayerMask ballLayer;
     [SerializeField] private float timeOutLimit = 0f;
@@ -263,11 +263,12 @@ public class BallControler : MonoBehaviour
     public void Push()
     {
         //When the ball is moving and under the limit,it dont pass to false so its reactiviting the stopped function
+        if (hasFinishHole || isOutOfLimit || !isOnGreen)
+            return;
         magnHasChanged = false;
         lineVisual.gameObject.SetActive(false);
         Debug.Log("Push the ball: " + pc.GetName());
-        if (hasFinishHole || isOutOfLimit || !isOnGreen)
-            return;
+      
         DoSound();
         lastPosition = transform.position;
         var vec = cam.transform.forward;
@@ -326,7 +327,7 @@ public class BallControler : MonoBehaviour
     }
     private void TpToLastLocation()
     {
-        Debug.Log("En dehors des limites... Tps vers la dernieres positions");
+        Debug.Log("En dehors des limites... Tps vers la dernieres positions :" + lastPosition);
         pc.TpToLocation(lastPosition);
         isOutOfLimit = false;
         timeOutLimit = 0f;
@@ -344,9 +345,9 @@ public class BallControler : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.CompareTag("Ground"))
+        if (collision.transform.CompareTag("Ground") && !isOnGreen)
         {
-            Debug.Log("Hors limit... " +collision.gameObject.name); 
+            Debug.Log("Hors limit... " +collision.gameObject.name + "(" + collision.contacts[0].point +")"); 
             isOutOfLimit = true;
         }
         if (collision.transform.CompareTag("Green"))
