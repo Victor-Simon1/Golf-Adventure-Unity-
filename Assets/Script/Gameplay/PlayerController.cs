@@ -204,6 +204,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void PushBall(Vector3 dir,float force)
     {
         ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+        ball.GetComponent<BallControler>().moving = true;
         RpcAddStroke();
     }
     [Command]

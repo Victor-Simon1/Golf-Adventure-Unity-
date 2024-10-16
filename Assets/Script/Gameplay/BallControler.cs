@@ -4,6 +4,8 @@ using Services;
 using TMPro;
 using System.Collections;
 using Unity.VisualScripting;
+using Mirror;
+
 public class BallControler : MonoBehaviour
 {
     [Header("Control")]
@@ -16,9 +18,12 @@ public class BallControler : MonoBehaviour
     private Quaternion sr;
     public bool hasFinishHole = false;
 
+    public bool isVisualized = false;
+
     [SerializeField] private Vector3 offset;
 
-    private bool moving;
+    public bool moving;
+
     [SerializeField] private bool magnHasChanged;
 
     private Touch touch;
@@ -133,24 +138,26 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Si on est en dehors des limits, tp dans le temps donn�
-        if (isOutOfLimit)
-            timeOutLimit += Time.deltaTime;
-        if(timeOutLimit>MaxTimeOutOfLimit)
+        if (isVisualized)
         {
-            TpToLastLocation();
-        }
-       
+            //Si on est en dehors des limits, tp dans le temps donn�
+            if (isOutOfLimit)
+                timeOutLimit += Time.deltaTime;
+            if (timeOutLimit > MaxTimeOutOfLimit)
+            {
+                TpToLastLocation();
+            }
+
 #if UNITY_EDITOR
-        //Permet de tester l'orientation et le zomm dans l'�diteur
-        if (Input.GetMouseButton(1))
-        {
-            var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
-            rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
-            rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, /*-80f*/10f, 80f), rotationValues.y);
-        }
-        var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
-        zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
+            //Permet de tester l'orientation et le zomm dans l'�diteur
+            if (Input.GetMouseButton(1))
+            {
+                var mouseMovement = new Vector2(-Input.GetAxis("Mouse Y") * 3f, Input.GetAxis("Mouse X") * 3f);
+                rotationValues += mouseMovement * RotationSensitivity * Time.unscaledDeltaTime;
+                rotationValues = new Vector2(Mathf.Clamp(rotationValues.x, /*-80f*/10f, 80f), rotationValues.y);
+            }
+            var zoomInput = -Input.GetAxis("Mouse ScrollWheel") * 10f;
+            zoomLevel = Mathf.Clamp(zoomLevel + zoomInput, 1f, 10f);
 
 #else
         //Permet de tester l'orientation et le zomm dans le t�lephone
@@ -192,61 +199,61 @@ public class BallControler : MonoBehaviour
          }
 
 #endif
-        var curRotation = Quaternion.Euler(rotationValues);
-        var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
-        if (cam)
-            cam.transform.SetPositionAndRotation(lookPosition, curRotation);
-        if (lineVisual)
-        {
-            var pos = transform.position;
-            lineVisual.SetPositionAndRotation(new Vector3 (pos.x, pos.y - 0.0499f, pos.z), Quaternion.Euler(new Vector3 (90, rotationValues.y, 0)));
-            
+            var curRotation = Quaternion.Euler(rotationValues);
+            var lookPosition = transform.position - (curRotation * Vector3.forward * zoomLevel);
+            if (cam)
+                cam.transform.SetPositionAndRotation(lookPosition, curRotation);
+            if (lineVisual)
+            {
+                var pos = transform.position;
+                lineVisual.SetPositionAndRotation(new Vector3(pos.x, pos.y - 0.0499f, pos.z), Quaternion.Euler(new Vector3(90, rotationValues.y, 0)));
+
+            }
+            //Detecting slope
+            float camX = cam.transform.forward.x / 7f;
+            float camZ = cam.transform.forward.z / 7f;
+
+            frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
+            rearRayPos.position = transform.position + new Vector3(-camX, 0, -camZ);
+            {
+                RaycastHit rearHit;
+                if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
+                {
+                    surfaceAngle = Vector3.Angle(rearHit.normal, Vector3.up);
+                }
+                else
+                {
+                    uphill = false;
+                    flatSurface = false;
+                }
+
+                RaycastHit frontHit;
+                Vector3 frontRayStartPos = new Vector3(frontRayPos.position.x, frontRayPos.position.y, frontRayPos.position.z);
+                if (Physics.Raycast(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up), out frontHit, 1f, layerMask))
+                {
+                }
+                else
+                {
+                    uphill = true;
+                    flatSurface = false;
+                }
+                if (Mathf.Abs(rearHit.distance - frontHit.distance) < 0.02f)
+                {
+                    flatSurface = true;
+                    uphill = false;
+                }
+                else if (frontHit.distance < rearHit.distance)
+                {
+                    uphill = true;
+                    flatSurface = false;
+                }
+                else if (frontHit.distance > rearHit.distance)
+                {
+                    uphill = false;
+                    flatSurface = false;
+                }
+            }
         }
-        //Detecting slope
-        float camX = cam.transform.forward.x/7f;
-        float camZ = cam.transform.forward.z/7f;
-
-        frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
-        rearRayPos.position= transform.position + new Vector3(-camX, 0, -camZ);
-        {
-            RaycastHit rearHit;
-            if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
-            {
-                surfaceAngle = Vector3.Angle(rearHit.normal, Vector3.up);
-            }
-            else
-            {
-                uphill = false;
-                flatSurface = false;
-            }
-
-            RaycastHit frontHit;
-            Vector3 frontRayStartPos = new Vector3(frontRayPos.position.x, frontRayPos.position.y, frontRayPos.position.z);
-            if (Physics.Raycast(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up), out frontHit, 1f, layerMask))
-            {
-            }
-            else
-            {
-                uphill = true;
-                flatSurface = false;
-            }
-            if(Mathf.Abs(rearHit.distance - frontHit.distance) < 0.02f)
-            {
-                flatSurface = true;
-                uphill = false;
-            }
-            else if (frontHit.distance < rearHit.distance)
-            {
-                uphill = true;
-                flatSurface = false;
-            }
-            else if (frontHit.distance > rearHit.distance)
-            {
-                uphill = false;
-                flatSurface = false;
-            }
-       }
-       
     }
     private void FixedUpdate()
     {
@@ -280,7 +287,6 @@ public class BallControler : MonoBehaviour
         vec = new Vector3(vec.x, /*sensY*/ 0, vec.z);
         //rb.AddForce(vec * force, ForceMode.Impulse);
         pc.PushBall(vec, force);
-        moving = true;
     }
     private void DoSound()
     {

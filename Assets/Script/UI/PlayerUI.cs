@@ -50,6 +50,7 @@ public class PlayerUI : MonoBehaviour
         {
             if (displayedPlayer != null)
             {
+                displayedPlayer.GetBall().GetComponent<BallControler>().isVisualized = false;
                 displayedPlayer.ActivateAll(false);
                 displayedPlayer.SetPlayerUI(null);
             }
@@ -58,6 +59,7 @@ public class PlayerUI : MonoBehaviour
             playerName.text = pc.GetName();
             displayedPlayer = pc;
             displayedPlayer.ActivateAll(true);
+            displayedPlayer.GetBall().GetComponent<BallControler>().isVisualized = true;
         }
     }
 

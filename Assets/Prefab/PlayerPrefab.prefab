@@ -618,7 +618,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   componentsToDisable:
-  - {fileID: 2609761587280812506}
   - {fileID: 3308073455899982781}
   - {fileID: 2028859925345120222}
 --- !u!114 &2609761587280812506
@@ -638,7 +637,9 @@ MonoBehaviour:
   AbsMagn: 0
   rb: {fileID: 6544871517458406900}
   hasFinishHole: 0
+  isVisualized: 0
   offset: {x: 0, y: 0, z: 0}
+  moving: 0
   magnHasChanged: 0
   cam: {fileID: 2028859925345120222}
   lineVisual: {fileID: 5048026304379257237}
@@ -647,6 +648,7 @@ MonoBehaviour:
   bPush: {fileID: 0}
   sliderForce: {fileID: 0}
   sliderTouch: {fileID: 0}
+  lastPosition: {x: 0, y: 0, z: 0}
   ballLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -1114,7 +1116,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5048026304379257237
 Transform:
   m_ObjectHideFlags: 0
