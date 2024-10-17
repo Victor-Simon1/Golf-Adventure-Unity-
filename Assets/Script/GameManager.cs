@@ -138,10 +138,26 @@ public class GameManager : MonoRegistrable
     public void CreateParty(string PartyName)
     {
         networkManager.StartHost();
-        hostIP = GetLocalIPAddress();
+        try
+        {
+            hostIP = GetLocalIPAddress();
+        }
+        catch (Exception e) 
+        {
+            //Close the network
+            networkManager.StopHost();
+            ThrowError("No ipv4 address available");
+            ServiceLocator.Get<JoinManager>().StopConnection();
+            throw e;
+        }
+        //Fill information
         sessionName = PartyName;
         networkManager.networkAddress = hostIP;
         isHost = true;
+
+        //Close old windows
+        GameObject joinCanvas = GameObject.FindObjectsOfType<JoinManager>(true)[0].gameObject;
+        joinCanvas.SetActive(false);
     }
 
     public void Connection(string connectionIp)
@@ -285,9 +301,9 @@ public class GameManager : MonoRegistrable
            {
                return ip.ToString();
            }
-       }
-       throw new System.Exception("No network adapters with an IPv4 address in the system!");*/
-        return "";
+       }*/
+       throw new System.Exception("No network adapters with an IPv4 address in the system!");
+        //return "";
     }
 
     public void Display()

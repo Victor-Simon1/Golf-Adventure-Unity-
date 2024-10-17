@@ -64,7 +64,7 @@ public class JoinManager : MonoRegistrable
     {
         waiting.SetActive(false);
         gameObject.SetActive(false);
-        next.SetActive(true);
+        next.SetActive(true); 
     }
 
     public string GetPlayerName()
