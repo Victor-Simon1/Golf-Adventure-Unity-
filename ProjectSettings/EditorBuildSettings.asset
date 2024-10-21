@@ -5,18 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: c850ee8c3b14cc8459e7e186857cf567
-  - enabled: 0
-    path: Assets/Mirror/Examples/Basic/Scenes/MirrorBasic.unity
-    guid: b30904751905d3f4dacde62ac85ec7c2
   - enabled: 1
     path: Assets/Scenes/MenuPrincipal.unity
     guid: 9843dbb8092f40a4c82ad26201843cde
-  - enabled: 0
-    path: Assets/Scenes/TestScene.unity
-    guid: 1ec83424c5410b04aab06dddca60e7f6
   - enabled: 1
     path: Assets/Scenes/CampingForest.unity
     guid: 0dbc2433f318a31479e542f4b7d86478

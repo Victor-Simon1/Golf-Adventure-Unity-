@@ -42,6 +42,8 @@ public class GameManager : MonoRegistrable
 
     private void Awake()
     {
+        if(ServiceLocator.IsRegistered<GameManager>())
+            Destroy(ServiceLocator.Get<GameManager>().gameObject);
         ServiceLocator.Register<GameManager>(this, false);
         starts.Clear();
     }
@@ -378,5 +380,4 @@ public class GameManager : MonoRegistrable
     {
         this.uiManager = uiManager;
     }
-
 }

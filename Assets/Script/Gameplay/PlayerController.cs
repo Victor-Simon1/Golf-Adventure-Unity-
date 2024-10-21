@@ -77,6 +77,21 @@ public class PlayerController : NetworkBehaviour, IComparable
         strokes.Clear();
         InitStrokes() ;
     }
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        if (isLocalPlayer)
+        {
+            Debug.Log("Client disconnect :" + playerName);
+            Destroy(GameObject.Find("SFXAudioSource"));
+            Destroy(ServiceLocator.Get<StockNetManager>().gameObject);
+            StartBehaviour.max = 0;
+            HoleBehavior.max = 0;
+            SceneManager.LoadScene("MenuPrincipal");
+            //ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+        }
+    }
+
     //[Command]
     void InitStrokes()
     {
@@ -130,15 +145,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
     }
 
-    public override void OnStopClient()
-    {
-        base.OnStopClient();
-        if (isLocalPlayer)
-        {
-            ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
-        }
-    }
-
+  
     [ClientRpc]
     public void RpcLaunch(string mapId)
     {
@@ -292,10 +299,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         hasFinishHole = true;
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
-//#if UNITY_ANDROID //&& !UNITY_EDITOR
+#if UNITY_ANDROID //&& !UNITY_EDITOR
             Debug.Log("Je vibre");
             Handheld.Vibrate();
-//#endif
+#endif
             Debug.Log("play sound");
             goodHoleSound.Play();
             Debug.Log("play animation");

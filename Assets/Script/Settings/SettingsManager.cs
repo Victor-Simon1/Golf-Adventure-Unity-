@@ -14,8 +14,11 @@ public class SettingsManager : MonoRegistrable
     // Start is called before the first frame update
     void Start()
     {
+      
         //Set Float of AudioMixer dont work in awake
         DontDestroyOnLoad(this);
+        if (ServiceLocator.IsRegistered<SettingsManager>())
+            Destroy(ServiceLocator.Get<SettingsManager>().gameObject);
         ServiceLocator.Register<SettingsManager>(this, false);
         if(PlayerPrefs.HasKey("Vibration"))
         {
