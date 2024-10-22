@@ -1,16 +1,17 @@
 using Services;
 using System;
-using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Audio;
-using static UnityEngine.Rendering.DebugUI;
+
 public class SettingsManager : MonoRegistrable
 {
+    [Header("Mixer")]
     [SerializeField] private AudioMixer audioMixer;
-    //[SerializeField] private AudioMixer audioMixer;
+    [Header("Variable")]
     [SerializeField] public bool vibrateOn;
     [SerializeField] public float sfxVolume = 0.5f,musicVolume = 0.5f;
 
+#region UNITY_FUNCTION
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,7 @@ public class SettingsManager : MonoRegistrable
         if (ServiceLocator.IsRegistered<SettingsManager>())
             Destroy(ServiceLocator.Get<SettingsManager>().gameObject);
         ServiceLocator.Register<SettingsManager>(this, false);
+        //Set default value if key dont exist, else take current value
         if(PlayerPrefs.HasKey("Vibration"))
         {
             Debug.Log("Valeurs déja enregistré");
@@ -35,6 +37,9 @@ public class SettingsManager : MonoRegistrable
        
     }
 
+#endregion
+
+#region PUBLIC_FUNCTION
     public void ModifyEffectsSounds(float value)
     {
         audioMixer.SetFloat("volumeSFX",Mathf.Log10(value)*20);
@@ -71,5 +76,5 @@ public class SettingsManager : MonoRegistrable
         bool vibration = Convert.ToBoolean(PlayerPrefs.GetInt("Vibration"));
         ModifyVibrations(vibration);
     }
-
+#endregion
 }

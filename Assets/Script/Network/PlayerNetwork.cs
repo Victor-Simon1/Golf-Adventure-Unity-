@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using Services;
-using Unity.VisualScripting;
 
 public class PlayerNetwork : NetworkBehaviour
 {
@@ -12,6 +10,7 @@ public class PlayerNetwork : NetworkBehaviour
     private int netID;
     private JoinManager joinManager;
 
+#region UNITY_FUNCTION
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +23,9 @@ public class PlayerNetwork : NetworkBehaviour
         }    
     }
 
+#endregion
+
+#region MIRROR_FUNCTION
     public override void OnStartClient()
     {
         Debug.Log("Player Network OnStartClient");
@@ -50,6 +52,9 @@ public class PlayerNetwork : NetworkBehaviour
 
     }
 
+#endregion
+
+#region CMD
     [Command]
     private void CmdUpdatePlayerName(int id, string username)
     {
@@ -68,7 +73,9 @@ public class PlayerNetwork : NetworkBehaviour
         RpcUpdateTitle(gm.GetSessionName());
         RpcUpdateDisplay(pcs);
     }
-
+#endregion
+ 
+#region RPC
     [ClientRpc]
     private void RpcUpdateTitle(string sessionName)
     {
@@ -81,18 +88,13 @@ public class PlayerNetwork : NetworkBehaviour
         ServiceLocator.Get<HubUIManager>().UpdatePlayers(pcs);
     }
 
-/*
-    
-    //Désactiver les go importants(camera principale)
-    private void OnDisable()
-    {
-        GameManager.UnregisterPlayer(transform.name);
-    }
-*/
+#endregion
+    /*
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        //Désactiver les go importants(camera principale)
+        private void OnDisable()
+        {
+            GameManager.UnregisterPlayer(transform.name);
+        }
+    */
 }

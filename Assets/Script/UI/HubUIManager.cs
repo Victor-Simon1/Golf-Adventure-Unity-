@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,15 +5,18 @@ using Services;
 
 public class HubUIManager : MonoRegistrable
 {
+    [Header("Script")]
     [SerializeField] private GameManager gm;
-    [SerializeField] private TMP_InputField sessionName;
-    [SerializeField] private TextMeshProUGUI ip;
     [SerializeField] private PlayerListScript pl;
 
+    [Header("Gameobject")]
+    [SerializeField] private TMP_InputField sessionName;
+    [SerializeField] private TextMeshProUGUI ip;
     [SerializeField] private GameObject launchButton;
     [SerializeField] private GameObject TextDropDown;
     [SerializeField] private TMP_Dropdown dropdown;
 
+#region UNITY_FUNCTION
     private void Start()
     {
         ServiceLocator.Register<HubUIManager>(this, false);
@@ -30,7 +32,9 @@ public class HubUIManager : MonoRegistrable
             TextDropDown.SetActive(true);
         }
     }
+#endregion
 
+#region PUBLIC_FUNCTION
     public void SetSessionNameWithoutNotify(string sessionName)
     {
         Debug.Log("change de titre");
@@ -41,4 +45,6 @@ public class HubUIManager : MonoRegistrable
     {
         pl.UpdatePlayers(pcs);
     }
+
+#endregion
 }

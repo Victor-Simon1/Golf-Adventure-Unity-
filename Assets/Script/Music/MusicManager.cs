@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.VisualScripting;
 using Services;
+
 public class MusicManager : MonoRegistrable
 {
 
@@ -13,6 +12,7 @@ public class MusicManager : MonoRegistrable
     [Header("Volume")]
     private float minVolume = 0f;
     private float maxVolume = 0.02f;
+#region UNITY_FUNCTION
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +31,10 @@ public class MusicManager : MonoRegistrable
         if (!audioSource.isPlaying)
             ChangeSong();
     }
+    #endregion
 
+#region PRIVATE_FUNCTION
+    //Shuffle all the music when start
     private void ShuffleSong()
     {
         List<AudioClip> tempAudioClip = new List<AudioClip>(audioClip);
@@ -46,7 +49,7 @@ public class MusicManager : MonoRegistrable
 
         audioClip = tempAudioClip.ToArray();
     }
-
+    //Pass to the next song 
     private void ChangeSong()
     {
         if (nextSong+1 < audioClip.Length)
@@ -58,6 +61,9 @@ public class MusicManager : MonoRegistrable
         audioSource.Play();
     }
 
+#endregion
+
+#region GETTER_SETTER
     public AudioSource GetAudioSource()
     {
         return audioSource;
@@ -70,4 +76,5 @@ public class MusicManager : MonoRegistrable
     {
         return minVolume;
     }
+#endregion
 }

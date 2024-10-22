@@ -1,17 +1,16 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+
 public class PlayerScoreboardItem : MonoBehaviour,IComparable
 {
+    [Header("Gameobject")]
     [SerializeField] TextMeshProUGUI usernameText;
-
     [SerializeField] TextMeshProUGUI strokeText;
-
+    [Header("Variables")]
     private int nbStrokes;
-    
+
+#region PUBLIC_FUNCTION
     public void Setup(PlayerController p)
     {
         usernameText.text = p.GetName();
@@ -20,14 +19,14 @@ public class PlayerScoreboardItem : MonoBehaviour,IComparable
         p.SetPlayerScoreboard(this);
         
     }
-
     public void SetSum(int sum)
     {
-        nbStrokes = sum;
         strokeText.text = sum.ToString();
         nbStrokes = sum;
     }
+    #endregion
 
+#region ICOMPARABLE_FUNCTION
     public int CompareTo(object obj)
     {
         var a = this;
@@ -41,5 +40,5 @@ public class PlayerScoreboardItem : MonoBehaviour,IComparable
 
         return 0;
     }
-
+#endregion
 }

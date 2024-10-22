@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class HoleBehavior : MonoBehaviour, IComparable
 {
+    [Header("Variables")]
     public int id;
     public static int max;
     public int maxStrokes = 0;
-
+ 
+#region UNITY_FUNCTION
     private void Awake()
     {
         max += 1;
@@ -19,7 +21,10 @@ public class HoleBehavior : MonoBehaviour, IComparable
         ServiceLocator.Get<GameManager>().AddHole(this);
     }
 
+#endregion
 
+#region ICOMPARABLE_FUNCTION
+    //Function of comparison between two Holebehavior object
     public int CompareTo(object obj)
     {
         var a = this;
@@ -33,6 +38,6 @@ public class HoleBehavior : MonoBehaviour, IComparable
 
         return 0;
     }
-
+#endregion
 
 }

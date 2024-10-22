@@ -1,13 +1,11 @@
 using Mirror;
 using Services;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ReturnToHub : MonoBehaviour
 {
 
+#region PUBLIC_FUNCTION
     public void ExitGame()
     {
         GameManager gm = ServiceLocator.Get<GameManager>(true);
@@ -23,4 +21,5 @@ public class ReturnToHub : MonoBehaviour
             nm.StopClient();
         }
     }
+#endregion 
 }

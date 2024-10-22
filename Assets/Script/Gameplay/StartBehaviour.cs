@@ -1,14 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Services;
 using System;
 
 public class StartBehaviour : MonoBehaviour, IComparable
 {
-
+    [Header("Variables")]
     public int id;
     public static int max;
+
+#region UNITY_FUNCTION
 
     private void Awake()
     {
@@ -21,6 +21,10 @@ public class StartBehaviour : MonoBehaviour, IComparable
         ServiceLocator.Get<GameManager>().AddStart(this);
     }
 
+#endregion
+
+#region ICOMPARABLE_FUNCTION
+    //Function of comparison between two StartBehavior
     public int CompareTo(object obj)
     {
         var a = this;
@@ -34,4 +38,5 @@ public class StartBehaviour : MonoBehaviour, IComparable
 
         return 0;
     }
+#endregion
 }

@@ -1,19 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Services;
 
 public class Scoreboard : MonoBehaviour
 {
+    [Header("Variables")]
     [SerializeField] GameObject playerScoreboardItem;
-
     [SerializeField] Transform playerScoreboardList;
+
     [SerializeField] List<PlayerScoreboardItem> ScoreboardItems = new List<PlayerScoreboardItem>();
 
+
+#region UNITY_FUNCTION
     private void Awake()
     {
         Init();
     }
+#endregion
+
+#region PRIVATE_FUNCTION
     private void Init()
     {
         //Recupere l'array du server 
@@ -29,7 +34,9 @@ public class Scoreboard : MonoBehaviour
                 item.Setup(p);
         }
     }
-    
+#endregion
+
+#region PUBLIC_FUNCTION
     public void TriPlayer()
     {
         ScoreboardItems.Sort();
@@ -39,4 +46,5 @@ public class Scoreboard : MonoBehaviour
             item.transform.SetSiblingIndex(i++);
         }
     }
+#endregion
 }

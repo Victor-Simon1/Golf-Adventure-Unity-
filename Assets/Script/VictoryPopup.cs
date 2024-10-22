@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class VictoryPopup : MonoBehaviour
 {
+    [Header("Gameobject")]
     [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private GameObject scoreboard;
+    [SerializeField] private GameObject playerList;
+
+    [Header("Variables")]
     [SerializeField] private float duration = 2f;
     [SerializeField] private float decalX = 800f;
     [SerializeField] private float decalY = 40f;
     [SerializeField] private bool isRetracted= true;
     [SerializeField] private bool isMoving = false;
-    [SerializeField] private GameObject scoreboard;
-    [SerializeField] private GameObject playerList;
 
+#region UNITY_FUNCTION
     private void Start()
     {
         Vector3 scale = transform.parent.parent.localScale;
@@ -21,7 +25,9 @@ public class VictoryPopup : MonoBehaviour
 
         playerList = transform.GetChild(2).GetChild(1).gameObject;
     }
+#endregion
 
+#region PUBLIC_FONCTION
     public void ChangeMessage(string str)
     {
         text.text = str;
@@ -50,6 +56,9 @@ public class VictoryPopup : MonoBehaviour
 
     }
 
+#endregion
+
+#region PRIVATE_FUNCTION
     IEnumerator Animate(Vector3 startPosition,Vector3 endPosition,float duration)
     {
         var timeElapsed = 0f;
@@ -70,7 +79,6 @@ public class VictoryPopup : MonoBehaviour
         {
             scoreboard.SetActive(false);
         }
-          
-
     }
+#endregion
 }
