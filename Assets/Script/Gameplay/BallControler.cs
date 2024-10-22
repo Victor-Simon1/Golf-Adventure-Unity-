@@ -1,10 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Services;
-using TMPro;
-using System.Collections;
-using Unity.VisualScripting;
-using Mirror;
 
 public class BallControler : MonoBehaviour
 {
