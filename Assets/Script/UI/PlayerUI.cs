@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Services;
-using Mirror.Examples.Basic;
-using System.Linq;
 
 public class PlayerUI : MonoBehaviour
 {
-
+    [Header("Gameobjects")]
     [SerializeField] private TextMeshProUGUI Title;
     [SerializeField] private TextMeshProUGUI playerName;
     [SerializeField] private TextMeshProUGUI strokes;
@@ -16,7 +12,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private GameObject pushButton;
     [SerializeField] private GameObject slider;
     [SerializeField] private GameObject arrows;
-
+    [Header("Script")]
     private PlayerController displayedPlayer;
     private PlayerController player;
     [SerializeField] private VictoryPopup scoreboard;
@@ -27,6 +23,7 @@ public class PlayerUI : MonoBehaviour
 
     private GameManager gm;
 
+#region UNITY_FUNCTION
     private void OnEnable()
     {
         gm = ServiceLocator.Get<GameManager>();
@@ -34,6 +31,7 @@ public class PlayerUI : MonoBehaviour
 
         SetActualPlayer(gm.GetLocalPlayer());
     }
+    #endregion
 
     private void Update()
     {
@@ -43,6 +41,7 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+#region PUBLIC_FUNCTION
     public void Spectate(bool b)
     {
         pushButton.SetActive(!b);
@@ -157,7 +156,9 @@ public class PlayerUI : MonoBehaviour
         ResetPlayer();
         Spectate(false);
     }
+#endregion
 
+#region GETTER_SETTER
     public void SetStrokes(int strokes)
     {
         this.strokes.text = "" + strokes;
@@ -178,4 +179,5 @@ public class PlayerUI : MonoBehaviour
         isWaiting = b;
         Debug.Log(ServiceLocator.Get<GameManager>().GetnbReady());
     }
+#endregion
 }

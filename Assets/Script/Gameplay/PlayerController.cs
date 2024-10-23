@@ -1,15 +1,11 @@
-using JetBrains.Annotations;
 using Mirror;
-using Mirror.Examples.Pong;
 using Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TextCore.Text;
 
 
 public class PlayerController : NetworkBehaviour, IComparable
@@ -77,6 +73,34 @@ public class PlayerController : NetworkBehaviour, IComparable
         strokes.Clear();
         InitStrokes() ;
     }
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        if (isLocalPlayer)
+        {
+            Debug.Log("Client disconnect :" + playerName);
+            Destroy(GameObject.Find("SFXAudioSource"));
+            Destroy(ServiceLocator.Get<StockNetManager>().gameObject);
+            //Reset static variables
+            StartBehaviour.max = 0;
+            HoleBehavior.max = 0;
+            //Load Hub scene
+            SceneManager.LoadScene("MenuPrincipal");
+            //ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+        }
+        else
+        {
+            Debug.Log("A Client has left :" + playerName);
+            GameManager gm = ServiceLocator.Get<GameManager>();
+            //Remove the player who quit from our manager
+            gm.RemovePc(this);
+            foreach(PlayerController pc in gm.GetListPlayer())
+            {
+                Debug.Log("name :" + pc.playerName);
+            } 
+        }
+    }
+
     //[Command]
     void InitStrokes()
     {
@@ -130,15 +154,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
     }
 
-    public override void OnStopClient()
-    {
-        base.OnStopClient();
-        if (isLocalPlayer)
-        {
-            ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
-        }
-    }
-
+  
     [ClientRpc]
     public void RpcLaunch(string mapId)
     {
@@ -304,10 +320,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         DespawnBall();
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
-//#if UNITY_ANDROID //&& !UNITY_EDITOR
+#if UNITY_ANDROID //&& !UNITY_EDITOR
             Debug.Log("Je vibre");
             Handheld.Vibrate();
-//#endif
+#endif
             Debug.Log("play sound");
             goodHoleSound.Play();
             Debug.Log("play animation");

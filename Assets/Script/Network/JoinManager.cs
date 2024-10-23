@@ -1,19 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using Services;
 
 public class JoinManager : MonoRegistrable
 {
-    [SerializeField] private GameManager gm;
-    [SerializeField] private GameObject waiting;
-    [SerializeField] private GameObject next;
-
+    [Header("Variables")]
     private string playerName;
     private string sessionName;
     private string ip;
+    [Header("Manager")]
+    [SerializeField] private GameManager gm;
+    [Header("Gameobject")]
+    [SerializeField] private GameObject waiting;
+    [SerializeField] private GameObject next;
 
+#region UNITY_FUNCTION
     // Start is called before the first frame update
     void Start()
     {
@@ -22,17 +22,17 @@ public class JoinManager : MonoRegistrable
         gm = ServiceLocator.Get<GameManager>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+#endregion
 
+#region GETTER_SETTER
     public void SetName(string newName)
     {
         playerName = newName;
     }
-
+    public string GetPlayerName()
+    {
+        return playerName;
+    }
     public void SetSessionName(string sessionName)
     {
         this.sessionName = sessionName;
@@ -43,6 +43,9 @@ public class JoinManager : MonoRegistrable
         ip = newIp;
     }
 
+#endregion
+
+#region PUBLIC_FUNCTION
     public void Connect()
     {
         waiting.SetActive(true);
@@ -64,11 +67,8 @@ public class JoinManager : MonoRegistrable
     {
         waiting.SetActive(false);
         gameObject.SetActive(false);
-        next.SetActive(true);
+        next.SetActive(true); 
     }
+#endregion
 
-    public string GetPlayerName()
-    {
-        return playerName;
-    }
 }

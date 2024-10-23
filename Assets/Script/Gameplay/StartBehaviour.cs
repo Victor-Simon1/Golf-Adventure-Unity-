@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Services;
 using System;
 
 public class StartBehaviour : MonoBehaviour, IComparable
 {
-
+    [Header("Variables")]
     public int id;
     public static int max;
 
@@ -24,6 +22,10 @@ public class StartBehaviour : MonoBehaviour, IComparable
         gameManager.AddStart(this);
     }
 
+#endregion
+
+#region ICOMPARABLE_FUNCTION
+    //Function of comparison between two StartBehavior
     public int CompareTo(object obj)
     {
         var a = this;
