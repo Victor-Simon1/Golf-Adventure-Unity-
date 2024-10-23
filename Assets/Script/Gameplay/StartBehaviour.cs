@@ -10,6 +10,8 @@ public class StartBehaviour : MonoBehaviour, IComparable
     public int id;
     public static int max;
 
+    public GameManager gameManager;
+
     private void Awake()
     {
         max += 1;
@@ -18,7 +20,8 @@ public class StartBehaviour : MonoBehaviour, IComparable
 
     private void Start()
     {
-        ServiceLocator.Get<GameManager>().AddStart(this);
+        gameManager = ServiceLocator.Get<GameManager>();
+        gameManager.AddStart(this);
     }
 
     public int CompareTo(object obj)
@@ -33,5 +36,17 @@ public class StartBehaviour : MonoBehaviour, IComparable
             return 1;
 
         return 0;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var ball = other.GetComponent<BallControler>();
+        if (ball != null)
+        {
+            if(ball.GetPlayer().isLocalPlayer)
+            {
+                ball.GetPlayer().hasArrived();
+            }
+        }
     }
 }

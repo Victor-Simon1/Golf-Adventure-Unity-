@@ -21,12 +21,26 @@ public class PlayerUI : MonoBehaviour
     private PlayerController player;
     [SerializeField] private VictoryPopup scoreboard;
 
+    private bool isWaiting;
+    [SerializeField] private GameObject WaitingScreen;
+    [SerializeField] private TextMeshProUGUI nbPlayerWaited;
+
+    private GameManager gm;
+
     private void OnEnable()
     {
-        var gm = ServiceLocator.Get<GameManager>();
+        gm = ServiceLocator.Get<GameManager>();
         Title.text = gm.GetSessionName();
 
         SetActualPlayer(gm.GetLocalPlayer());
+    }
+
+    private void Update()
+    {
+        if(isWaiting)
+        {
+            nbPlayerWaited.text = gm.GetStringNbReady();
+        }
     }
 
     public void Spectate(bool b)
@@ -50,7 +64,6 @@ public class PlayerUI : MonoBehaviour
         {
             if (displayedPlayer != null)
             {
-                displayedPlayer.GetBall().GetComponent<BallControler>().isVisualized = false;
                 displayedPlayer.ActivateAll(false);
                 displayedPlayer.SetPlayerUI(null);
             }
@@ -59,7 +72,6 @@ public class PlayerUI : MonoBehaviour
             playerName.text = pc.GetName();
             displayedPlayer = pc;
             displayedPlayer.ActivateAll(true);
-            displayedPlayer.GetBall().GetComponent<BallControler>().isVisualized = true;
         }
     }
 
@@ -158,5 +170,12 @@ public class PlayerUI : MonoBehaviour
     public VictoryPopup GetScoreboard()
     {
         return scoreboard;
+    }
+
+    public void DisplayWaiting(bool b)
+    {
+        if(!isWaiting) WaitingScreen.SetActive(b);
+        isWaiting = b;
+        Debug.Log(ServiceLocator.Get<GameManager>().GetnbReady());
     }
 }

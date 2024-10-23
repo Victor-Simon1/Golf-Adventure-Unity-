@@ -18,7 +18,7 @@ public class BallControler : MonoBehaviour
     private Quaternion sr;
     public bool hasFinishHole = false;
 
-    public bool isVisualized = false;
+    private bool isVisualized = false;
 
     [SerializeField] private Vector3 offset;
 
@@ -30,6 +30,9 @@ public class BallControler : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private Camera cam;
+
+    [Header("Behaviour")]
+    [SerializeField] private MeshRenderer mr;
 
     [SerializeField] private Transform lineVisual;
 
@@ -90,6 +93,7 @@ public class BallControler : MonoBehaviour
         //rb.inertiaTensor = new Vector3(0, 0, 0);
         //rb.inertiaTensorRotation = new Quaternion(0.1f, 0.1f, 0.1f, 0f);
     }
+
     private void OnEnable()
     {
         sp = transform.position;
@@ -374,7 +378,23 @@ public class BallControler : MonoBehaviour
         if (hole != null) 
         {
             pc.OnHoleEntered(hole.maxStrokes);
-            gameObject.SetActive(false);
+            Spawn(false);
         }
+    }
+
+    public void Spawn(bool b)
+    {
+        mr.enabled = b;
+        rb.useGravity = b;
+    }
+
+    public void SetIsVisualized(bool b)
+    {
+        isVisualized = b;
+    }
+
+    public PlayerController GetPlayer()
+    {
+        return pc;
     }
 }

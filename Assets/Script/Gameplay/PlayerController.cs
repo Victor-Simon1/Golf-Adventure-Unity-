@@ -24,7 +24,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public int id;
 
     [Header("Gameobjects")]
-    [SerializeField] private GameObject ball;
+    [SerializeField] private BallControler ball;
     [SerializeField] private Camera camObj;
 
     [Header("Material")]
@@ -160,20 +160,22 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void TpToLocation(Transform location)
     {
         Debug.Log("tp to " + location.position);
-        
-        ball.GetComponent<Rigidbody>().freezeRotation = true;
-        ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+        var ballRb = ball.GetComponent<Rigidbody>();
+        ballRb.freezeRotation = true;
+        ballRb.velocity = Vector3.zero;
       
         ball.transform.position = transform.localPosition;
         ball.transform.rotation = Quaternion.identity;
 
        
         transform.position = location.position;
-        ball.GetComponent<Rigidbody>().freezeRotation = false;
+        ballRb.freezeRotation = false;
         //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
-        SpawnBall();
-        ball.GetComponent<BallControler>().SetLastPosition(transform.localPosition);
-        ball.GetComponent<BallControler>().SetRotationValueY(location.rotation.eulerAngles.y);
+        ball.SetLastPosition(transform.localPosition);
+        ball.SetRotationValueY(location.rotation.eulerAngles.y);
+
+        ballRb.useGravity = true;
     }
     public void TpToLocation(Vector3 location)
     {
@@ -186,14 +188,23 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.GetComponent<Rigidbody>().freezeRotation = false;
         //Debug.Log("Fin tp to location" + ball.transform.position);
     }
+
     public void SpawnBall()
     {
-        ball.SetActive(true);
+        ball.enabled = true;
+        ball.Spawn(true);
     }
 
     public void DespawnBall()
     {
-        ball.SetActive(false);
+        ball.enabled = true;
+        ball.Spawn(false);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnBalls()
+    {
+        if(isLocalPlayer) ServiceLocator.Get<GameManager>().GetListPlayer().ForEach(p => p.SpawnBall());
     }
 
     public void SetColor(Color color)
@@ -274,7 +285,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         return sum;
     }
 
-    public GameObject GetBall()
+    public BallControler GetBall()
     {
         return ball;
     }
@@ -282,7 +293,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void ActivateAll(bool b)
     {
         camObj.enabled = b;
-        ball.GetComponent<BallControler>().enabled = b;
+        ball.SetIsVisualized(b);
     }
 
     public void OnHoleEntered(int maxStrokes)
@@ -290,6 +301,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         Debug.Log("Une balle est rentrée : " + playerName);
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
+        DespawnBall();
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
 //#if UNITY_ANDROID //&& !UNITY_EDITOR
@@ -341,5 +353,24 @@ public class PlayerController : NetworkBehaviour, IComparable
         yield return new WaitForSeconds(1f);
         resultHoleText.gameObject.SetActive(false);
         playerUI.NextPlayer();
+    }
+
+    public void hasArrived()
+    {
+        CmdAskGMReady();
+    }
+
+    [ClientRpc]
+    public void DisplayNbReady(bool b, int nbReady)
+    {
+        ServiceLocator.Get<GameManager>().SetnbReady(nbReady);
+        playerUI.DisplayWaiting(b);
+    }
+
+
+    [Command]
+    public void CmdAskGMReady()
+    {
+        ServiceLocator.Get<GameManager>().addReady();
     }
 }
