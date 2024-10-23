@@ -10,6 +10,7 @@ public class StartBehaviour : MonoBehaviour, IComparable
 
     public GameManager gameManager;
 
+#region UnityEditor
     private void Awake()
     {
         max += 1;
@@ -51,4 +52,5 @@ public class StartBehaviour : MonoBehaviour, IComparable
             }
         }
     }
+#endregion
 }
