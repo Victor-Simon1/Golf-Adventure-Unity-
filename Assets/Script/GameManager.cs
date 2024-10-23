@@ -57,7 +57,9 @@ public class GameManager : MonoRegistrable
     private void OnDestroy()
     {
         foreach (var player in players) { Destroy(player); }
-        Destroy(networkManager.gameObject);
+
+        if(networkManager != null)
+            Destroy(networkManager.gameObject);
     }
 
     public void ResetManager()
@@ -119,6 +121,10 @@ public class GameManager : MonoRegistrable
     public List<PlayerController> GetListPlayer()
     {
         return players;
+    }
+    public void RemovePc(PlayerController pc)
+    {
+        players.Remove(pc);
     }
 
     public PlayerController GetLocalPlayer()

@@ -81,10 +81,23 @@ public class PlayerController : NetworkBehaviour, IComparable
             Debug.Log("Client disconnect :" + playerName);
             Destroy(GameObject.Find("SFXAudioSource"));
             Destroy(ServiceLocator.Get<StockNetManager>().gameObject);
+            //Reset static variables
             StartBehaviour.max = 0;
             HoleBehavior.max = 0;
+            //Load Hub scene
             SceneManager.LoadScene("MenuPrincipal");
             //ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
+        }
+        else
+        {
+            Debug.Log("A Client has left :" + playerName);
+            GameManager gm = ServiceLocator.Get<GameManager>();
+            //Remove the player who quit from our manager
+            gm.RemovePc(this);
+            foreach(PlayerController pc in gm.GetListPlayer())
+            {
+                Debug.Log("name :" + pc.playerName);
+            } 
         }
     }
 
