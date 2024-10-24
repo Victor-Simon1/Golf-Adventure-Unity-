@@ -34,6 +34,8 @@ public class GameManager : MonoRegistrable
     [SerializeField] private string[] maps;
     private int mapId;
 
+    private int nbPlayerReady;
+
     private void Awake()
     {
         if(ServiceLocator.IsRegistered<GameManager>())
@@ -214,13 +216,10 @@ public class GameManager : MonoRegistrable
                             foreach (var player in players)
                             {
                                 TpPlayersToLocation(0);
-                                player.SpawnBall();
                             }
 
                         });
                 }
-                foreach(var player in players)
-                    player.DespawnBall();
                 ResetManager();
             }
             else
@@ -277,9 +276,8 @@ public class GameManager : MonoRegistrable
     {
         Debug.Log("Here we go : " + idStart);
         players.ForEach(p => {
-            p.GetBall().GetComponent<BallControler>().IgnoreBalls();
+            p.GetBall().IgnoreBalls();
             p.TpToLocation(starts[idStart].transform);
-            p.GetBall().gameObject.SetActive(true);
             p.hasFinishHole = false;
         });
     }
@@ -379,5 +377,37 @@ public class GameManager : MonoRegistrable
     public void setUIManager(UIManager uiManager)
     {
         this.uiManager = uiManager;
+    }
+
+    public void addReady()
+    {
+        nbPlayerReady++;
+            foreach (var player in players)
+            {
+                if(nbPlayerReady >= players.Count)
+                { 
+                    if (player.isLocalPlayer) player.DisplayNbReady(false, 0);
+                    player.RpcSpawnBalls();
+                }
+                else
+                {
+                    player.DisplayNbReady(true, GetnbReady());
+                }
+            }
+    }
+
+    public void SetnbReady(int n) 
+    {
+        nbPlayerReady = n;
+    }
+
+    public int GetnbReady()
+    {
+        return nbPlayerReady;
+    }
+
+    public string GetStringNbReady()
+    {
+        return nbPlayerReady + "/" + players.Count;
     }
 }
