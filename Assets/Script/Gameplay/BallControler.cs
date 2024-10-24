@@ -61,6 +61,7 @@ public class BallControler : MonoBehaviour
     [SerializeField] private bool isOutOfLimit = false;
     [SerializeField] private bool isOnGreen = true;
 
+    private int maxStrokes = 15;
     [Header("Movement")]
     [SerializeField] private float limitForce = 0.35f;
     [SerializeField] private float maxAngularVelocity = 0.9f;
@@ -272,7 +273,7 @@ public class BallControler : MonoBehaviour
     public void Push()
     {
         //When the ball is moving and under the limit,it dont pass to false so its reactiviting the stopped function
-        if (hasFinishHole || isOutOfLimit || !isOnGreen)
+        if (hasFinishHole || isOutOfLimit || !isOnGreen || pc.GetActualStrokes()+1 > maxStrokes)
             return;
         magnHasChanged = false;
         lineVisual.gameObject.SetActive(false);
@@ -308,6 +309,11 @@ public class BallControler : MonoBehaviour
     {
         if (AbsMagn < 0.04f)
         {
+            if (pc.GetActualStrokes() >= maxStrokes)
+            {
+                Debug.Log("Player is over the limit of strokes");
+                pc.OnOutofStrokes();
+            }
             Debug.Log("Ball stopped");
             rb.Sleep();
             if (pc.isLocalPlayer)
