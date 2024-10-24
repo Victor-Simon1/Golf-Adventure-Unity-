@@ -599,7 +599,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.05
   m_Center: {x: 0, y: 0, z: 0}
@@ -638,13 +638,11 @@ MonoBehaviour:
   AbsMagn: 0
   rb: {fileID: 6544871517458406900}
   hasFinishHole: 0
-  isVisualized: 0
   offset: {x: 0, y: 0, z: 0}
   moving: 0
   magnHasChanged: 0
   cam: {fileID: 2028859925345120222}
   mr: {fileID: 3185249494583716143}
-  c: {fileID: 259812675400959546}
   lineVisual: {fileID: 5048026304379257237}
   rotationValues: {x: 0, y: 0}
   zoomModifierSpeed: 0.1

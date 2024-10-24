@@ -49,6 +49,8 @@ public class GameManager : MonoRegistrable
         networkManager = ServiceLocator.Get<StockNetManager>().GetNetworkManager();
 
         Display();
+
+        
     }
 
     private void OnEnable()
@@ -254,6 +256,12 @@ public class GameManager : MonoRegistrable
         }
     }
 
+    public void SceneLoaded()
+    {
+        inGame = true;
+        StartCoroutine(CouroutingWaitingForAllPlayers());
+    }
+
     public void AddStart(StartBehaviour newStart)
     {
         starts.Add(newStart);
@@ -386,12 +394,12 @@ public class GameManager : MonoRegistrable
             {
                 if(nbPlayerReady >= players.Count)
                 { 
-                    if (player.isLocalPlayer) player.DisplayNbReady(false, 0);
+                    //if (player.isLocalPlayer) player.DisplayNbReady(0, 0);
                     player.RpcSpawnBalls();
                 }
                 else
                 {
-                    player.DisplayNbReady(true, GetnbReady());
+                    //player.DisplayNbReady(1, GetnbReady());
                 }
             }
     }
@@ -409,5 +417,37 @@ public class GameManager : MonoRegistrable
     public string GetStringNbReady()
     {
         return nbPlayerReady + "/" + players.Count;
+    }
+
+    private IEnumerator CouroutingWaitingForAllPlayers()
+    {
+        PlayerUI playerUI = null;
+        while (true)
+        {
+            if(uiManager != null)
+            {
+                if (playerUI == null)
+                {
+                    playerUI = uiManager.GetPlayerUI();
+                }
+                else
+                {
+                    nbPlayerReady = 0;
+                    foreach (var player in players)
+                    {
+                        if (player.IsReady()) nbPlayerReady++;
+                    }
+                    Debug.Log("nb player ready: " + nbPlayerReady + "/" + players.Count);
+                    if (nbPlayerReady == players.Count)
+                    {
+                        playerUI.DisplayWaiting(false, "Lancement...");
+                        players.ForEach(p => p.SpawnBall());
+                        break;
+                    }
+                    playerUI.DisplayWaiting(true, nbPlayerReady + "/" + players.Count);
+                }
+            }
+            yield return null;
+        }
     }
 }

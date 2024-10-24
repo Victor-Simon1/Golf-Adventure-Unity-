@@ -41,16 +41,5 @@ public class StartBehaviour : MonoBehaviour, IComparable
         return 0;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        var ball = other.GetComponent<BallControler>();
-        if (ball != null)
-        {
-            if(ball.GetPlayer().isLocalPlayer)
-            {
-                ball.GetPlayer().hasArrived();
-            }
-        }
-    }
 #endregion
 }
