@@ -323,6 +323,21 @@ public class PlayerController : NetworkBehaviour, IComparable
         StartCoroutine(gm.GoNextHole());
 
     }
+
+    public void OnOutofStrokes()
+    {
+        var gm = ServiceLocator.Get<GameManager>();
+        hasFinishHole = true;
+        if (gm.GetLocalPlayer().netIdentity == netIdentity)
+        {
+            Debug.Log("play sound");
+            //goodHoleSound.Play();
+            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0,true));
+            playerUI.Spectate(true);
+        }
+        gm.PlayerFinished();
+        StartCoroutine(gm.GoNextHole());
+    }
     private string GetTextResultHole(int actualStrokes, int maxStrokes)
     {
         int result = actualStrokes - maxStrokes;
@@ -346,10 +361,12 @@ public class PlayerController : NetworkBehaviour, IComparable
         else
             return "X BOGEY";
     }
-    private IEnumerator CouroutineShowResultHole(int actualStrokes, int maxStrokes)
+    private IEnumerator CouroutineShowResultHole(int actualStrokes, int maxStrokes,bool outOfStrokes = false)
     {
         yield return null;
         string result = GetTextResultHole(actualStrokes, maxStrokes);
+        if (outOfStrokes)
+            result = "OUT OF STROKES";
         Debug.Log(result);
         resultHoleText.text = result;
         resultHoleText.gameObject.SetActive(true);
