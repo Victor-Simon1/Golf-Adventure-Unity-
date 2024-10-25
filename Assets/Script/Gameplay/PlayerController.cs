@@ -217,6 +217,8 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         ball.enabled = true;
         ball.Spawn(false);
+
+        if (isLocalPlayer) updateReady(false);
     }
 
     [ClientRpc]
@@ -342,6 +344,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
+        DespawnBall();
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
             Debug.Log("play sound");

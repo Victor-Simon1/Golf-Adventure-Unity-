@@ -383,7 +383,6 @@ public class BallControler : MonoBehaviour
         if (hole != null) 
         {
             pc.OnHoleEntered(hole.maxStrokes);
-            Spawn(false);
         }
     }
 

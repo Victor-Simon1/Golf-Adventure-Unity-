@@ -193,6 +193,7 @@ public class GameManager : MonoRegistrable
             nbPlayerFinishHole = 0;
 
             Debug.Log("Tp vers le prochain trou :" + (actualHole + 1) +" / " + starts.Count);
+
             if ((actualHole+1) == starts.Count)
             {
                 Debug.Log("Map fini");
@@ -234,6 +235,7 @@ public class GameManager : MonoRegistrable
                 players.ForEach(p => { p.actualHole = actualHole; });
                 uiManager.GetPlayerUI().ResetAllUI();
                 TpPlayersToLocation(actualHole);
+                StartCoroutine(CoroutingWaitingForAllPlayers(false));
                 yield return new WaitForSeconds(0.5f);
 
                 uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
@@ -259,7 +261,7 @@ public class GameManager : MonoRegistrable
     public void SceneLoaded()
     {
         inGame = true;
-        StartCoroutine(CouroutingWaitingForAllPlayers());
+        StartCoroutine(CoroutingWaitingForAllPlayers(true));
     }
 
     public void AddStart(StartBehaviour newStart)
@@ -387,23 +389,6 @@ public class GameManager : MonoRegistrable
         this.uiManager = uiManager;
     }
 
-    public void addReady()
-    {
-        nbPlayerReady++;
-            foreach (var player in players)
-            {
-                if(nbPlayerReady >= players.Count)
-                { 
-                    //if (player.isLocalPlayer) player.DisplayNbReady(0, 0);
-                    player.RpcSpawnBalls();
-                }
-                else
-                {
-                    //player.DisplayNbReady(1, GetnbReady());
-                }
-            }
-    }
-
     public void SetnbReady(int n) 
     {
         nbPlayerReady = n;
@@ -419,7 +404,7 @@ public class GameManager : MonoRegistrable
         return nbPlayerReady + "/" + players.Count;
     }
 
-    private IEnumerator CouroutingWaitingForAllPlayers()
+    private IEnumerator CoroutingWaitingForAllPlayers(bool display)
     {
         PlayerUI playerUI = null;
         while (true)
@@ -444,7 +429,7 @@ public class GameManager : MonoRegistrable
                         players.ForEach(p => p.SpawnBall());
                         break;
                     }
-                    playerUI.DisplayWaiting(true, nbPlayerReady + "/" + players.Count);
+                    playerUI.DisplayWaiting(display, nbPlayerReady + "/" + players.Count);
                 }
             }
             yield return null;
