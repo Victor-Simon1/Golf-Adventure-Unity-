@@ -42,6 +42,8 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SerializeField] private Behaviour nrbNotLocal;
     [SerializeField] private Behaviour nTransformLocal;
     [SerializeField] private Behaviour nTransformNotLocal;
+    [SyncVar]
+    private bool isReady;
 
     private void Start()
     {
@@ -166,8 +168,8 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         if(isLocalPlayer)
         {
-            ServiceLocator.Get<GameManager>().inGame = true;
             SceneManager.LoadScene(mapId);
+            ServiceLocator.Get<GameManager>().SceneLoaded();
             //SpawnBall();
         }
     }
@@ -195,9 +197,8 @@ public class PlayerController : NetworkBehaviour, IComparable
         ballRb.freezeRotation = false;
         //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
         ball.SetLastPosition(transform.localPosition);
-        ball.SetRotationValueY(location.rotation.eulerAngles.y);
-
-        ballRb.useGravity = true;
+        ball.SetRotationValueY(location.rotation.eulerAngles.y); 
+        Physics.SyncTransforms();
     }
     public void TpToLocation(Vector3 location)
     {
@@ -209,6 +210,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         //transform.position = location;
         ball.GetComponent<Rigidbody>().freezeRotation = false;
         //Debug.Log("Fin tp to location" + ball.transform.position);
+        Physics.SyncTransforms();
     }
 
     public void SpawnBall()
@@ -413,20 +415,25 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void hasArrived()
     {
-        CmdAskGMReady();
+        Debug.Log(playerName + " has arrived");
+        updateReady(true);
     }
 
     [ClientRpc]
-    public void DisplayNbReady(bool b, int nbReady)
+    public void DisplayNbReady(int b, int nbReady)
     {
         ServiceLocator.Get<GameManager>().SetnbReady(nbReady);
-        playerUI.DisplayWaiting(b);
     }
 
 
     [Command]
-    public void CmdAskGMReady()
+    public void updateReady(bool b)
     {
-        ServiceLocator.Get<GameManager>().addReady();
+        isReady = b;
+    }
+
+    public bool IsReady()
+    {
+        return isReady;
     }
 }

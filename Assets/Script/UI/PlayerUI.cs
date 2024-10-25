@@ -17,7 +17,6 @@ public class PlayerUI : MonoBehaviour
     private PlayerController player;
     [SerializeField] private VictoryPopup scoreboard;
 
-    private bool isWaiting;
     [SerializeField] private GameObject WaitingScreen;
     [SerializeField] private TextMeshProUGUI nbPlayerWaited;
 
@@ -32,14 +31,6 @@ public class PlayerUI : MonoBehaviour
         SetActualPlayer(gm.GetLocalPlayer());
     }
     #endregion
-
-    private void Update()
-    {
-        if(isWaiting)
-        {
-            nbPlayerWaited.text = gm.GetStringNbReady();
-        }
-    }
 
 #region PUBLIC_FUNCTION
     public void Spectate(bool b)
@@ -173,11 +164,10 @@ public class PlayerUI : MonoBehaviour
         return scoreboard;
     }
 
-    public void DisplayWaiting(bool b)
+    public void DisplayWaiting(bool b, string nbPlayerReady)
     {
-        if(!isWaiting) WaitingScreen.SetActive(b);
-        isWaiting = b;
-        Debug.Log(ServiceLocator.Get<GameManager>().GetnbReady());
+        WaitingScreen.SetActive(b);
+        nbPlayerWaited.text = nbPlayerReady;
     }
 #endregion
 }

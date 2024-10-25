@@ -173,10 +173,11 @@ public class BallControler : MonoBehaviour
 
 #else
         //Permet de tester l'orientation et le zomm dans le t�lephone
-        if(!sliderTouch.isPressed)
+        if(pc.isLocalPlayer ? !sliderTouch.isPressed : true)
         {
             if (Input.touchCount == 1)
             {
+                Debug.Log("Screen Touched");
                 touch = Input.GetTouch(0);
 
                 if(touch.phase == TouchPhase.Moved)
@@ -222,11 +223,14 @@ public class BallControler : MonoBehaviour
 
             }
             //Detecting slope
-            float camX = cam.transform.forward.x / 7f;
-            float camZ = cam.transform.forward.z / 7f;
+            if(cam)
+            {
+                float camX = cam.transform.forward.x / 7f;
+                float camZ = cam.transform.forward.z / 7f;
 
-            frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
-            rearRayPos.position = transform.position + new Vector3(-camX, 0, -camZ);
+                frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
+                rearRayPos.position = transform.position + new Vector3(-camX, 0, -camZ);
+            }
             {
                 RaycastHit rearHit;
                 if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
