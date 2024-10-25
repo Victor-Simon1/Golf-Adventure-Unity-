@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class BallControler : MonoBehaviour
 {
@@ -62,6 +63,8 @@ public class BallControler : MonoBehaviour
     [SerializeField] private bool isOnGreen = true;
 
     private int maxStrokes = 15;
+
+    private int maxMinutesPerRound = 5;
     [Header("Movement")]
     [SerializeField] private float limitForce = 0.35f;
     [SerializeField] private float maxAngularVelocity = 0.9f;
@@ -128,8 +131,17 @@ public class BallControler : MonoBehaviour
         rotationValues = new Vector2(15, 0);
         
         zoomLevel = 10;
+
+        StartCoroutine(TimeLimit());
     }
 
+    private IEnumerator TimeLimit()
+    {
+        yield return new WaitForSeconds(maxMinutesPerRound * 60);
+        pc.RpcAddXStroke(maxStrokes - pc.GetActualStrokes() );
+        pc.OutOfTime();
+
+    }
     private void OnDisable()
     {
         lineVisual.gameObject.SetActive(false);
