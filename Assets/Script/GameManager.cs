@@ -73,6 +73,7 @@ public class GameManager : MonoRegistrable
         actualHole = 0;
         nbPlayerFinishHole = 0;
         StartBehaviour.max = 0;
+        inGame = false;
     }
     public void RegisterPlayer(PlayerController player)
     {
@@ -200,19 +201,26 @@ public class GameManager : MonoRegistrable
                 yield return new WaitForSeconds(1f);
 
                 uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
-                
-                if(isHost)
+
+                ResetManager();
+
+                foreach (var item in players)
+                {
+                    item.UpdateReady(false);
+                }
+
+                if (isHost)
                 {
                     GameObject gmNextMap = GameObject.Find("NextMap");
-                    gmNextMap.transform.GetChild(0).gameObject.SetActive(true);
-                    TMPro.TMP_Dropdown dropdown = gmNextMap.transform.GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                    var changeMap = gmNextMap.transform.GetChild(0);
+                    changeMap.gameObject.SetActive(true);
+                    TMPro.TMP_Dropdown dropdown = changeMap.GetChild(2).gameObject.GetComponent<TMPro.TMP_Dropdown>();
                     dropdown.onValueChanged.AddListener(
                         delegate
                         {
                             SetMapID(dropdown.value);
                         });
-                    gmNextMap.transform.GetChild(1).gameObject.SetActive(true);
-                    gmNextMap.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(
+                    changeMap.GetChild(3).GetChild(1).GetComponent<Button>().onClick.AddListener(
                         delegate
                         {
                             LaunchGame();
@@ -220,10 +228,8 @@ public class GameManager : MonoRegistrable
                             {
                                 TpPlayersToLocation(0);
                             }
-
                         });
                 }
-                ResetManager();
             }
             else
             {

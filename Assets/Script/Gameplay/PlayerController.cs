@@ -225,7 +225,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.enabled = true;
         ball.Spawn(false);
 
-        if (isLocalPlayer) updateReady(false);
+        if (isLocalPlayer) UpdateReady(false);
     }
 
     [ClientRpc]
@@ -420,7 +420,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void hasArrived()
     {
         Debug.Log(playerName + " has arrived");
-        updateReady(true);
+        UpdateReady(true);
     }
 
     [ClientRpc]
@@ -431,7 +431,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
 
     [Command]
-    public void updateReady(bool b)
+    public void UpdateReady(bool b)
     {
         isReady = b;
     }

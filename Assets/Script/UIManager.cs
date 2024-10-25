@@ -9,7 +9,7 @@ public class UIManager : MonoRegistrable
 #region UNITY_FUNCTION
     private void Awake()
     {
-        ServiceLocator.Register<UIManager>(this);
+        ServiceLocator.Register<UIManager>(this,false);
     }
 
     private void OnEnable()
