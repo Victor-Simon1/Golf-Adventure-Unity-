@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class BallControler : MonoBehaviour
 {
@@ -61,7 +62,11 @@ public class BallControler : MonoBehaviour
     [SerializeField] private bool isOutOfLimit = false;
     [SerializeField] private bool isOnGreen = true;
 
-    private int maxStrokes = 15;
+    private int maxStrokes = 12;
+    private int penalityStrokes = 3;
+    private float maxMinutesPerRound = 5f;
+
+    public Coroutine timeLimitCoroutine;
     [Header("Movement")]
     [SerializeField] private float limitForce = 0.35f;
     [SerializeField] private float maxAngularVelocity = 0.9f;
@@ -128,8 +133,18 @@ public class BallControler : MonoBehaviour
         rotationValues = new Vector2(15, 0);
         
         zoomLevel = 10;
+
+      
     }
 
+    public IEnumerator TimeLimit()
+    {
+        yield return new WaitForSeconds(maxMinutesPerRound * 60);
+        Debug.Log("Time Limit");
+        pc.RpcAddXStroke(maxStrokes - pc.GetActualStrokes() + penalityStrokes);
+        pc.OutOfTime();
+
+    }
     private void OnDisable()
     {
         lineVisual.gameObject.SetActive(false);
@@ -309,9 +324,11 @@ public class BallControler : MonoBehaviour
     {
         if (AbsMagn < 0.04f)
         {
-            if (pc.GetActualStrokes() >= maxStrokes)
+            if (pc.GetActualStrokes() == maxStrokes)
             {
                 Debug.Log("Player is over the limit of strokes");
+                pc.RpcAddXStroke(penalityStrokes);
+                StopCoroutine(timeLimitCoroutine);
                 pc.OnOutofStrokes();
             }
             Debug.Log("Ball stopped");
@@ -382,6 +399,7 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null) 
         {
+            StopCoroutine(timeLimitCoroutine);
             pc.OnHoleEntered(hole.maxStrokes);
         }
     }

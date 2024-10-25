@@ -124,6 +124,12 @@ public class PlayerController : NetworkBehaviour, IComparable
     }
 
     [ClientRpc]
+    public void RpcAddXStroke(int x)
+    {
+        strokes[actualHole]+=x ;
+    }
+    
+    [ClientRpc]
     public void RpcFinishFirstPut()
     {
         GetComponent<SphereCollider>().excludeLayers = 0;
@@ -193,6 +199,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.SetLastPosition(transform.localPosition);
         ball.SetRotationValueY(location.rotation.eulerAngles.y); 
         Physics.SyncTransforms();
+        ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
     }
     public void TpToLocation(Vector3 location)
     {
@@ -355,6 +362,21 @@ public class PlayerController : NetworkBehaviour, IComparable
         gm.PlayerFinished();
         StartCoroutine(gm.GoNextHole());
     }
+
+    public void OutOfTime()
+    {
+        var gm = ServiceLocator.Get<GameManager>();
+        hasFinishHole = true;
+        if (gm.GetLocalPlayer().netIdentity == netIdentity)
+        {
+            Debug.Log("play sound");
+            //goodHoleSound.Play();
+            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, false,true));
+            playerUI.Spectate(true);
+        }
+        gm.PlayerFinished();
+        StartCoroutine(gm.GoNextHole());
+    }
     private string GetTextResultHole(int actualStrokes, int maxStrokes)
     {
         int result = actualStrokes - maxStrokes;
@@ -378,12 +400,14 @@ public class PlayerController : NetworkBehaviour, IComparable
         else
             return "X BOGEY";
     }
-    private IEnumerator CouroutineShowResultHole(int actualStrokes, int maxStrokes,bool outOfStrokes = false)
+    private IEnumerator CouroutineShowResultHole(int actualStrokes, int maxStrokes,bool outOfStrokes = false, bool outOfTime = false)
     {
         yield return null;
         string result = GetTextResultHole(actualStrokes, maxStrokes);
         if (outOfStrokes)
             result = "OUT OF STROKES";
+        if (outOfTime)
+            result = "OUT OF TIME";
         Debug.Log(result);
         resultHoleText.text = result;
         resultHoleText.gameObject.SetActive(true);
