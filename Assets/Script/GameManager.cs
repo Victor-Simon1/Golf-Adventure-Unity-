@@ -7,6 +7,7 @@ using Services;
 using System;
 using UnityEngine.UI;
 using System.Net.NetworkInformation;
+using TMPro;
 
 public class GameManager : MonoRegistrable
 {
@@ -30,6 +31,7 @@ public class GameManager : MonoRegistrable
     public int nbPlayerFinishHole = 0;
     public bool inGame;
 
+   
     [Header("Maps Variables")]
     [SerializeField] private string[] maps;
     private int mapId;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class BallControler : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class BallControler : MonoBehaviour
 
     private int maxStrokes = 12;
     private int penalityStrokes = 3;
-    private float maxMinutesPerRound = 5f;
+
 
     public Coroutine timeLimitCoroutine;
     [Header("Movement")]
@@ -144,6 +145,10 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!hasFinishHole && pc.isLocalPlayer)
+        {
+            
+        }
         if (isVisualized)
         {
             //Si on est en dehors des limits, tp dans le temps donn�
@@ -301,7 +306,8 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
-            StopCoroutine(timeLimitCoroutine);
+            pc.GetTimer().StopTimer();
+            //StopCoroutine(timeLimitCoroutine);
             pc.OnHoleEntered(hole.maxStrokes);
         }
     }
@@ -309,14 +315,14 @@ public class BallControler : MonoBehaviour
     #endregion
 
     #region COROUTINE
-    public IEnumerator TimeLimit()
+   /* public IEnumerator TimeLimit()
     {
         yield return new WaitForSeconds(maxMinutesPerRound * 60);
         Debug.Log("Time Limit");
         pc.RpcAddXStroke(maxStrokes - pc.GetActualStrokes() + penalityStrokes);
         pc.OutOfTime();
 
-    }
+    }*/
     #endregion
     #region PUBLIC_FUNCTION
     public void Push()
@@ -397,7 +403,8 @@ public class BallControler : MonoBehaviour
             {
                 Debug.Log("Player is over the limit of strokes");
                 pc.RpcAddXStroke(penalityStrokes);
-                StopCoroutine(timeLimitCoroutine);
+                pc.GetTimer().StopTimer();
+                //StopCoroutine(timeLimitCoroutine);
                 pc.OnOutofStrokes();
             }
             Debug.Log("Ball stopped");
@@ -426,7 +433,14 @@ public class BallControler : MonoBehaviour
 
 
     #region GETTER_SETTER
-
+    public int GetPenalityStrokes()
+    {
+        return penalityStrokes;
+    }
+    public int GetMaxStrokes()
+    {
+        return maxStrokes;
+    }
     public PlayerController GetPlayer()
     {
         return pc;
