@@ -88,6 +88,7 @@ public class BallControler : MonoBehaviour
 
     private bool firstEnable = true;
 
+    #region UNITY_FUNCTION
     void Start()
     {
         rotationValues = new Vector2(15, 0);
@@ -136,20 +137,10 @@ public class BallControler : MonoBehaviour
 
       
     }
-
-    public IEnumerator TimeLimit()
-    {
-        yield return new WaitForSeconds(maxMinutesPerRound * 60);
-        Debug.Log("Time Limit");
-        pc.RpcAddXStroke(maxStrokes - pc.GetActualStrokes() + penalityStrokes);
-        pc.OutOfTime();
-
-    }
     private void OnDisable()
     {
         lineVisual.gameObject.SetActive(false);
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -226,7 +217,7 @@ public class BallControler : MonoBehaviour
 
             }
             //Detecting slope
-            if(cam)
+            if (cam)
             {
                 float camX = cam.transform.forward.x / 7f;
                 float camZ = cam.transform.forward.z / 7f;
@@ -285,6 +276,49 @@ public class BallControler : MonoBehaviour
         if (moving && magnHasChanged && AbsMagn < 0.4)
             Stopped();
     }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Ground") && !isOnGreen)
+        {
+            Debug.Log("Hors limit... " + collision.gameObject.name + "(" + collision.contacts[0].point + ")");
+            isOutOfLimit = true;
+        }
+        if (collision.transform.CompareTag("Green"))
+        {
+            isOnGreen = true;
+        }
+    }
+    public void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.CompareTag("Green"))
+        {
+            isOnGreen = false;
+        }
+    }
+    public void OnTriggerEnter(Collider other)
+    {
+        HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
+        if (hole != null)
+        {
+            StopCoroutine(timeLimitCoroutine);
+            pc.OnHoleEntered(hole.maxStrokes);
+        }
+    }
+
+    #endregion
+
+    #region COROUTINE
+    public IEnumerator TimeLimit()
+    {
+        yield return new WaitForSeconds(maxMinutesPerRound * 60);
+        Debug.Log("Time Limit");
+        pc.RpcAddXStroke(maxStrokes - pc.GetActualStrokes() + penalityStrokes);
+        pc.OutOfTime();
+
+    }
+    #endregion
+    #region PUBLIC_FUNCTION
     public void Push()
     {
         //When the ball is moving and under the limit,it dont pass to false so its reactiviting the stopped function
@@ -307,11 +341,6 @@ public class BallControler : MonoBehaviour
         //rb.AddForce(vec * force, ForceMode.Impulse);
         pc.PushBall(vec, force);
     }
-    private void DoSound()
-    {
-        audioSource.pitch = Random.Range(0.8f, 1.2f);
-        audioSource.Play();
-    }
     public void TpStart()
     {
         rb.velocity = Vector3.zero;
@@ -320,6 +349,46 @@ public class BallControler : MonoBehaviour
         transform.position = sp;
     }
 
+    public void SetRotationValueY(float y)
+    {
+        rotationValues.x = 15;
+        rotationValues.y = y;
+        Debug.Log("Rotation :" + rotationValues);
+    }
+    public void SetLastPosition(Vector3 position)
+    {
+        lastPosition = position;
+    }
+    public void IgnoreBalls()
+    {
+        Debug.Log("J'ignore les autres balls");
+        GetComponent<SphereCollider>().excludeLayers = ballLayer;
+    }
+
+    public void DontIgnoreBalls()
+    {
+        GetComponent<SphereCollider>().excludeLayers = 0;
+    }
+
+    public void Spawn(bool b)
+    {
+        mr.enabled = b;
+        rb.useGravity = b;
+    }
+
+    public void SetIsVisualized(bool b)
+    {
+        isVisualized = b;
+    }
+
+    #endregion
+
+    #region PRIVATE_FUNCTION
+    private void DoSound()
+    {
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
+        audioSource.Play();
+    }
     private void Stopped()
     {
         if (AbsMagn < 0.04f)
@@ -344,18 +413,7 @@ public class BallControler : MonoBehaviour
             }
         }
         rb.velocity = rb.velocity * coeffAngularVelocity; //* Time.deltaTime;
-        coeffAngularVelocity = coeffAngularVelocity -coeffAngularVelocity * (0.001f / 100)*Time.fixedDeltaTime;//0.99f;
-    }
-
-    public void SetRotationValueY(float y)
-    {
-        rotationValues.x = 15;
-        rotationValues.y = y;
-        Debug.Log("Rotation :" + rotationValues);
-    }
-    public void SetLastPosition(Vector3 position)
-    {
-        lastPosition = position;
+        coeffAngularVelocity = coeffAngularVelocity - coeffAngularVelocity * (0.001f / 100) * Time.fixedDeltaTime;//0.99f;
     }
     private void TpToLastLocation()
     {
@@ -364,59 +422,15 @@ public class BallControler : MonoBehaviour
         isOutOfLimit = false;
         timeOutLimit = 0f;
     }
-    public void IgnoreBalls()
-    {
-        Debug.Log("J'ignore les autres balls");
-        GetComponent<SphereCollider>().excludeLayers = ballLayer;
-    }
+    #endregion
 
-    public void DontIgnoreBalls()
-    {
-        GetComponent<SphereCollider>().excludeLayers = 0;
-    }
 
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.CompareTag("Ground") && !isOnGreen)
-        {
-            Debug.Log("Hors limit... " +collision.gameObject.name + "(" + collision.contacts[0].point +")"); 
-            isOutOfLimit = true;
-        }
-        if (collision.transform.CompareTag("Green"))
-        {
-            isOnGreen = true;
-        }
-    }
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.transform.CompareTag("Green"))
-        {
-            isOnGreen = false;
-        }
-    }
-    public void OnTriggerEnter(Collider other)
-    {
-        HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
-        if (hole != null) 
-        {
-            StopCoroutine(timeLimitCoroutine);
-            pc.OnHoleEntered(hole.maxStrokes);
-        }
-    }
-
-    public void Spawn(bool b)
-    {
-        mr.enabled = b;
-        rb.useGravity = b;
-    }
-
-    public void SetIsVisualized(bool b)
-    {
-        isVisualized = b;
-    }
+    #region GETTER_SETTER
 
     public PlayerController GetPlayer()
     {
         return pc;
     }
+
+    #endregion
 }

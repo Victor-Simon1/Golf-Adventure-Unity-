@@ -7,7 +7,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 public class PlayerController : NetworkBehaviour, IComparable
 {
     [Header("Holes")]
@@ -45,6 +44,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SyncVar]
     private bool isReady;
 
+    #region UNITY_FUNCTION
     private void Start()
     {
         mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
@@ -73,8 +73,11 @@ public class PlayerController : NetworkBehaviour, IComparable
         actualHole = 0;
         hasFinishHole = false;
         strokes.Clear();
-        InitStrokes() ;
+        InitStrokes();
     }
+    #endregion
+
+    #region NETWORK_FUNCTION
     public override void OnStopClient()
     {
         base.OnStopClient();
@@ -102,21 +105,9 @@ public class PlayerController : NetworkBehaviour, IComparable
             } 
         }
     }
+    #endregion
 
-    //[Command]
-    void InitStrokes()
-    {
-        
-        for(int i = 0; i < 18; i++)
-        {
-            strokes.Add(0);
-        }
-    }
-    public int GetActualStrokes()
-    {
-        return strokes[actualHole];
-
-    }
+    #region RPC_FUNCTION
     [ClientRpc]
     public void RpcAddStroke()
     {
@@ -126,20 +117,13 @@ public class PlayerController : NetworkBehaviour, IComparable
     [ClientRpc]
     public void RpcAddXStroke(int x)
     {
-        strokes[actualHole]+=x ;
+        strokes[actualHole] += x;
     }
-    
+
     [ClientRpc]
     public void RpcFinishFirstPut()
     {
         GetComponent<SphereCollider>().excludeLayers = 0;
-    }
-
-    [Command]
-    public void CmdExit()
-    {
-        RpcExit();
-        PlayerDestroy();
     }
 
     [ClientRpc]
@@ -150,35 +134,159 @@ public class PlayerController : NetworkBehaviour, IComparable
         PlayerDestroy();
     }
 
-    [Command]
-    public void CmdStopHost()
-    {
-        RpcStopHost();
-    }
-
     [ClientRpc]
     public void RpcStopHost()
     {
         ServiceLocator.Get<GameManager>().ThrowError("Vous avez été déconnecté du serveur.");
     }
 
-  
+    [ClientRpc]
+    public void RpcSetColor(Color color)
+    {
+        display.SetColor(color);
+        mat.SetColor("_BaseColor", color);
+    }
+
     [ClientRpc]
     public void RpcLaunch(string mapId)
     {
-        if(isLocalPlayer)
+        if (isLocalPlayer)
         {
             SceneManager.LoadScene(mapId);
             ServiceLocator.Get<GameManager>().SceneLoaded();
             //SpawnBall();
         }
     }
-
-    private void PlayerDestroy()
+    [ClientRpc]
+    public void RpcSpawnBalls()
     {
-        Destroy(display.gameObject);
-        Destroy(playerScore);
-        Destroy(gameObject);
+        if (isLocalPlayer) ServiceLocator.Get<GameManager>().GetListPlayer().ForEach(p => p.SpawnBall());
+    }
+
+    [ClientRpc]
+    public void DisplayNbReady(int b, int nbReady)
+    {
+        ServiceLocator.Get<GameManager>().SetnbReady(nbReady);
+    }
+
+    #endregion
+
+    #region COMMAND_FUNCTION
+
+    [Command]
+    public void CmdExit()
+    {
+        RpcExit();
+        PlayerDestroy();
+    }
+
+    [Command]
+    public void CmdStopHost()
+    {
+        RpcStopHost();
+    }
+
+    [Command]
+    public void PushBall(Vector3 dir, float force)
+    {
+        ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+        ball.GetComponent<BallControler>().moving = true;
+        RpcAddStroke();
+    }
+
+    [Command]
+    public void CmdSetColor(Color color, int id)
+    {
+        ServiceLocator.Get<GameManager>().SetPlayerColor(color, id);
+    }
+
+    [Command]
+    public void UpdateReady(bool b)
+    {
+        isReady = b;
+    }
+
+    #endregion
+
+    #region PUBLIC_FUNCTION
+    public void hasArrived()
+    {
+        Debug.Log(playerName + " has arrived");
+        UpdateReady(true);
+    }
+
+    public int GetSumStrokes()
+    {
+        int sum = 0;
+        strokes.ForEach(s => sum += s);
+        return sum;
+    }
+
+
+    public void ActivateAll(bool b)
+    {
+        camObj.enabled = b;
+        ball.SetIsVisualized(b);
+    }
+
+    public void OnHoleEntered(int maxStrokes)
+    {
+        Debug.Log("Une balle est rentrée : " + playerName);
+        var gm = ServiceLocator.Get<GameManager>();
+        hasFinishHole = true;
+        DespawnBall();
+
+        if (gm.GetLocalPlayer().netIdentity == netIdentity)
+        {
+#if UNITY_ANDROID //&& !UNITY_EDITOR
+            Debug.Log("Je vibre");
+            Handheld.Vibrate();
+#endif
+            Debug.Log("play sound");
+            goodHoleSound.Play();
+            Debug.Log("play animation");
+            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], maxStrokes));
+            playerUI.Spectate(true);
+        }
+
+        gm.PlayerFinished();
+        StartCoroutine(gm.GoNextHole());
+
+    }
+
+    public void OnOutofStrokes()
+    {
+        var gm = ServiceLocator.Get<GameManager>();
+        hasFinishHole = true;
+        DespawnBall();
+        if (gm.GetLocalPlayer().netIdentity == netIdentity)
+        {
+            Debug.Log("play sound");
+            //goodHoleSound.Play();
+            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, true));
+            playerUI.Spectate(true);
+        }
+        gm.PlayerFinished();
+        StartCoroutine(gm.GoNextHole());
+    }
+
+    public void OutOfTime()
+    {
+        var gm = ServiceLocator.Get<GameManager>();
+        hasFinishHole = true;
+        if (gm.GetLocalPlayer().netIdentity == netIdentity)
+        {
+            Debug.Log("play sound");
+            //goodHoleSound.Play();
+            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, false, true));
+            playerUI.Spectate(true);
+        }
+        gm.PlayerFinished();
+        StartCoroutine(gm.GoNextHole());
+    }
+    public int GetActualStrokes()
+    {
+        return strokes[actualHole];
     }
 
     public void TpToLocation(Transform location)
@@ -188,16 +296,15 @@ public class PlayerController : NetworkBehaviour, IComparable
         var ballRb = ball.GetComponent<Rigidbody>();
         ballRb.freezeRotation = true;
         ballRb.velocity = Vector3.zero;
-      
+
         ball.transform.position = transform.localPosition;
         ball.transform.rotation = Quaternion.identity;
 
-       
         transform.position = location.position;
         ballRb.freezeRotation = false;
         //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
         ball.SetLastPosition(transform.localPosition);
-        ball.SetRotationValueY(location.rotation.eulerAngles.y); 
+        ball.SetRotationValueY(location.rotation.eulerAngles.y);
         Physics.SyncTransforms();
         ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
     }
@@ -228,36 +335,74 @@ public class PlayerController : NetworkBehaviour, IComparable
         if (isLocalPlayer) UpdateReady(false);
     }
 
-    [ClientRpc]
-    public void RpcSpawnBalls()
-    {
-        if(isLocalPlayer) ServiceLocator.Get<GameManager>().GetListPlayer().ForEach(p => p.SpawnBall());
-    }
-
     public void SetColor(Color color)
     {
         CmdSetColor(color, id);
     }
-    [Command]
-    public void PushBall(Vector3 dir,float force)
+    #endregion
+
+    #region PRIVATE_FUNCTION
+    void InitStrokes()
     {
-        ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
-        ball.GetComponent<BallControler>().moving = true;
-        RpcAddStroke();
+        for(int i = 0; i < 18; i++)
+        {
+            strokes.Add(0);
+        }
     }
-    [Command]
-    public void CmdSetColor(Color color,int id)
+    private void PlayerDestroy()
     {
-        ServiceLocator.Get<GameManager>().SetPlayerColor(color,id);
+        Destroy(display.gameObject);
+        Destroy(playerScore);
+        Destroy(gameObject);
     }
 
-    [ClientRpc]
-    public void RpcSetColor(Color color)
+    private string GetTextResultHole(int actualStrokes, int maxStrokes)
     {
-        display.SetColor(color);
-        mat.SetColor("_BaseColor", color);
+        int result = actualStrokes - maxStrokes;
+
+        if (actualStrokes == 1)
+            return "HOLE IN ONE";
+        else if (result == -4)
+            return "CONDOR";
+        else if (result == -3)
+            return "ALBATROS";
+        else if (result == -2)
+            return "EAGLE";
+        else if (result == -1)
+            return "BIRDIE";
+        else if (result == 0)
+            return "PAR";
+        else if (result == 1)
+            return "BOGEY";
+        else if (result == 2)
+            return "DOUBLE BOGEY";
+        else
+            return "X BOGEY";
     }
 
+
+    #endregion
+
+    #region COROUTINE
+    private IEnumerator CouroutineShowResultHole(int actualStrokes, int maxStrokes, bool outOfStrokes = false, bool outOfTime = false)
+    {
+        yield return null;
+        string result = GetTextResultHole(actualStrokes, maxStrokes);
+        if (outOfStrokes)
+            result = "OUT OF STROKES";
+        if (outOfTime)
+            result = "OUT OF TIME";
+        Debug.Log(result);
+        resultHoleText.text = result;
+        resultHoleText.gameObject.SetActive(true);
+        resultHoleText.GetComponent<Animator>().Play("New Animation");
+        yield return new WaitForSeconds(1f);
+        resultHoleText.gameObject.SetActive(false);
+        playerUI.NextPlayer();
+    }
+    #endregion
+
+    #region GETTER_SETTER
     public void SetName(string newName)
     {
         this.playerName = newName;
@@ -266,20 +411,6 @@ public class PlayerController : NetworkBehaviour, IComparable
     public string GetName()
     {
         return playerName;
-    }
-
-    public int CompareTo(object obj)
-    {
-        var a = this;
-        var b = obj as PlayerController;
-
-        if (a.id < b.id)
-            return -1;
-
-        if (a.id > b.id)
-            return 1;
-
-        return 0;
     }
 
     public void SetDisplay(PlayerDisplay display)
@@ -304,140 +435,32 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         this.playerScore = playerScore;
     }
-
-    public int GetSumStrokes()
-    {
-        int sum = 0;
-        strokes.ForEach(s => sum += s) ;
-        return sum;
-    }
-
     public BallControler GetBall()
     {
         return ball;
     }
-
-    public void ActivateAll(bool b)
-    {
-        camObj.enabled = b;
-        ball.SetIsVisualized(b);
-    }
-
-    public void OnHoleEntered(int maxStrokes)
-    {
-        Debug.Log("Une balle est rentrée : " + playerName);
-        var gm = ServiceLocator.Get<GameManager>();
-        hasFinishHole = true;
-        DespawnBall();
-        if (gm.GetLocalPlayer().netIdentity == netIdentity)
-        {
-#if UNITY_ANDROID //&& !UNITY_EDITOR
-            Debug.Log("Je vibre");
-            Handheld.Vibrate();
-#endif
-            Debug.Log("play sound");
-            goodHoleSound.Play();
-            Debug.Log("play animation");
-            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], maxStrokes));
-            playerUI.Spectate(true);
-        }
-
-        gm.PlayerFinished();
-        StartCoroutine(gm.GoNextHole());
-
-    }
-
-    public void OnOutofStrokes()
-    {
-        var gm = ServiceLocator.Get<GameManager>();
-        hasFinishHole = true;
-        DespawnBall();
-        if (gm.GetLocalPlayer().netIdentity == netIdentity)
-        {
-            Debug.Log("play sound");
-            //goodHoleSound.Play();
-            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0,true));
-            playerUI.Spectate(true);
-        }
-        gm.PlayerFinished();
-        StartCoroutine(gm.GoNextHole());
-    }
-
-    public void OutOfTime()
-    {
-        var gm = ServiceLocator.Get<GameManager>();
-        hasFinishHole = true;
-        if (gm.GetLocalPlayer().netIdentity == netIdentity)
-        {
-            Debug.Log("play sound");
-            //goodHoleSound.Play();
-            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, false,true));
-            playerUI.Spectate(true);
-        }
-        gm.PlayerFinished();
-        StartCoroutine(gm.GoNextHole());
-    }
-    private string GetTextResultHole(int actualStrokes, int maxStrokes)
-    {
-        int result = actualStrokes - maxStrokes;
-
-        if (actualStrokes == 1)
-            return "HOLE IN ONE";
-        else if (result == -4)
-            return "CONDOR";
-        else if (result == -3)
-            return "ALBATROS";
-        else if (result == -2)
-            return "EAGLE";
-        else if (result == -1)
-            return "BIRDIE";
-        else if (result == 0)
-            return "PAR";
-        else if (result == 1)
-            return "BOGEY";
-        else if (result == 2)
-            return "DOUBLE BOGEY";
-        else
-            return "X BOGEY";
-    }
-    private IEnumerator CouroutineShowResultHole(int actualStrokes, int maxStrokes,bool outOfStrokes = false, bool outOfTime = false)
-    {
-        yield return null;
-        string result = GetTextResultHole(actualStrokes, maxStrokes);
-        if (outOfStrokes)
-            result = "OUT OF STROKES";
-        if (outOfTime)
-            result = "OUT OF TIME";
-        Debug.Log(result);
-        resultHoleText.text = result;
-        resultHoleText.gameObject.SetActive(true);
-        resultHoleText.GetComponent<Animator>().Play("New Animation");
-        yield return new WaitForSeconds(1f);
-        resultHoleText.gameObject.SetActive(false);
-        playerUI.NextPlayer();
-    }
-
-    public void hasArrived()
-    {
-        Debug.Log(playerName + " has arrived");
-        UpdateReady(true);
-    }
-
-    [ClientRpc]
-    public void DisplayNbReady(int b, int nbReady)
-    {
-        ServiceLocator.Get<GameManager>().SetnbReady(nbReady);
-    }
-
-
-    [Command]
-    public void UpdateReady(bool b)
-    {
-        isReady = b;
-    }
-
     public bool IsReady()
     {
         return isReady;
     }
+    #endregion
+
+
+    #region ICOMPARABLE_FUNCTION
+    public int CompareTo(object obj)
+    {
+        var a = this;
+        var b = obj as PlayerController;
+
+        if (a.id < b.id)
+            return -1;
+
+        if (a.id > b.id)
+            return 1;
+
+        return 0;
+    }
+
+    #endregion
+
 }
