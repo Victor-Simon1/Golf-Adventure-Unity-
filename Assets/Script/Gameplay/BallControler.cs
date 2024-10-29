@@ -270,7 +270,7 @@ public class BallControler : MonoBehaviour
     {
         //Speed
         AbsMagn = Vector3.Magnitude(rb.velocity);
-        moving = (AbsMagn >= 0);
+        moving = (AbsMagn > 0.01);
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)
@@ -408,7 +408,7 @@ public class BallControler : MonoBehaviour
             rb.Sleep();
             if (pc.isLocalPlayer)
                 lineVisual.gameObject.SetActive(true);
-            moving = false;
+            //moving = false;
             if (isOutOfLimit)
             {
                 TpToLastLocation();
