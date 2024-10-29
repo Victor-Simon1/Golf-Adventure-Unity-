@@ -35,7 +35,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     private PlayerScoreboardItem playerScore;
     [SerializeField] private PlayerUI playerUI;
     private PlayerDisplay display;
-
+    [SerializeField] Timer timer;
     [Header("Network")]
     [SerializeField] private Behaviour nrbLocal;
     [SerializeField] private Behaviour nrbNotLocal;
@@ -306,7 +306,11 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.SetLastPosition(transform.localPosition);
         ball.SetRotationValueY(location.rotation.eulerAngles.y);
         Physics.SyncTransforms();
-        ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
+        if (timer)
+            timer.StartTimer();
+        else
+            Debug.Log("Timer not init");
+       // ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
     }
     public void TpToLocation(Vector3 location)
     {
@@ -403,6 +407,14 @@ public class PlayerController : NetworkBehaviour, IComparable
     #endregion
 
     #region GETTER_SETTER
+    public Timer GetTimer()
+    {
+        return timer; 
+    }
+    public void SetTimer(Timer _timer)
+    {
+        timer = _timer;
+    }
     public void SetName(string newName)
     {
         this.playerName = newName;
