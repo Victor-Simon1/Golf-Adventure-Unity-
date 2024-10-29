@@ -29,6 +29,8 @@ public class PlayerUI : MonoBehaviour
         Title.text = gm.GetSessionName();
 
         SetActualPlayer(gm.GetLocalPlayer());
+
+        ServiceLocator.Get<UIManager>().SetPlayerUI(this);
     }
     #endregion
 
