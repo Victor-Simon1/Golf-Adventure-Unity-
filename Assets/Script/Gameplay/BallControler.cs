@@ -145,10 +145,6 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!hasFinishHole && pc.isLocalPlayer)
-        {
-            
-        }
         if (isVisualized)
         {
             //Si on est en dehors des limits, tp dans le temps donn�
@@ -274,6 +270,7 @@ public class BallControler : MonoBehaviour
     {
         //Speed
         AbsMagn = Vector3.Magnitude(rb.velocity);
+        moving = (AbsMagn >= 0);
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)

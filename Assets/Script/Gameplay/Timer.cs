@@ -15,11 +15,15 @@ public class Timer : MonoBehaviour
     [Header("Manager")]
     PlayerController pc;
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         pc = ServiceLocator.Get<GameManager>().GetLocalPlayer();
         pc.SetTimer(this);
         currentTime = startingTime;
+    }
+    void Start()
+    {
+       
         timerText = GetComponent<TextMeshProUGUI>();
     }
 
