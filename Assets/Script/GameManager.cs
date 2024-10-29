@@ -7,6 +7,7 @@ using Services;
 using System;
 using UnityEngine.UI;
 using System.Net.NetworkInformation;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoRegistrable
@@ -49,7 +50,7 @@ public class GameManager : MonoRegistrable
     private void Start()
     {
         networkManager = ServiceLocator.Get<StockNetManager>().GetNetworkManager();
-
+        uiManager = ServiceLocator.Get<UIManager>();
         Display();
 
         
@@ -266,10 +267,21 @@ public class GameManager : MonoRegistrable
         }
     }
 
-    public void SceneLoaded()
+    public IEnumerator LoadScene(string mapId)
     {
-        inGame = true;
-        StartCoroutine(CoroutingWaitingForAllPlayers(true));
+        AsyncOperation operation = SceneManager.LoadSceneAsync(mapId);
+
+        var loadingScreen = uiManager.GetLoadingScreen();
+        uiManager.GetHubCanvas().SetActive(false);
+        loadingScreen.gameObject.SetActive(true);
+        while (!operation.isDone)
+        {
+            Debug.Log("Loading...");
+            float progressiveValue = Mathf.Clamp01(operation.progress / 0.9f);
+            loadingScreen.SetProgression(progressiveValue);
+            loadingScreen.RotateAll();
+            yield return null;
+        }
     }
 
     public void AddStart(StartBehaviour newStart)

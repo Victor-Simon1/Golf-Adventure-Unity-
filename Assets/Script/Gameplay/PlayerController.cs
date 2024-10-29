@@ -152,8 +152,8 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         if (isLocalPlayer)
         {
-            SceneManager.LoadScene(mapId);
-            ServiceLocator.Get<GameManager>().SceneLoaded();
+            var gm = ServiceLocator.Get<GameManager>();
+            StartCoroutine(gm.LoadScene(mapId));
             //SpawnBall();
         }
     }
