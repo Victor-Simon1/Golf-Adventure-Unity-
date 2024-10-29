@@ -306,7 +306,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.SetLastPosition(transform.localPosition);
         ball.SetRotationValueY(location.rotation.eulerAngles.y);
         Physics.SyncTransforms();
-        timer.StartTimer();
+        if (timer)
+            timer.StartTimer();
+        else
+            Debug.Log("Timer not init");
        // ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
     }
     public void TpToLocation(Vector3 location)
