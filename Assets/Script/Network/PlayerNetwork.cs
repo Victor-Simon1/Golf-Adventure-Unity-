@@ -48,7 +48,7 @@ public class PlayerNetwork : NetworkBehaviour
 
         CmdUpdateUI(gm.GetListPlayer());
 
-        CmdUpdatePlayerName(player.id, joinManager.GetPlayerName());
+        CmdUpdatePlayerName(player.id, joinManager.GetPlayerName() + player.id.ToString());
 
     }
 
