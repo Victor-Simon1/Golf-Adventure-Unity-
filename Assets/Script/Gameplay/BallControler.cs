@@ -145,6 +145,7 @@ public class BallControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Number of vertices : " + GetComponent<MeshFilter>().mesh.vertexCount);
         if (isVisualized)
         {
             //Si on est en dehors des limits, tp dans le temps donn�
@@ -270,12 +271,12 @@ public class BallControler : MonoBehaviour
     {
         //Speed
         AbsMagn = Vector3.Magnitude(rb.velocity);
-        moving = (AbsMagn > 0.01);
+        moving = (AbsMagn > 0.05);
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)
             magnHasChanged = false;
-        if (moving && magnHasChanged && AbsMagn < 0.4)
+        if (moving && magnHasChanged && AbsMagn < 0.5)
             Stopped();
     }
 
@@ -312,14 +313,7 @@ public class BallControler : MonoBehaviour
     #endregion
 
     #region COROUTINE
-   /* public IEnumerator TimeLimit()
-    {
-        yield return new WaitForSeconds(maxMinutesPerRound * 60);
-        Debug.Log("Time Limit");
-        pc.RpcAddXStroke(maxStrokes - pc.GetActualStrokes() + penalityStrokes);
-        pc.OutOfTime();
 
-    }*/
     #endregion
     #region PUBLIC_FUNCTION
     public void Push()
@@ -394,7 +388,7 @@ public class BallControler : MonoBehaviour
     }
     private void Stopped()
     {
-        if (AbsMagn < 0.04f)
+        //if (AbsMagn < 0.05f)
         {
             if (pc.GetActualStrokes() == maxStrokes)
             {
@@ -405,6 +399,7 @@ public class BallControler : MonoBehaviour
                 pc.OnOutofStrokes();
             }
             Debug.Log("Ball stopped");
+            magnHasChanged = false;
             rb.Sleep();
             if (pc.isLocalPlayer)
                 lineVisual.gameObject.SetActive(true);

@@ -30,6 +30,14 @@ public class ColourPickerControl : MonoBehaviour
         UpdateOutput();
     }
 
+    private void OnEnable()
+    {
+        changeThisColor.enabled = true;
+    }
+    private void OnDisable()
+    {
+        changeThisColor.enabled = false;
+    }
     private void CreateHueImage()
     {
         hueTexture = new Texture2D(1, 16);
