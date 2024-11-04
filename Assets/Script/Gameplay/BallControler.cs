@@ -336,11 +336,11 @@ public class BallControler : MonoBehaviour
         var vec = cam.transform.forward;
         force = sliderForce.value*scaleForce;
         float sensY = rb.velocity.normalized.y;
-        /*if(uphill)
+        if(uphill)
             sensY = Mathf.Abs(sensY);
         if (flatSurface)
-            sensY = 0f;*/
-        vec = new Vector3(vec.x, /*sensY*/ 0, vec.z);
+            sensY = 0f;
+        vec = new Vector3(vec.x, sensY /*0*/, vec.z);
         //rb.AddForce(vec * force, ForceMode.Impulse);
         pc.PushBall(vec, force);
     }
