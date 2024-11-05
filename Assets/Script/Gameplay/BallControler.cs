@@ -140,7 +140,8 @@ public class BallControler : MonoBehaviour
     }
     private void OnDisable()
     {
-        lineVisual.gameObject.SetActive(false);
+        if(lineVisual.gameObject.activeSelf)
+            lineVisual.gameObject.SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -401,13 +402,13 @@ public class BallControler : MonoBehaviour
             Debug.Log("Ball stopped");
             magnHasChanged = false;
             rb.Sleep();
-            if (pc.isLocalPlayer)
+            if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf)
                 lineVisual.gameObject.SetActive(true);
             //moving = false;
             if (isOutOfLimit)
             {
                 TpToLastLocation();
-                if (pc.isLocalPlayer)
+                if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf)
                     lineVisual.gameObject.SetActive(true);
             }
         }
