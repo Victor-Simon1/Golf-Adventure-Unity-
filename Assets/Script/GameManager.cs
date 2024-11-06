@@ -49,6 +49,7 @@ public class GameManager : MonoRegistrable
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
         networkManager = ServiceLocator.Get<StockNetManager>().GetNetworkManager();
         uiManager = ServiceLocator.Get<UIManager>();
         Display();
