@@ -75,7 +75,7 @@ public class VictoryPopup : MonoBehaviour
         isRetracted = !isRetracted;
         isMoving = false;
         yield return null;//new WaitForSeconds(pause);
-        if (isRetracted)
+        if (isRetracted && scoreboard.activeSelf)
         {
             scoreboard.SetActive(false);
         }

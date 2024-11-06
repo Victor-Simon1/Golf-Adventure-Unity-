@@ -32,7 +32,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SerializeField] private TextMeshProUGUI resultHoleText;
 
     [Header("Scripts")]
-    private PlayerScoreboardItem playerScore;
+    [SerializeField] private PlayerScoreboardItem playerScore;
     [SerializeField] private PlayerUI playerUI;
     private PlayerDisplay display;
     [SerializeField] Timer timer;
@@ -54,18 +54,6 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.GetComponent<Renderer>().material = mat;
         ballRb = ball.GetComponent<Rigidbody>();
         InitStrokes();
-    }
-
-    private void Update()
-    {
-        if(playerUI != null)
-        {
-            playerUI.SetStrokes(strokes[actualHole]);
-        }
-        if(playerScore != null)
-        {
-            playerScore.SetSum(GetSumStrokes());
-        }
     }
 
     public void Reset()
@@ -112,6 +100,13 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void RpcAddStroke()
     {
         strokes[actualHole]++;
+        if(isLocalPlayer)
+        {
+            if (playerUI != null)
+                playerUI.SetStrokes(strokes[actualHole]);
+            if (playerScore != null)
+                playerScore.SetSum(GetSumStrokes());
+        }
     }
 
     [ClientRpc]
@@ -392,7 +387,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         string result = GetTextResultHole(actualStrokes, maxStrokes);
         if (outOfStrokes)
             result = "OUT OF STROKES";
-        if (outOfTime)
+        else if (outOfTime)
             result = "OUT OF TIME";
         Debug.Log(result);
         resultHoleText.text = result;
