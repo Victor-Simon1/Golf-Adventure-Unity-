@@ -22,6 +22,7 @@ public class ErrorManager : MonoBehaviour
     private void Quitter()
     {
         var gm = ServiceLocator.Get<GameManager>();
+        DontDestroy.dontDestroyTargets.ForEach(t => { Destroy(t); });
         Destroy(gm.gameObject);
         SceneManager.LoadScene("MenuPrincipal");
     }

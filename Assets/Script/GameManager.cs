@@ -41,8 +41,8 @@ public class GameManager : MonoRegistrable
 
     private void Awake()
     {
-        if(ServiceLocator.IsRegistered<GameManager>())
-            Destroy(ServiceLocator.Get<GameManager>().gameObject);
+        //if(ServiceLocator.IsRegistered<GameManager>())
+          //  Destroy(ServiceLocator.Get<GameManager>().gameObject);
         ServiceLocator.Register<GameManager>(this, false);
         starts.Clear();
     }
@@ -158,6 +158,7 @@ public class GameManager : MonoRegistrable
             //Close the network
             networkManager.StopHost();
             ThrowError("No ipv4 address available");
+            //DontDestroy.dontDestroyTargets.ForEach(e => Destroy(e));
             ServiceLocator.Get<JoinManager>().StopConnection();
             throw e;
         }
@@ -317,9 +318,10 @@ public class GameManager : MonoRegistrable
     {
         foreach(UnicastIPAddressInformation add in NetworkInterface.GetAllNetworkInterfaces()[0].GetIPProperties().UnicastAddresses)
         {
-            Debug.Log(add.Address.ToString());
+          throw new System.Exception();
             if (add.Address.AddressFamily == AddressFamily.InterNetwork)
             {
+                Debug.Log("The address :" + add.Address.ToString());
                 return add.Address.ToString();
             }
         }
