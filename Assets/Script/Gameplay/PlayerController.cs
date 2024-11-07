@@ -51,7 +51,6 @@ public class PlayerController : NetworkBehaviour, IComparable
         mat.SetFloat("_Glossiness", .8f);
         mat.SetFloat("_Metallic", 0f);
 
-        ball.GetComponent<Renderer>().material = mat;
         ballRb = ball.GetComponent<Rigidbody>();
         InitStrokes();
     }
