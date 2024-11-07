@@ -11,11 +11,20 @@ public class LoadingScreen : MonoBehaviour
 
     [SerializeField] private Image loadingBar;
 
+    private bool isWaiting;
 
-    public void RotateAll()
+    private void OnEnable()
     {
-        rotatingCircle.Rotate();
-        ballSprite.Rotate();
+        isWaiting = true;
+    }
+
+    private void FixedUpdate()
+    {
+        if (isWaiting)
+        {
+            rotatingCircle.Rotate();
+            ballSprite.Rotate();
+        }
     }
 
     public void SetProgression(float progression)

@@ -246,7 +246,6 @@ public class GameManager : MonoRegistrable
                 players.ForEach(p => { p.actualHole = actualHole; });
                 uiManager.GetPlayerUI().ResetAllUI();
                 TpPlayersToLocation(actualHole);
-                StartCoroutine(CoroutingWaitingForAllPlayers(false));
                 yield return new WaitForSeconds(0.5f);
 
                 uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
@@ -265,7 +264,6 @@ public class GameManager : MonoRegistrable
             {
                 player.RpcLaunch(maps[mapId]);
             }
-           
         }
     }
 
@@ -281,7 +279,6 @@ public class GameManager : MonoRegistrable
             Debug.Log("Loading...");
             float progressiveValue = Mathf.Clamp01(operation.progress / 0.9f);
             loadingScreen.SetProgression(progressiveValue);
-            loadingScreen.RotateAll();
             yield return null;
         }
     }
@@ -307,6 +304,7 @@ public class GameManager : MonoRegistrable
     private void TpPlayersToLocation(int idStart = 0)
     {
         Debug.Log("Here we go : " + idStart);
+        StartCoroutine(CoroutingWaitingForAllPlayers(false));
         players.ForEach(p => {
             p.GetBall().IgnoreBalls();
             p.TpToLocation(starts[idStart].transform);
@@ -432,6 +430,7 @@ public class GameManager : MonoRegistrable
         PlayerUI playerUI = null;
         while (true)
         {
+            Debug.Log("waiting players ...");
             if(uiManager != null)
             {
                 if (playerUI == null)

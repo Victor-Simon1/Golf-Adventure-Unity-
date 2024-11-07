@@ -47,11 +47,10 @@ public class PlayerController : NetworkBehaviour, IComparable
     #region UNITY_FUNCTION
     private void Start()
     {
-        mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        mat = ball.GetComponent<Renderer>().material;
         mat.SetFloat("_Glossiness", .8f);
         mat.SetFloat("_Metallic", 0f);
 
-        ball.GetComponent<Renderer>().material = mat;
         ballRb = ball.GetComponent<Rigidbody>();
         InitStrokes();
     }
