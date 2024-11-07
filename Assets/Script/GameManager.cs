@@ -316,7 +316,6 @@ public class GameManager : MonoRegistrable
     {
         foreach(UnicastIPAddressInformation add in NetworkInterface.GetAllNetworkInterfaces()[0].GetIPProperties().UnicastAddresses)
         {
-          throw new System.Exception();
             if (add.Address.AddressFamily == AddressFamily.InterNetwork)
             {
                 Debug.Log("The address :" + add.Address.ToString());
