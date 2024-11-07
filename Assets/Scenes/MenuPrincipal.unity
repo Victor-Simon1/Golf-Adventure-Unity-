@@ -1411,7 +1411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
-  m_DragThreshold: 10
+  m_DragThreshold: 5
 --- !u!4 &164047579
 Transform:
   m_ObjectHideFlags: 0
@@ -11243,6 +11243,11 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 3296f2b6ec15529428995f91c061ec88,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 3296f2b6ec15529428995f91c061ec88,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 3296f2b6ec15529428995f91c061ec88,

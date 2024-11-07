@@ -12,9 +12,10 @@ public class Scoreboard : MonoBehaviour
 
 
 #region UNITY_FUNCTION
-    private void Awake()
+    private void Start()
     {
         Init();
+        gameObject.SetActive(false);
     }
 #endregion
 

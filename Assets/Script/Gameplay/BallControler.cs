@@ -136,11 +136,12 @@ public class BallControler : MonoBehaviour
         
         zoomLevel = 10;
 
-      
+        InvokeRepeating("DetectSlope", 0.1f, 0.3f);
     }
     private void OnDisable()
     {
-        lineVisual.gameObject.SetActive(false);
+        if(lineVisual.gameObject.activeSelf)
+            lineVisual.gameObject.SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -149,11 +150,14 @@ public class BallControler : MonoBehaviour
         {
             //Si on est en dehors des limits, tp dans le temps donn�
             if (isOutOfLimit)
-                timeOutLimit += Time.deltaTime;
-            if (timeOutLimit > MaxTimeOutOfLimit)
             {
-                TpToLastLocation();
+                timeOutLimit += Time.deltaTime;
+                if (timeOutLimit > MaxTimeOutOfLimit)
+                {
+                    TpToLastLocation();
+                }
             }
+          
 
 #if UNITY_EDITOR
             //Permet de tester l'orientation et le zomm dans l'�diteur
@@ -217,65 +221,18 @@ public class BallControler : MonoBehaviour
                 lineVisual.SetPositionAndRotation(new Vector3(pos.x, pos.y - 0.0499f, pos.z), Quaternion.Euler(new Vector3(90, rotationValues.y, 0)));
 
             }
-            //Detecting slope
-            if (cam)
-            {
-                float camX = cam.transform.forward.x / 7f;
-                float camZ = cam.transform.forward.z / 7f;
-
-                frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
-                rearRayPos.position = transform.position + new Vector3(-camX, 0, -camZ);
-            }
-            {
-                RaycastHit rearHit;
-                if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
-                {
-                    surfaceAngle = Vector3.Angle(rearHit.normal, Vector3.up);
-                }
-                else
-                {
-                    uphill = false;
-                    flatSurface = false;
-                }
-
-                RaycastHit frontHit;
-                Vector3 frontRayStartPos = new Vector3(frontRayPos.position.x, frontRayPos.position.y, frontRayPos.position.z);
-                if (Physics.Raycast(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up), out frontHit, 1f, layerMask))
-                {
-                }
-                else
-                {
-                    uphill = true;
-                    flatSurface = false;
-                }
-                if (Mathf.Abs(rearHit.distance - frontHit.distance) < 0.02f)
-                {
-                    flatSurface = true;
-                    uphill = false;
-                }
-                else if (frontHit.distance < rearHit.distance)
-                {
-                    uphill = true;
-                    flatSurface = false;
-                }
-                else if (frontHit.distance > rearHit.distance)
-                {
-                    uphill = false;
-                    flatSurface = false;
-                }
-            }
         }
     }
     private void FixedUpdate()
     {
         //Speed
         AbsMagn = Vector3.Magnitude(rb.velocity);
-        moving = (AbsMagn >= 0);
+        moving = (AbsMagn > 0.05);
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)
             magnHasChanged = false;
-        if (moving && magnHasChanged && AbsMagn < 0.4)
+        if (moving && magnHasChanged && AbsMagn < 0.5)
             Stopped();
     }
 
@@ -312,14 +269,7 @@ public class BallControler : MonoBehaviour
     #endregion
 
     #region COROUTINE
-   /* public IEnumerator TimeLimit()
-    {
-        yield return new WaitForSeconds(maxMinutesPerRound * 60);
-        Debug.Log("Time Limit");
-        pc.RpcAddXStroke(maxStrokes - pc.GetActualStrokes() + penalityStrokes);
-        pc.OutOfTime();
 
-    }*/
     #endregion
     #region PUBLIC_FUNCTION
     public void Push()
@@ -328,7 +278,8 @@ public class BallControler : MonoBehaviour
         if (hasFinishHole || isOutOfLimit || !isOnGreen || pc.GetActualStrokes()+1 > maxStrokes)
             return;
         magnHasChanged = false;
-        lineVisual.gameObject.SetActive(false);
+        if(lineVisual.gameObject.activeSelf)
+            lineVisual.gameObject.SetActive(false);
         Debug.Log("Push the ball: " + pc.GetName());
       
         DoSound();
@@ -336,11 +287,11 @@ public class BallControler : MonoBehaviour
         var vec = cam.transform.forward;
         force = sliderForce.value*scaleForce;
         float sensY = rb.velocity.normalized.y;
-        /*if(uphill)
+        if(uphill)
             sensY = Mathf.Abs(sensY);
         if (flatSurface)
-            sensY = 0f;*/
-        vec = new Vector3(vec.x, /*sensY*/ 0, vec.z);
+            sensY = 0f;
+        vec = new Vector3(vec.x, sensY /*0*/, vec.z);
         //rb.AddForce(vec * force, ForceMode.Impulse);
         pc.PushBall(vec, force);
     }
@@ -387,6 +338,56 @@ public class BallControler : MonoBehaviour
     #endregion
 
     #region PRIVATE_FUNCTION
+
+    private void DetectSlope()
+    {
+        Debug.Log("DetectSlope");
+        if (cam)
+        {
+            float camX = cam.transform.forward.x / 7f;
+            float camZ = cam.transform.forward.z / 7f;
+
+            frontRayPos.position = transform.position + new Vector3(camX, 0, camZ);
+            rearRayPos.position = transform.position + new Vector3(-camX, 0, -camZ);
+        }
+        RaycastHit rearHit;
+        if (Physics.Raycast(rearRayPos.position, rearRayPos.TransformDirection(-Vector3.up), out rearHit, 1f, layerMask))
+        {
+            surfaceAngle = Vector3.Angle(rearHit.normal, Vector3.up);
+        }
+        else
+        {
+            uphill = false;
+            flatSurface = false;
+        }
+
+        RaycastHit frontHit;
+        Vector3 frontRayStartPos = new Vector3(frontRayPos.position.x, frontRayPos.position.y, frontRayPos.position.z);
+        if (Physics.Raycast(frontRayStartPos, frontRayPos.TransformDirection(-Vector3.up), out frontHit, 1f, layerMask))
+        {
+        }
+        else
+        {
+            uphill = true;
+            flatSurface = false;
+        }
+        if (Mathf.Abs(rearHit.distance - frontHit.distance) < 0.02f)
+        {
+            flatSurface = true;
+            uphill = false;
+        }
+        else if (frontHit.distance < rearHit.distance)
+        {
+            uphill = true;
+            flatSurface = false;
+        }
+        else if (frontHit.distance > rearHit.distance)
+        {
+            uphill = false;
+            flatSurface = false;
+        }
+    }
+
     private void DoSound()
     {
         audioSource.pitch = Random.Range(0.8f, 1.2f);
@@ -394,7 +395,7 @@ public class BallControler : MonoBehaviour
     }
     private void Stopped()
     {
-        if (AbsMagn < 0.04f)
+        //if (AbsMagn < 0.05f)
         {
             if (pc.GetActualStrokes() == maxStrokes)
             {
@@ -405,14 +406,15 @@ public class BallControler : MonoBehaviour
                 pc.OnOutofStrokes();
             }
             Debug.Log("Ball stopped");
+            magnHasChanged = false;
             rb.Sleep();
-            if (pc.isLocalPlayer)
+            if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf)
                 lineVisual.gameObject.SetActive(true);
-            moving = false;
+            //moving = false;
             if (isOutOfLimit)
             {
                 TpToLastLocation();
-                if (pc.isLocalPlayer)
+                if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf)
                     lineVisual.gameObject.SetActive(true);
             }
         }

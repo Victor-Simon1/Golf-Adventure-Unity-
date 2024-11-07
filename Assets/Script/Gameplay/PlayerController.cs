@@ -21,7 +21,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [Header("Gameobjects")]
     [SerializeField] private BallControler ball;
     [SerializeField] private Camera camObj;
-
+    [SerializeField] private Rigidbody ballRb;
     [Header("Material")]
     private Material mat;
 
@@ -32,7 +32,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SerializeField] private TextMeshProUGUI resultHoleText;
 
     [Header("Scripts")]
-    private PlayerScoreboardItem playerScore;
+    [SerializeField] private PlayerScoreboardItem playerScore;
     [SerializeField] private PlayerUI playerUI;
     private PlayerDisplay display;
     [SerializeField] Timer timer;
@@ -51,19 +51,9 @@ public class PlayerController : NetworkBehaviour, IComparable
         mat.SetFloat("_Glossiness", .8f);
         mat.SetFloat("_Metallic", 0f);
 
+        ball.GetComponent<Renderer>().material = mat;
+        ballRb = ball.GetComponent<Rigidbody>();
         InitStrokes();
-    }
-
-    private void Update()
-    {
-        if(playerUI != null)
-        {
-            playerUI.SetStrokes(strokes[actualHole]);
-        }
-        if(playerScore != null)
-        {
-            playerScore.SetSum(GetSumStrokes());
-        }
     }
 
     public void Reset()
@@ -110,6 +100,13 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void RpcAddStroke()
     {
         strokes[actualHole]++;
+        if(isLocalPlayer)
+        {
+            if (playerUI != null)
+                playerUI.SetStrokes(strokes[actualHole]);
+            if (playerScore != null)
+                playerScore.SetSum(GetSumStrokes());
+        }
     }
 
     [ClientRpc]
@@ -187,7 +184,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [Command]
     public void PushBall(Vector3 dir, float force)
     {
-        ball.GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.Impulse);
+        ballRb.AddForce(dir * force, ForceMode.Impulse);
         ball.GetComponent<BallControler>().moving = true;
         RpcAddStroke();
     }
@@ -290,8 +287,6 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void TpToLocation(Transform location)
     {
         Debug.Log("tp to " + location.position);
-
-        var ballRb = ball.GetComponent<Rigidbody>();
         ballRb.freezeRotation = true;
         ballRb.velocity = Vector3.zero;
 
@@ -313,12 +308,12 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void TpToLocation(Vector3 location)
     {
         //Debug.Log("Deubt tp to location:" + ball.transform.position);
-        ball.GetComponent<Rigidbody>().freezeRotation = true;
-        ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ballRb.freezeRotation = true;
+        ballRb.velocity = Vector3.zero;
         ball.transform.position = location;//transform.localPosition;
         ball.transform.rotation = Quaternion.identity;
         //transform.position = location;
-        ball.GetComponent<Rigidbody>().freezeRotation = false;
+        ballRb.freezeRotation = false;
         //Debug.Log("Fin tp to location" + ball.transform.position);
         Physics.SyncTransforms();
     }
@@ -392,7 +387,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         string result = GetTextResultHole(actualStrokes, maxStrokes);
         if (outOfStrokes)
             result = "OUT OF STROKES";
-        if (outOfTime)
+        else if (outOfTime)
             result = "OUT OF TIME";
         Debug.Log(result);
         resultHoleText.text = result;

@@ -17,7 +17,7 @@ public class JoinManager : MonoRegistrable
     // Start is called before the first frame update
     void Start()
     {
-        playerName = "Player 1";
+        playerName = "Player ";
         ServiceLocator.Register<JoinManager>(this, false);
         gm = ServiceLocator.Get<GameManager>();
     }
