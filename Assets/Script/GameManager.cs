@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using System.Net.NetworkInformation;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Mirror.Examples.Basic;
 
 public class GameManager : MonoRegistrable
 {

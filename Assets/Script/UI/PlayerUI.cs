@@ -62,6 +62,7 @@ public class PlayerUI : MonoBehaviour
             Debug.Log("UI updated to player: " + pc.GetName());
             pc.SetPlayerUI(this);
             playerName.text = pc.GetName();
+            strokes.text = pc.GetActualStrokes().ToString();
             displayedPlayer = pc;
             displayedPlayer.ActivateAll(true);
         }
