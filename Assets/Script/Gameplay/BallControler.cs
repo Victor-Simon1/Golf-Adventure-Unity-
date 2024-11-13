@@ -100,7 +100,7 @@ public class BallControler : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        Debug.Log("Ball is enable");
         sp = transform.position;
         sr = transform.rotation;
         if(pc.isLocalPlayer)
@@ -142,8 +142,10 @@ public class BallControler : MonoBehaviour
     }
     private void OnDisable()
     {
-        if(lineVisual.gameObject.activeSelf)
+        Debug.Log("Ball is disable");
+        if (lineVisual.gameObject.activeSelf)
             lineVisual.gameObject.SetActive(false);
+        CancelInvoke("DetectSlope");
     }
     // Update is called once per frame
     void Update()
@@ -354,7 +356,7 @@ public class BallControler : MonoBehaviour
 
     private void DetectSlope()
     {
-        Debug.Log("DetectSlope");
+        //Debug.Log("DetectSlope");
         if (cam)
         {
             float camX = cam.transform.forward.x / 7f;
@@ -465,6 +467,11 @@ public class BallControler : MonoBehaviour
     public void SetIsVisualized(bool b)
     {
         isVisualized = b;
+    }
+
+    public void SetFirstEnable(bool b)
+    {
+        firstEnable = b;
     }
     #endregion
 }

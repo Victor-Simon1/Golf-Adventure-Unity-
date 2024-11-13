@@ -147,13 +147,26 @@ public class PlayerController : NetworkBehaviour, IComparable
         display.SetColor(color);
         mat.SetColor("_BaseColor", color);
     }
-
+    //Call when we start a new map(sort of Reset)
+    [ClientRpc]
+    public void RPCDisableBall()
+    {
+        if (isLocalPlayer)
+        {
+            Debug.Log("Je disable la ball");
+            ball.GetComponent<BallControler>().enabled = false;
+            ball.SetFirstEnable(true);
+            for (int index = 0; index < strokes.Count; index++)
+                strokes[index] = 0;
+        }
+    }
     [ClientRpc]
     public void RpcLaunch(string mapId)
     {
         if (isLocalPlayer)
         {
             var gm = ServiceLocator.Get<GameManager>();
+            Debug.Log(gm);
             StartCoroutine(gm.LoadScene(mapId));
             //SpawnBall();
         }

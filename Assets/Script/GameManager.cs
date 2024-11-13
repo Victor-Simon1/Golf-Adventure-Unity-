@@ -77,6 +77,7 @@ public class GameManager : MonoRegistrable
         actualHole = 0;
         nbPlayerFinishHole = 0;
         StartBehaviour.max = 0;
+        HoleBehavior.max = 0;
         inGame = false;
     }
     public void RegisterPlayer(PlayerController player)
@@ -228,11 +229,17 @@ public class GameManager : MonoRegistrable
                     changeMap.GetChild(3).GetChild(1).GetComponent<Button>().onClick.AddListener(
                         delegate
                         {
-                            LaunchGame();
                             foreach (var player in players)
                             {
-                                TpPlayersToLocation(0);
+                                player.RPCDisableBall();
                             }
+                            LaunchGame();
+                          
+                           // foreach (var player in players)
+                           //{
+                           //  player.gameObject.SetActive(false);
+                           //}
+                           //TpPlayersToLocation(0);
                         });
                 }
             }
@@ -272,13 +279,18 @@ public class GameManager : MonoRegistrable
         AsyncOperation operation = SceneManager.LoadSceneAsync(mapId);
 
         var loadingScreen = uiManager.GetLoadingScreen();
-        uiManager.GetHubCanvas().SetActive(false);
-        loadingScreen.gameObject.SetActive(true);
+        var hubCanvas = uiManager.GetHubCanvas();
+        Debug.Log(hubCanvas);
+        if(hubCanvas != null)
+            hubCanvas.SetActive(false);
+        if(loadingScreen != null)
+            loadingScreen.gameObject.SetActive(true);
         while (!operation.isDone)
         {
             Debug.Log("Loading...");
             float progressiveValue = Mathf.Clamp01(operation.progress / 0.9f);
-            loadingScreen.SetProgression(progressiveValue);
+            if (loadingScreen != null)
+                loadingScreen.SetProgression(progressiveValue);
             yield return null;
         }
     }
