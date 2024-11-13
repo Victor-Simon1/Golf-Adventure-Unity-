@@ -303,8 +303,10 @@ MonoBehaviour:
   id: 0
   ball: {fileID: 7572539338505682347}
   camObj: {fileID: 2028859925345120222}
+  ballRb: {fileID: 0}
   goodHoleSound: {fileID: 2093450403390913769}
   resultHoleText: {fileID: 0}
+  playerScore: {fileID: 0}
   playerUI: {fileID: 0}
   timer: {fileID: 0}
   nrbLocal: {fileID: 0}
@@ -898,7 +900,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   componentsToDisable:
-  - {fileID: 0}
+  - {fileID: -3911127702487239908}
   - {fileID: 2028859925345120222}
 --- !u!114 &7572539338505682347
 MonoBehaviour:
@@ -912,7 +914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd019107ef72a3b4b9ce845e3dfaebae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleForce: 20
+  scaleForce: 25
   force: 100
   AbsMagn: 0
   rb: {fileID: 1300381283748021366}
@@ -989,8 +991,8 @@ Rigidbody:
   m_GameObject: {fileID: 3166305214845413116}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
+  m_Drag: 0.3
+  m_AngularDrag: 6
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0.00880202, y: 0.008649721, z: 0.008649721, w: 0.9998864}

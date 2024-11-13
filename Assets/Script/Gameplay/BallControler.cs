@@ -65,7 +65,7 @@ public class BallControler : MonoBehaviour
 
     private int maxStrokes = 12;
     private int penalityStrokes = 3;
-
+    private bool hasAddPenality = false;
 
     public Coroutine timeLimitCoroutine;
     [Header("Movement")]
@@ -92,6 +92,7 @@ public class BallControler : MonoBehaviour
     #region UNITY_FUNCTION
     void Start()
     {
+        rb.maxAngularVelocity = 1000;
         rotationValues = new Vector2(15, 0);
         //rb.inertiaTensor = new Vector3(0, 0, 0);
         //rb.inertiaTensorRotation = new Quaternion(0.1f, 0.1f, 0.1f, 0f);
@@ -99,6 +100,7 @@ public class BallControler : MonoBehaviour
 
     private void OnEnable()
     {
+        
         sp = transform.position;
         sr = transform.rotation;
         if(pc.isLocalPlayer)
@@ -228,12 +230,26 @@ public class BallControler : MonoBehaviour
         //Speed
         AbsMagn = Vector3.Magnitude(rb.velocity);
         moving = (AbsMagn > 0.05);
+        if (magnHasChanged && !moving && !hasAddPenality  && pc.GetActualStrokes() == maxStrokes)
+        {
+            Debug.Log("Player is over the limit of strokes");
+            pc.RpcAddXStroke(penalityStrokes);
+            pc.GetTimer().StopTimer();
+            //StopCoroutine(timeLimitCoroutine);
+            pc.OnOutofStrokes();
+            hasAddPenality = true;
+        }
+        if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf && !moving)
+            lineVisual.gameObject.SetActive(true);
+        else if(moving && pc.isLocalPlayer && lineVisual.gameObject.activeSelf)
+            lineVisual.gameObject.SetActive(false);
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)
             magnHasChanged = false;
-        if (moving && magnHasChanged && AbsMagn < 0.5)
-            Stopped();
+       
+       // if (moving && magnHasChanged && AbsMagn < 0.5)
+         //   Stopped();
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -330,10 +346,7 @@ public class BallControler : MonoBehaviour
         rb.useGravity = b;
     }
 
-    public void SetIsVisualized(bool b)
-    {
-        isVisualized = b;
-    }
+  
 
     #endregion
 
@@ -445,5 +458,13 @@ public class BallControler : MonoBehaviour
         return pc;
     }
 
+    public void SetAddPenality(bool add)
+    {
+        hasAddPenality = add;
+    }
+    public void SetIsVisualized(bool b)
+    {
+        isVisualized = b;
+    }
     #endregion
 }

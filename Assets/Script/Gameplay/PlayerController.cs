@@ -112,6 +112,13 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void RpcAddXStroke(int x)
     {
         strokes[actualHole] += x;
+        if (isLocalPlayer)
+        {
+            if (playerUI != null)
+                playerUI.SetStrokes(strokes[actualHole]);
+            if (playerScore != null)
+                playerScore.SetSum(GetSumStrokes());
+        }
     }
 
     [ClientRpc]
@@ -298,6 +305,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.SetLastPosition(transform.localPosition);
         ball.SetRotationValueY(location.rotation.eulerAngles.y);
         Physics.SyncTransforms();
+        ball.SetAddPenality(false);
         if (timer)
             timer.StartTimer();
         else
