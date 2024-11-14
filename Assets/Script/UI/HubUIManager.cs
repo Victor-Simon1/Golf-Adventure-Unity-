@@ -37,7 +37,7 @@ public class HubUIManager : MonoRegistrable
 #region PUBLIC_FUNCTION
     public void SetSessionNameWithoutNotify(string sessionName)
     {
-        Debug.Log("change de titre");
+        //Debug.Log("change de titre");
         this.sessionName.SetTextWithoutNotify(sessionName);
     }
 

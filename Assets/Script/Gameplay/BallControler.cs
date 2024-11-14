@@ -100,7 +100,6 @@ public class BallControler : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Ball is enable");
         sp = transform.position;
         sr = transform.rotation;
         if(pc.isLocalPlayer)
@@ -142,7 +141,6 @@ public class BallControler : MonoBehaviour
     }
     private void OnDisable()
     {
-        Debug.Log("Ball is disable");
         if (lineVisual.gameObject.activeSelf)
             lineVisual.gameObject.SetActive(false);
         CancelInvoke("DetectSlope");
@@ -180,7 +178,7 @@ public class BallControler : MonoBehaviour
         {
             if (Input.touchCount == 1)
             {
-                Debug.Log("Screen Touched");
+                //Debug.Log("Screen Touched");
                 touch = Input.GetTouch(0);
 
                 if(touch.phase == TouchPhase.Moved)
@@ -234,7 +232,7 @@ public class BallControler : MonoBehaviour
         moving = (AbsMagn > 0.05);
         if (magnHasChanged && !moving && !hasAddPenality  && pc.GetActualStrokes() == maxStrokes)
         {
-            Debug.Log("Player is over the limit of strokes");
+            //Debug.Log("Player is over the limit of strokes");
             pc.RpcAddXStroke(penalityStrokes);
             pc.GetTimer().StopTimer();
             //StopCoroutine(timeLimitCoroutine);
@@ -249,16 +247,14 @@ public class BallControler : MonoBehaviour
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)
             magnHasChanged = false;
-       
-       // if (moving && magnHasChanged && AbsMagn < 0.5)
-         //   Stopped();
+
     }
 
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.CompareTag("Ground") && !isOnGreen)
         {
-            Debug.Log("Hors limit... " + collision.gameObject.name + "(" + collision.contacts[0].point + ")");
+            //Debug.Log("Hors limit... " + collision.gameObject.name + "(" + collision.contacts[0].point + ")");
             isOutOfLimit = true;
         }
         if (collision.transform.CompareTag("Green"))
@@ -298,7 +294,7 @@ public class BallControler : MonoBehaviour
         magnHasChanged = false;
         if(lineVisual.gameObject.activeSelf)
             lineVisual.gameObject.SetActive(false);
-        Debug.Log("Push the ball: " + pc.GetName());
+        //Debug.Log("Push the ball: " + pc.GetName());
       
         DoSound();
         lastPosition = transform.position;
@@ -325,7 +321,6 @@ public class BallControler : MonoBehaviour
     {
         rotationValues.x = 15;
         rotationValues.y = y;
-        Debug.Log("Rotation :" + rotationValues);
     }
     public void SetLastPosition(Vector3 position)
     {
@@ -333,7 +328,6 @@ public class BallControler : MonoBehaviour
     }
     public void IgnoreBalls()
     {
-        Debug.Log("J'ignore les autres balls");
         GetComponent<SphereCollider>().excludeLayers = ballLayer;
     }
 
@@ -356,7 +350,6 @@ public class BallControler : MonoBehaviour
 
     private void DetectSlope()
     {
-        //Debug.Log("DetectSlope");
         if (cam)
         {
             float camX = cam.transform.forward.x / 7f;
@@ -408,37 +401,10 @@ public class BallControler : MonoBehaviour
         audioSource.pitch = Random.Range(0.8f, 1.2f);
         audioSource.Play();
     }
-    private void Stopped()
-    {
-        //if (AbsMagn < 0.05f)
-        {
-            if (pc.GetActualStrokes() == maxStrokes)
-            {
-                Debug.Log("Player is over the limit of strokes");
-                pc.RpcAddXStroke(penalityStrokes);
-                pc.GetTimer().StopTimer();
-                //StopCoroutine(timeLimitCoroutine);
-                pc.OnOutofStrokes();
-            }
-            Debug.Log("Ball stopped");
-            magnHasChanged = false;
-            rb.Sleep();
-            if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf)
-                lineVisual.gameObject.SetActive(true);
-            //moving = false;
-            if (isOutOfLimit)
-            {
-                TpToLastLocation();
-                if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf)
-                    lineVisual.gameObject.SetActive(true);
-            }
-        }
-        rb.velocity = rb.velocity * coeffAngularVelocity; //* Time.deltaTime;
-        coeffAngularVelocity = coeffAngularVelocity - coeffAngularVelocity * (0.001f / 100) * Time.fixedDeltaTime;//0.99f;
-    }
+   
     private void TpToLastLocation()
     {
-        Debug.Log("En dehors des limites... Tps vers la dernieres positions :" + lastPosition);
+        //Debug.Log("En dehors des limites... Tps vers la dernieres positions :" + lastPosition);
         pc.TpToLocation(lastPosition);
         isOutOfLimit = false;
         timeOutLimit = 0f;

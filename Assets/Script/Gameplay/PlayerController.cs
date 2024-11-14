@@ -70,7 +70,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         base.OnStopClient();
         if (isLocalPlayer)
         {
-            Debug.Log("Client disconnect :" + playerName);
+            //Debug.Log("Client disconnect :" + playerName);
             Destroy(GameObject.Find("SFXAudioSource"));
             Destroy(ServiceLocator.Get<StockNetManager>().gameObject);
             //Reset static variables
@@ -82,14 +82,14 @@ public class PlayerController : NetworkBehaviour, IComparable
         }
         else
         {
-            Debug.Log("A Client has left :" + playerName);
+            //Debug.Log("A Client has left :" + playerName);
             GameManager gm = ServiceLocator.Get<GameManager>();
             //Remove the player who quit from our manager
             gm.RemovePc(this);
-            foreach(PlayerController pc in gm.GetListPlayer())
-            {
-                Debug.Log("name :" + pc.playerName);
-            } 
+            //foreach(PlayerController pc in gm.GetListPlayer())
+            //{
+              //  Debug.Log("name :" + pc.playerName);
+            //} 
         }
     }
     #endregion
@@ -153,7 +153,6 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         if (isLocalPlayer)
         {
-            Debug.Log("Je disable la ball");
             ball.GetComponent<BallControler>().enabled = false;
             ball.SetFirstEnable(true);
             for (int index = 0; index < strokes.Count; index++)
@@ -166,9 +165,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         if (isLocalPlayer)
         {
             var gm = ServiceLocator.Get<GameManager>();
-            Debug.Log(gm);
             StartCoroutine(gm.LoadScene(mapId));
-            //SpawnBall();
         }
     }
     [ClientRpc]
@@ -225,7 +222,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     #region PUBLIC_FUNCTION
     public void hasArrived()
     {
-        Debug.Log(playerName + " has arrived");
+        //Debug.Log(playerName + " has arrived");
         UpdateReady(true);
     }
 
@@ -245,7 +242,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void OnHoleEntered(int maxStrokes)
     {
-        Debug.Log("Une balle est rentrée : " + playerName);
+        //Debug.Log("Une balle est rentrée : " + playerName);
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
         DespawnBall();
@@ -253,12 +250,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
 #if UNITY_ANDROID //&& !UNITY_EDITOR
-            Debug.Log("Je vibre");
+            //Debug.Log("Je vibre");
             Handheld.Vibrate();
 #endif
-            Debug.Log("play sound");
             goodHoleSound.Play();
-            Debug.Log("play animation");
             StartCoroutine(CouroutineShowResultHole(strokes[actualHole], maxStrokes));
             playerUI.Spectate(true);
         }
@@ -275,8 +270,6 @@ public class PlayerController : NetworkBehaviour, IComparable
         DespawnBall();
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
-            Debug.Log("play sound");
-            //goodHoleSound.Play();
             StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, true));
             playerUI.Spectate(true);
         }
@@ -290,8 +283,6 @@ public class PlayerController : NetworkBehaviour, IComparable
         hasFinishHole = true;
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
-            Debug.Log("play sound");
-            //goodHoleSound.Play();
             StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, false, true));
             playerUI.Spectate(true);
         }
@@ -305,7 +296,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void TpToLocation(Transform location)
     {
-        Debug.Log("tp to " + location.position);
+        //Debug.Log("tp to " + location.position);
         ballRb.freezeRotation = true;
         ballRb.velocity = Vector3.zero;
 
@@ -322,7 +313,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         if (timer)
             timer.StartTimer();
         else
-            Debug.Log("Timer not init");
+            Debug.LogError("Timer not init");
        // ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
     }
     public void TpToLocation(Vector3 location)
@@ -409,7 +400,7 @@ public class PlayerController : NetworkBehaviour, IComparable
             result = "OUT OF STROKES";
         else if (outOfTime)
             result = "OUT OF TIME";
-        Debug.Log(result);
+
         resultHoleText.text = result;
         resultHoleText.gameObject.SetActive(true);
         resultHoleText.GetComponent<Animator>().Play("New Animation");

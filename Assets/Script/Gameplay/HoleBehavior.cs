@@ -13,7 +13,7 @@ public class HoleBehavior : MonoBehaviour, IComparable
     private void Awake()
     {
         max += 1;
-        Debug.Log("Register Hole " + id);
+        //Debug.Log("Register Hole " + id);
     }
 
     private void Start()

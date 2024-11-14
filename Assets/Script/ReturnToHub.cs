@@ -12,12 +12,12 @@ public class ReturnToHub : MonoBehaviour
         NetworkManager nm = ServiceLocator.Get<StockNetManager>().GetNetworkManager();
         if (gm.IsHost()) 
         {
-            Debug.Log("Je suis l'hote");
+            //Debug.Log("Je suis l'hote");
             nm.StopHost();
         }
         else
         {
-            Debug.Log("Je suis client");
+            //Debug.Log("Je suis client");
             nm.StopClient();
         }
     }

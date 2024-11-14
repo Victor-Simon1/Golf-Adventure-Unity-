@@ -14,7 +14,7 @@ public class StartBehaviour : MonoBehaviour, IComparable
     private void Awake()
     {
         max += 1;
-        Debug.Log("Register Start " + id);
+        //Debug.Log("Register Start " + id);
     }
 
     private void Start()

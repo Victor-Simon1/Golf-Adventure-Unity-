@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.0070657097, g: 0.035382297, b: 0.09707603, a: 0.1}
+  m_IndirectSpecularColor: {r: 0.0070610144, g: 0.035376437, b: 0.09707826, a: 0.1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7442,6 +7442,7 @@ Transform:
   - {fileID: 215122824}
   - {fileID: 1154464347}
   - {fileID: 1232928614}
+  - {fileID: 2043678335}
   - {fileID: 358856556}
   - {fileID: 1499446486}
   m_Father: {fileID: 0}
@@ -10736,7 +10737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1725245581
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13341,7 +13342,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1025072609}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
@@ -13366,17 +13367,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
@@ -13393,6 +13394,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8293607433921795771, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: -6596056810010970148, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -13408,10 +13414,25 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 49db3522e234af24384acc0e77890364, type: 2}
+    - target: {fileID: 524727968224624586, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
+        type: 3}
+      propertyPath: m_TagString
+      value: Green
+      objectReference: {fileID: 0}
+    - target: {fileID: 524727968224624586, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
       propertyPath: m_Name
       value: Trou10_Slope
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 975873523631041208, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
@@ -13423,6 +13444,16 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 551d56903605edc438be5e046c25f81f, type: 2}
+    - target: {fileID: 5619632666643848218, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
+        type: 3}
+      propertyPath: m_TagString
+      value: Green
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619632666643848218, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7775541059235149576, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -13445,6 +13476,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 117039170}
   m_SourcePrefab: {fileID: 100100000, guid: e9b26105cc4ef6543aad06a0cd9ad39b, type: 3}
+--- !u!4 &2043678335 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e9b26105cc4ef6543aad06a0cd9ad39b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2043678334}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2058248978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14021,4 +14058,3 @@ SceneRoots:
   - {fileID: 1911058549}
   - {fileID: 554166553}
   - {fileID: 1725245585}
-  - {fileID: 2043678334}

@@ -24,12 +24,12 @@ public class SettingsManager : MonoRegistrable
         //Set default value if key dont exist, else take current value
         if(PlayerPrefs.HasKey("Vibration"))
         {
-            Debug.Log("Valeurs déja enregistré");
+            //Debug.Log("Valeurs déja enregistré");
             ApplySound();
         }
         else
         {
-            Debug.Log("Valeurs non enregistré");
+            //Debug.Log("Valeurs non enregistré");
             audioMixer.SetFloat("volumeSFX", Mathf.Log10(0.5f) * 20);
             audioMixer.SetFloat("volumeMusic", Mathf.Log10(0.5f) * 20);
             SaveSound();
