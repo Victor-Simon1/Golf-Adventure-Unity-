@@ -218,16 +218,28 @@ public class GameManager : MonoRegistrable
 
                 if (isHost)
                 {
+                    //Parent
                     GameObject gmNextMap = GameObject.Find("NextMap");
                     var changeMap = gmNextMap.transform.GetChild(0);
+                    //Dropdown of map's choices
+                    TMP_Dropdown dropdown = changeMap.GetChild(2).GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                    //Button for launch a new game
+                    var launchGameButton = changeMap.GetChild(2).GetChild(1).GetChild(1).GetComponent<Button>();
+                    //Scoreboard of all players
+                    var scoreboard = GameObject.Find("PlayerList");
+                    //Setup scoreboard
+                    scoreboard.transform.SetParent(changeMap);
+                    scoreboard.transform.localPosition = new Vector3(0, -120, 0);
+                    scoreboard.SetActive(false);
+                    uiManager.GetPlayerUI().GetScoreboard().gameObject.SetActive(false);
                     changeMap.gameObject.SetActive(true);
-                    TMPro.TMP_Dropdown dropdown = changeMap.GetChild(2).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                    
                     dropdown.onValueChanged.AddListener(
                         delegate
                         {
                             SetMapID(dropdown.value);
                         });
-                    changeMap.GetChild(3).GetChild(1).GetComponent<Button>().onClick.AddListener(
+                   launchGameButton.onClick.AddListener(
                         delegate
                         {
                             foreach (var player in players)
@@ -235,12 +247,6 @@ public class GameManager : MonoRegistrable
                                 player.RPCDisableBall();
                             }
                             LaunchGame();
-                          
-                           // foreach (var player in players)
-                           //{
-                           //  player.gameObject.SetActive(false);
-                           //}
-                           //TpPlayersToLocation(0);
                         });
                 }
             }
