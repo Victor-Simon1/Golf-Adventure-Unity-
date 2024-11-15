@@ -30,6 +30,8 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI resultHoleText;
+    private Projection projector;
+    [SerializeField] private LineRenderer lineRenderer;
 
     [Header("Scripts")]
     [SerializeField] private PlayerScoreboardItem playerScore;
@@ -61,6 +63,13 @@ public class PlayerController : NetworkBehaviour, IComparable
         hasFinishHole = false;
         strokes.Clear();
         InitStrokes();
+    }
+    private void Update()
+    {
+        if (projector != null && isLocalPlayer)
+        {
+            projector.SimulateTrajectory(ball.transform.position, ball.GetDir(), ball.GetForce());
+        }
     }
     #endregion
 
@@ -333,6 +342,8 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         ball.enabled = true;
         ball.Spawn(true);
+
+        projector = ServiceLocator.Get<Projection>();
     }
 
     public void DespawnBall()
@@ -458,6 +469,11 @@ public class PlayerController : NetworkBehaviour, IComparable
     public bool IsReady()
     {
         return isReady;
+    }
+
+    public LineRenderer GetLineRenderer()
+    {
+        return lineRenderer;
     }
     #endregion
 

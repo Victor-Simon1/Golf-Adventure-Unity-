@@ -53,6 +53,7 @@ public class Projection : MonoRegistrable
 
     public void SimulateTrajectory(Vector3 pos, Vector3 dir, float force)
     {
+        Debug.Log(pos);
         var ghostObj = Instantiate(ballPrefab, pos, Quaternion.identity);
         SceneManager.MoveGameObjectToScene(ghostObj.gameObject, _simulationScene);
         var ghostBall = ghostObj.GetComponent<SimpleBallController>();
@@ -63,7 +64,11 @@ public class Projection : MonoRegistrable
         for (var i = 0; i < _maxPhysicsFrameIterations; i++)
         {
             _physicsScene.Simulate(Time.fixedDeltaTime);
-            _line.SetPosition(i, ghostBall.GetLinePosition());
+
+            float x = ghostObj.transform.position.x;
+            float y = ghostObj.transform.position.y;
+            float z = ghostObj.transform.position.z;
+            _line.SetPosition(i, new Vector3(x, y - 0.049f, z));
         }
 
         Destroy(ghostObj.gameObject);

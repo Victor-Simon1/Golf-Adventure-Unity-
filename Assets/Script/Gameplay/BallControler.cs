@@ -220,7 +220,7 @@ public class BallControler : MonoBehaviour
             if (lineVisual)
             {
                 var pos = transform.position;
-                lineVisual.SetPositionAndRotation(new Vector3(pos.x, pos.y - 0.0499f, pos.z), Quaternion.Euler(new Vector3(90, rotationValues.y, 0)));
+                //lineVisual.SetPositionAndRotation(new Vector3(pos.x, pos.y - 0.0499f, pos.z), Quaternion.Euler(new Vector3(90, rotationValues.y, 0)));
 
             }
         }
@@ -438,6 +438,22 @@ public class BallControler : MonoBehaviour
     public void SetFirstEnable(bool b)
     {
         firstEnable = b;
+    }
+
+    public Vector3 GetDir()
+    {
+        var vec = cam.transform.forward;
+        float sensY = rb.velocity.normalized.y;
+        if (uphill)
+            sensY = Mathf.Abs(sensY);
+        if (flatSurface)
+            sensY = 0f;
+        return new Vector3(vec.x, sensY /*0*/, vec.z);
+    }
+
+    public float GetForce()
+    {
+        return sliderForce.value * scaleForce;
     }
     #endregion
 }
