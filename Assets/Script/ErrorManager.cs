@@ -31,7 +31,7 @@ public class ErrorManager : MonoBehaviour
 #region PUBLIC_FUNCTION
     public void Error(string message)
     {
-        Debug.Log(message);
+        Debug.LogError(message);
         text.text = message;
         if(gameObject != null)
             gameObject.SetActive(true);

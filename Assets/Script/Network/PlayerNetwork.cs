@@ -28,7 +28,7 @@ public class PlayerNetwork : NetworkBehaviour
 #region MIRROR_FUNCTION
     public override void OnStartClient()
     {
-        Debug.Log("Player Network OnStartClient");
+        //Debug.Log("Player Network OnStartClient");
         base.OnStartClient();
 
         joinManager = ServiceLocator.Get<JoinManager>();
@@ -66,7 +66,7 @@ public class PlayerNetwork : NetworkBehaviour
         PlayerController player = ServiceLocator.Get<GameManager>().GetPlayer(id);
         if(player != null)
         {
-            Debug.Log(username + " has joined !");
+            //Debug.Log(username + " has joined !");
             player.SetName(username);
         }
     }

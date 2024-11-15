@@ -53,7 +53,7 @@ public class GameManager : MonoRegistrable
         Application.targetFrameRate = 60;
         networkManager = ServiceLocator.Get<StockNetManager>().GetNetworkManager();
         uiManager = ServiceLocator.Get<UIManager>();
-        Display();
+        //Display();
 
         
     }
@@ -99,11 +99,7 @@ public class GameManager : MonoRegistrable
     {
         if (isHost)
         {
-            Debug.Log("Stop Server");
-            /*foreach (PlayerController player in players)
-            {
-                player.CmdStopHost();
-            }*/
+            //Debug.Log("Stop Server");
             networkManager.StopHost();
         }
         else
@@ -193,18 +189,18 @@ public class GameManager : MonoRegistrable
 
     public IEnumerator GoNextHole()
     {
-        Debug.Log("Nombre de joueurs ayant fini "+ nbPlayerFinishHole);
+        //Debug.Log("Nombre de joueurs ayant fini "+ nbPlayerFinishHole);
         if (nbPlayerFinishHole != players.Count)
             yield return null;
         else
         {
             nbPlayerFinishHole = 0;
 
-            Debug.Log("Tp vers le prochain trou :" + (actualHole + 1) +" / " + starts.Count);
+            //Debug.Log("Tp vers le prochain trou :" + (actualHole + 1) +" / " + starts.Count);
 
             if ((actualHole+1) == starts.Count)
             {
-                Debug.Log("Map fini");
+                //Debug.Log("Map fini");
                 yield return new WaitForSeconds(1f);
 
                 uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
@@ -218,16 +214,28 @@ public class GameManager : MonoRegistrable
 
                 if (isHost)
                 {
+                    //Parent
                     GameObject gmNextMap = GameObject.Find("NextMap");
                     var changeMap = gmNextMap.transform.GetChild(0);
+                    //Dropdown of map's choices
+                    TMP_Dropdown dropdown = changeMap.GetChild(2).GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                    //Button for launch a new game
+                    var launchGameButton = changeMap.GetChild(2).GetChild(1).GetChild(1).GetComponent<Button>();
+                    //Scoreboard of all players
+                    var scoreboard = GameObject.Find("PlayerList");
+                    //Setup scoreboard
+                    scoreboard.transform.SetParent(changeMap);
+                    scoreboard.transform.localPosition = new Vector3(0, -120, 0);
+                    scoreboard.SetActive(false);
+                    uiManager.GetPlayerUI().GetScoreboard().gameObject.SetActive(false);
                     changeMap.gameObject.SetActive(true);
-                    TMPro.TMP_Dropdown dropdown = changeMap.GetChild(2).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                    
                     dropdown.onValueChanged.AddListener(
                         delegate
                         {
                             SetMapID(dropdown.value);
                         });
-                    changeMap.GetChild(3).GetChild(1).GetComponent<Button>().onClick.AddListener(
+                   launchGameButton.onClick.AddListener(
                         delegate
                         {
                             foreach (var player in players)
@@ -235,12 +243,6 @@ public class GameManager : MonoRegistrable
                                 player.RPCDisableBall();
                             }
                             LaunchGame();
-                          
-                           // foreach (var player in players)
-                           //{
-                           //  player.gameObject.SetActive(false);
-                           //}
-                           //TpPlayersToLocation(0);
                         });
                 }
             }
@@ -267,7 +269,7 @@ public class GameManager : MonoRegistrable
     {
         if(isHost)
         {
-            Debug.LogWarning("Chargement de la map");
+            //Debug.LogWarning("Chargement de la map");
             foreach (PlayerController player in players)
             {
                 player.RpcLaunch(maps[mapId]);
@@ -281,14 +283,13 @@ public class GameManager : MonoRegistrable
 
         var loadingScreen = uiManager.GetLoadingScreen();
         var hubCanvas = uiManager.GetHubCanvas();
-        Debug.Log(hubCanvas);
         if(hubCanvas != null)
             hubCanvas.SetActive(false);
         if(loadingScreen != null)
             loadingScreen.gameObject.SetActive(true);
         while (!operation.isDone)
         {
-            Debug.Log("Loading...");
+            //Debug.Log("Loading...");
             float progressiveValue = Mathf.Clamp01(operation.progress / 0.9f);
             if (loadingScreen != null)
                 loadingScreen.SetProgression(progressiveValue);
@@ -300,10 +301,10 @@ public class GameManager : MonoRegistrable
     {
         starts.Add(newStart);
         starts.Sort();
-        Debug.Log("Add " + starts.Count + " : "  + StartBehaviour.max);
+        //Debug.Log("Add " + starts.Count + " : "  + StartBehaviour.max);
         if (starts.Count == StartBehaviour.max)
         {
-            Debug.Log("Tp vers le premier trou");
+            //Debug.Log("Tp vers le premier trou");
             TpPlayersToLocation();
         }
            
@@ -316,7 +317,7 @@ public class GameManager : MonoRegistrable
     }
     private void TpPlayersToLocation(int idStart = 0)
     {
-        Debug.Log("Here we go : " + idStart);
+        //Debug.Log("Here we go : " + idStart);
         StartCoroutine(CoroutingWaitingForAllPlayers(false));
         players.ForEach(p => {
             p.GetBall().IgnoreBalls();
@@ -331,22 +332,11 @@ public class GameManager : MonoRegistrable
         {
             if (add.Address.AddressFamily == AddressFamily.InterNetwork)
             {
-                Debug.Log("The address :" + add.Address.ToString());
+                //Debug.Log("The address :" + add.Address.ToString());
                 return add.Address.ToString();
             }
         }
-        /*var host = Dns.GetHostEntry(Dns.GetHostName());
-       Debug.Log(Dns.GetHostName());
-       foreach (var ip in host.AddressList)
-       {
-           Debug.Log(ip.ToString());
-           if (ip.AddressFamily == AddressFamily.InterNetwork)
-           {
-               return ip.ToString();
-           }
-       }*/
        throw new System.Exception("No network adapters with an IPv4 address in the system!");
-        //return "";
     }
 
     public void Display()
@@ -442,7 +432,7 @@ public class GameManager : MonoRegistrable
         PlayerUI playerUI = null;
         while (true)
         {
-            Debug.Log("waiting players ...");
+            //Debug.Log("waiting players ...");
             if(uiManager != null)
             {
                 if (playerUI == null)
@@ -456,7 +446,7 @@ public class GameManager : MonoRegistrable
                     {
                         if (player.IsReady()) nbPlayerReady++;
                     }
-                    Debug.Log("nb player ready: " + nbPlayerReady + "/" + players.Count);
+                    //Debug.Log("nb player ready: " + nbPlayerReady + "/" + players.Count);
                     if (nbPlayerReady == players.Count)
                     {
                         playerUI.DisplayWaiting(false, "Lancement...");
