@@ -254,6 +254,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         //Debug.Log("Une balle est rentrée : " + playerName);
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
+        ball.FreezeBall();
         DespawnBall();
 
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
@@ -305,6 +306,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void TpToLocation(Transform location)
     {
+        ball.UnfreezeBall();
         //Debug.Log("tp to " + location.position);
         ballRb.freezeRotation = true;
         ballRb.velocity = Vector3.zero;
@@ -327,6 +329,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     }
     public void TpToLocation(Vector3 location)
     {
+        ball.UnfreezeBall();
         //Debug.Log("Deubt tp to location:" + ball.transform.position);
         ballRb.freezeRotation = true;
         ballRb.velocity = Vector3.zero;

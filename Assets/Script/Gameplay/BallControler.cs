@@ -7,7 +7,7 @@ public class BallControler : MonoBehaviour
 {
     [Header("Control")]
     [Range(0.0f, 100.0f)]
-    [SerializeField] private float scaleForce = 100f;
+    [SerializeField] private float scaleForce = 25f;
     [SerializeField] private float force;
     [SerializeField] private float AbsMagn;
     [SerializeField] private Rigidbody rb;
@@ -239,9 +239,9 @@ public class BallControler : MonoBehaviour
             pc.OnOutofStrokes();
             hasAddPenality = true;
         }
-        if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf && !moving)
+        if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf && !moving && !pc.hasFinishHole)
             lineVisual.gameObject.SetActive(true);
-        else if(moving && pc.isLocalPlayer && lineVisual.gameObject.activeSelf)
+        else if(moving && pc.isLocalPlayer && lineVisual.gameObject.activeSelf && pc.hasFinishHole)
             lineVisual.gameObject.SetActive(false);
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
@@ -339,10 +339,18 @@ public class BallControler : MonoBehaviour
     public void Spawn(bool b)
     {
         mr.enabled = b;
-        rb.useGravity = b;
+        //rb.useGravity = b;
     }
 
-  
+    public void FreezeBall()
+    {
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    public void UnfreezeBall()
+    {
+        rb.constraints = RigidbodyConstraints.None;
+    }
 
     #endregion
 
