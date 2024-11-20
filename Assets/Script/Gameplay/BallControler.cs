@@ -239,10 +239,14 @@ public class BallControler : MonoBehaviour
             pc.OnOutofStrokes();
             hasAddPenality = true;
         }
-        if (pc.isLocalPlayer && !lineVisual.gameObject.activeSelf && !moving && !pc.hasFinishHole)
-            lineVisual.gameObject.SetActive(true);
-        else if(moving && pc.isLocalPlayer && lineVisual.gameObject.activeSelf && pc.hasFinishHole)
-            lineVisual.gameObject.SetActive(false);
+        if(pc.isLocalPlayer)
+        {
+            if (!lineVisual.gameObject.activeSelf && !moving && !pc.hasFinishHole)
+                lineVisual.gameObject.SetActive(true);
+            else if (lineVisual.gameObject.activeSelf && moving && pc.hasFinishHole)
+                lineVisual.gameObject.SetActive(false);
+        }
+        
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
         if (magnHasChanged && AbsMagn == 0)
@@ -274,7 +278,8 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
-            pc.GetTimer().StopTimer();
+            if(pc.isLocalPlayer)
+                pc.GetTimer().StopTimer();
             //StopCoroutine(timeLimitCoroutine);
             pc.OnHoleEntered(hole.maxStrokes);
         }
