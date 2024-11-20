@@ -66,10 +66,15 @@ public class PlayerController : NetworkBehaviour, IComparable
     }
     private void Update()
     {
-        if (projector != null && isLocalPlayer)
+        if(ball.moving && lineRenderer.gameObject.activeSelf)
+            lineRenderer.gameObject.SetActive(false);
+        else if(!ball.moving && !lineRenderer.gameObject.activeSelf)
+            lineRenderer.gameObject.SetActive(true);
+        if (projector != null && isLocalPlayer && !ball.moving)
         {
             projector.SimulateTrajectory(ball.transform.position, ball.GetDir(), ball.GetForce());
         }
+        
     }
     #endregion
 
