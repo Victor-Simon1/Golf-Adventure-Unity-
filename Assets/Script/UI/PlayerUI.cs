@@ -76,26 +76,25 @@ public class PlayerUI : MonoBehaviour
     public void NextPlayer()
     {
         var gm = ServiceLocator.Get<GameManager>();
-        if (gm.GetListPlayer().Count > 1)
-        {
-            displayedPlayer.SetPlayerUI(null);
-            var pl = gm.GetListPlayer();
-            PlayerController pc = null;
+        displayedPlayer.SetPlayerUI(null);
+        var pl = gm.GetListPlayer();
+        PlayerController pc = null;
 
-            if (pl.Count == 1)
+        if (pl.Count == 1)
+        {
+            pc = pl[0];
+        }
+        else for (int i = pl.Count - 1; i >= 0; i--)
             {
-                pc = pl[0];
-            }
-            else for (int i = pl.Count - 1; i >= 0; i--)
+                if (!pl[i].hasFinishHole)
                 {
-                    if (!pl[i].hasFinishHole)
+                    if (pl[i].id > displayedPlayer.id)
                     {
-                        if (pl[i].id > displayedPlayer.id)
-                        {
-                            pc = pl[i];
-                        }
+                        pc = pl[i];
                     }
+                    else break;
                 }
+            }
 
             if (pc == null)
             {
@@ -107,8 +106,7 @@ public class PlayerUI : MonoBehaviour
                     }
                 }
             }
-            SetPlayer(pc);
-        }
+        SetPlayer(pc);
     }
 
     public void PreviousPlayer()
@@ -125,10 +123,11 @@ public class PlayerUI : MonoBehaviour
         {
                 if (!pl[i].hasFinishHole)
                 {
-                    if (pl[i].id > displayedPlayer.id)
+                    if (pl[i].id < displayedPlayer.id)
                     {
                         pc = pl[i];
                     }
+                    else break;
                 }
         }
 

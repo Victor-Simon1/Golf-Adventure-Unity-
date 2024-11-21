@@ -17916,6 +17916,8 @@ MonoBehaviour:
   actualHole: 0
   nbPlayerFinishHole: 0
   inGame: 0
+  isLoaded: 0
+  isTpReady: 0
   maps:
   - CampingForest
 --- !u!114 &7320203874447452711

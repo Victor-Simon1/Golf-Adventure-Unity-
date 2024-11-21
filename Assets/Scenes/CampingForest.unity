@@ -9490,8 +9490,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _line: {fileID: 0}
-  _maxPhysicsFrameIterations: 100
+  _maxPhysicsFrameIterations: 25
   _obstaclesParent: {fileID: 1763448261}
+  multiplier: 2
   ballPrefab: {fileID: 8507850812816222988, guid: 76ce6acc6cd273f4eb65f40efc0451db,
     type: 3}
 --- !u!4 &1269566421

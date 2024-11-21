@@ -141,6 +141,7 @@ public class BallControler : MonoBehaviour
     }
     private void OnDisable()
     {
+
         if (lineVisual.gameObject.activeSelf)
             lineVisual.gameObject.SetActive(false);
         CancelInvoke("DetectSlope");
@@ -239,18 +240,13 @@ public class BallControler : MonoBehaviour
             pc.OnOutofStrokes();
             hasAddPenality = true;
         }
-        if(pc.isLocalPlayer)
-        {
-            if (!lineVisual.gameObject.activeSelf && !moving && !pc.hasFinishHole)
-                lineVisual.gameObject.SetActive(true);
-            else if (lineVisual.gameObject.activeSelf && moving && pc.hasFinishHole)
-                lineVisual.gameObject.SetActive(false);
-        }
-        
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
-        if (magnHasChanged && AbsMagn == 0)
+        if (magnHasChanged && AbsMagn < 0.1)
+        {
             magnHasChanged = false;
+            pc.RpcDoSimulate();
+        }
 
     }
 
@@ -278,8 +274,10 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
-            if(pc.isLocalPlayer)
+            if (pc.isLocalPlayer)
+            {
                 pc.GetTimer().StopTimer();
+            }
             //StopCoroutine(timeLimitCoroutine);
             pc.OnHoleEntered(hole.maxStrokes);
         }
@@ -297,8 +295,7 @@ public class BallControler : MonoBehaviour
         if (hasFinishHole || isOutOfLimit || !isOnGreen || pc.GetActualStrokes()+1 > maxStrokes)
             return;
         magnHasChanged = false;
-        if(lineVisual.gameObject.activeSelf)
-            lineVisual.gameObject.SetActive(false);
+        pc.NotSimulate();
         //Debug.Log("Push the ball: " + pc.GetName());
       
         DoSound();
@@ -455,13 +452,17 @@ public class BallControler : MonoBehaviour
 
     public Vector3 GetDir()
     {
-        var vec = cam.transform.forward;
-        float sensY = rb.velocity.normalized.y;
-        if (uphill)
-            sensY = Mathf.Abs(sensY);
-        if (flatSurface)
-            sensY = 0f;
-        return new Vector3(vec.x, sensY /*0*/, vec.z);
+        if (pc.isLocalPlayer)
+        {
+            var vec = cam.transform.forward.normalized;
+            float sensY = rb.velocity.normalized.y;
+            if (uphill)
+                sensY = Mathf.Abs(sensY);
+            if (flatSurface)
+                sensY = 0f;
+            return new Vector3(vec.x, sensY /*0*/, vec.z);
+        }
+        return Vector3.zero;
     }
 
     public float GetForce()

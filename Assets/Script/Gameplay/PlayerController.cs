@@ -45,6 +45,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     [SerializeField] private Behaviour nTransformNotLocal;
     [SyncVar]
     private bool isReady;
+    private bool isSimulating = false;
 
     #region UNITY_FUNCTION
     private void Start()
@@ -63,18 +64,6 @@ public class PlayerController : NetworkBehaviour, IComparable
         hasFinishHole = false;
         strokes.Clear();
         InitStrokes();
-    }
-    private void Update()
-    {
-        if(ball.moving && lineRenderer.gameObject.activeSelf)
-            lineRenderer.gameObject.SetActive(false);
-        else if(!ball.moving && !lineRenderer.gameObject.activeSelf)
-            lineRenderer.gameObject.SetActive(true);
-        if (projector != null && isLocalPlayer && !ball.moving)
-        {
-            projector.SimulateTrajectory(ball.transform.position, ball.GetDir(), ball.GetForce());
-        }
-        
     }
     #endregion
 
@@ -194,8 +183,17 @@ public class PlayerController : NetworkBehaviour, IComparable
         ServiceLocator.Get<GameManager>().SetnbReady(nbReady);
     }
 
-    #endregion
+    [ClientRpc]
+    public void RpcSimulateBall()
+    {
+        if (ServiceLocator.Get<GameManager>().inGame && isLocalPlayer && isSimulating)
+        {
+            projector.SimulateTrajectory(ball.transform.position, ball.GetDir(), 25);
+        }
+    }
 
+    #endregion
+    
     #region COMMAND_FUNCTION
 
     [Command]
@@ -231,6 +229,34 @@ public class PlayerController : NetworkBehaviour, IComparable
         isReady = b;
     }
 
+    [Command]
+    public void CmdTpToLocation(Vector3 Lposition, Vector3 Langles)
+    {
+        ball.UnfreezeBall();
+        //Debug.Log("tp to " + location.position);
+        ballRb.freezeRotation = true;
+        ballRb.velocity = Vector3.zero;
+
+        ball.IgnoreBalls();
+
+        ball.transform.position = transform.localPosition;
+        ball.transform.rotation = Quaternion.identity;
+
+        transform.position = Lposition;
+        ballRb.freezeRotation = false;
+        //transform.position = new Vector3(location.position.x, location.position.y, location.position.z + id);
+        ball.SetLastPosition(transform.localPosition);
+        ball.SetRotationValueY(Langles.y);
+        Physics.SyncTransforms();
+        ball.SetAddPenality(false);
+        if (timer)
+            timer.StartTimer();
+        else
+            Debug.LogError("Timer not init");
+        // ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
+
+        RpcDoSimulate();
+    }
     #endregion
 
     #region PUBLIC_FUNCTION
@@ -259,6 +285,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         //Debug.Log("Une balle est rentrée : " + playerName);
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
+        isSimulating = false;
         ball.FreezeBall();
         DespawnBall();
 
@@ -331,6 +358,8 @@ public class PlayerController : NetworkBehaviour, IComparable
         else
             Debug.LogError("Timer not init");
        // ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
+
+        isSimulating = true;
     }
     public void TpToLocation(Vector3 location)
     {
@@ -344,6 +373,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         ballRb.freezeRotation = false;
         //Debug.Log("Fin tp to location" + ball.transform.position);
         Physics.SyncTransforms();
+        isSimulating = true;
     }
 
     public void SpawnBall()
@@ -482,6 +512,22 @@ public class PlayerController : NetworkBehaviour, IComparable
     public LineRenderer GetLineRenderer()
     {
         return lineRenderer;
+    }
+
+    public void NotSimulate()
+    {
+        lineRenderer.enabled = false;
+        isSimulating = false;
+    }
+
+    [ClientRpc]
+    public void RpcDoSimulate()
+    {
+        if (!hasFinishHole)
+        {
+            lineRenderer.enabled = true;
+            isSimulating = true;
+        }
     }
     #endregion
 

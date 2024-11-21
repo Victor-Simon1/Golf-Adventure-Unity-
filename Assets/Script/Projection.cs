@@ -6,8 +6,9 @@ using UnityEngine.SceneManagement;
 public class Projection : MonoRegistrable
 {
     [SerializeField] private LineRenderer _line;
-    [SerializeField] private int _maxPhysicsFrameIterations = 100;
+    [SerializeField] private int _maxPhysicsFrameIterations = 10;
     [SerializeField] private Transform _obstaclesParent;
+    [SerializeField] private float multiplier = 1;
 
     private Scene _simulationScene;
     private PhysicsScene _physicsScene;
@@ -15,16 +16,30 @@ public class Projection : MonoRegistrable
 
     [SerializeField] private GameObject ballPrefab;
 
+    private BallControler ballControler;
+
     private void Awake()
     {
-        ServiceLocator.Register<Projection>(this);
+        ServiceLocator.Register<Projection>(this, false);
     }
 
     private void Start()
     {
         CreatePhysicsScene();
-        _line = ServiceLocator.Get<GameManager>().GetLocalPlayer().GetLineRenderer();
+        var playerController = ServiceLocator.Get<GameManager>().GetLocalPlayer();
+        _line = playerController.GetLineRenderer();
         _line.alignment = LineAlignment.TransformZ;
+        ballControler = playerController.GetBall();
+    }
+
+    private void Update()
+    {
+        foreach (var item in _spawnedObjects)
+        {
+            item.Value.position = item.Key.position;
+            item.Value.rotation = item.Key.rotation;
+        }
+
     }
 
     private void CreatePhysicsScene()
@@ -42,22 +57,12 @@ public class Projection : MonoRegistrable
         }
     }
 
-    private void Update()
-    {
-        foreach (var item in _spawnedObjects)
-        {
-            item.Value.position = item.Key.position;
-            item.Value.rotation = item.Key.rotation;
-        }
-    }
-
     public void SimulateTrajectory(Vector3 pos, Vector3 dir, float force)
     {
-        Debug.Log(pos);
         var ghostObj = Instantiate(ballPrefab, pos, Quaternion.identity);
         SceneManager.MoveGameObjectToScene(ghostObj.gameObject, _simulationScene);
         var ghostBall = ghostObj.GetComponent<SimpleBallController>();
-        ghostBall.SimplePush(dir, force, true);
+        ghostBall.SimplePush(dir, force*multiplier, true);
 
         _line.positionCount = _maxPhysicsFrameIterations;
 

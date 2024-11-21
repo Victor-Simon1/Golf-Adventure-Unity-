@@ -32,6 +32,8 @@ public class GameManager : MonoRegistrable
     public int actualHole = 0;
     public int nbPlayerFinishHole = 0;
     public bool inGame;
+    public bool isLoaded = false;
+    public bool isTpReady;
 
    
     [Header("Maps Variables")]
@@ -56,6 +58,32 @@ public class GameManager : MonoRegistrable
         //Display();
 
         
+    }
+
+    private void Update()
+    {
+        if (isLoaded && isTpReady)
+        {
+            isLoaded = false;
+            var st= starts[0].transform;
+
+            StartCoroutine(CoroutingWaitingForAllPlayers(true));
+
+            GetLocalPlayer().CmdTpToLocation(st.position, st.rotation.eulerAngles);
+        }
+        if (isHost)
+        {
+            if (inGame)
+            {
+                foreach (PlayerController player in players)
+                {
+                    if (player != null)
+                    {
+                        player.RpcSimulateBall();
+                    }
+                }
+            }
+        }
     }
 
     private void OnEnable()
@@ -295,6 +323,8 @@ public class GameManager : MonoRegistrable
                 loadingScreen.SetProgression(progressiveValue);
             yield return null;
         }
+
+        isLoaded = true;
     }
 
     public void AddStart(StartBehaviour newStart)
@@ -305,7 +335,11 @@ public class GameManager : MonoRegistrable
         if (starts.Count == StartBehaviour.max)
         {
             //Debug.Log("Tp vers le premier trou");
-            TpPlayersToLocation();
+            isTpReady = true;
+        }
+        else
+        {
+            isTpReady = false;
         }
            
     }
@@ -458,5 +492,7 @@ public class GameManager : MonoRegistrable
             }
             yield return null;
         }
+
+        inGame = true;
     }
 }
