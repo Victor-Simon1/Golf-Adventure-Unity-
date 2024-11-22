@@ -35,7 +35,7 @@ public class BallControler : MonoBehaviour
 
     [SerializeField] private Vector2 rotationValues = new Vector2(0,0);
     //La sensibilit� n'est pas la m�me dans l'�diteur que sur t�l�phone
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
     private float RotationSensitivity = 100f;
 #else
     private float RotationSensitivity = 1f;
@@ -160,9 +160,9 @@ public class BallControler : MonoBehaviour
                     TpToLastLocation();
                 }
             }
-          
 
-#if UNITY_EDITOR
+
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
             //Permet de tester l'orientation et le zomm dans l'�diteur
             if (Input.GetMouseButton(1))
             {

@@ -249,10 +249,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.SetRotationValueY(Langles.y);
         Physics.SyncTransforms();
         ball.SetAddPenality(false);
-        if (timer)
+        /* (timer)
             timer.StartTimer();
         else
-            Debug.LogError("Timer not init");
+            Debug.LogError("Timer not init");*/
         // ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
 
         RpcDoSimulate();
@@ -282,7 +282,7 @@ public class PlayerController : NetworkBehaviour, IComparable
 
     public void OnHoleEntered(int maxStrokes)
     {
-        //Debug.Log("Une balle est rentrée : " + playerName);
+        Debug.Log("Une balle est rentrée : " + playerName);
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
         isSimulating = false;
@@ -353,10 +353,10 @@ public class PlayerController : NetworkBehaviour, IComparable
         ball.SetRotationValueY(location.rotation.eulerAngles.y);
         Physics.SyncTransforms();
         ball.SetAddPenality(false);
-        if (timer)
+       /*f (timer)
             timer.StartTimer();
         else
-            Debug.LogError("Timer not init");
+            Debug.LogError("Timer not init");*/
        // ball.timeLimitCoroutine = ball.StartCoroutine(ball.TimeLimit());
 
         isSimulating = true;

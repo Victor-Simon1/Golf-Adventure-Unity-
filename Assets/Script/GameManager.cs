@@ -485,6 +485,7 @@ public class GameManager : MonoRegistrable
                     {
                         playerUI.DisplayWaiting(false, "Lancement...");
                         players.ForEach(p => p.SpawnBall());
+                       
                         break;
                     }
                     playerUI.DisplayWaiting(display, nbPlayerReady + "/" + players.Count);
@@ -494,5 +495,10 @@ public class GameManager : MonoRegistrable
         }
 
         inGame = true;
+        Timer playerTimer = GetLocalPlayer().GetTimer();
+        if (playerTimer)
+            playerTimer.StartTimer();
+        else
+            Debug.LogError("Timer not init");
     }
 }
