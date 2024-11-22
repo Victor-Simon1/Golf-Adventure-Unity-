@@ -102,13 +102,11 @@ public class PlayerController : NetworkBehaviour, IComparable
     public void RpcAddStroke()
     {
         strokes[actualHole]++;
-        if(isLocalPlayer)
-        {
-            if (playerUI != null)
-                playerUI.SetStrokes(strokes[actualHole]);
-            if (playerScore != null)
-                playerScore.SetSum(GetSumStrokes());
-        }
+
+        if (playerUI != null)
+            playerUI.SetStrokes(strokes[actualHole]);
+        if (playerScore != null)
+            playerScore.SetSum(GetSumStrokes());
     }
 
     [ClientRpc]
@@ -286,7 +284,7 @@ public class PlayerController : NetworkBehaviour, IComparable
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
         isSimulating = false;
-        ball.FreezeBall();
+        //ball.FreezeBall();
         DespawnBall();
 
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
