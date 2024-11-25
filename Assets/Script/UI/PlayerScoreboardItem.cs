@@ -24,6 +24,13 @@ public class PlayerScoreboardItem : MonoBehaviour,IComparable
         strokeText.text = sum.ToString();
         nbStrokes = sum;
     }
+
+    public void SetupAndSum(PlayerController p, int sum)
+    {
+        usernameText.text = p.GetName();
+        strokeText.text = sum.ToString();
+        nbStrokes = sum;
+    }
     #endregion
 
 #region ICOMPARABLE_FUNCTION

@@ -10,12 +10,14 @@ public class Scoreboard : MonoBehaviour
 
     [SerializeField] List<PlayerScoreboardItem> ScoreboardItems = new List<PlayerScoreboardItem>();
 
+    [SerializeField] private bool isContinue = true;
 
 #region UNITY_FUNCTION
-    private void Start()
+    private void Awake()
     {
         Init();
-        gameObject.SetActive(false);
+        if(isContinue)
+            gameObject.SetActive(false);
     }
 #endregion
 
@@ -31,7 +33,7 @@ public class Scoreboard : MonoBehaviour
             itemGo.SetActive(true);
             PlayerScoreboardItem item = itemGo.GetComponent<PlayerScoreboardItem>();
             ScoreboardItems.Add(item);
-            if (item != null)
+            if (item != null && isContinue)
                 item.Setup(p);
         }
     }
@@ -48,4 +50,9 @@ public class Scoreboard : MonoBehaviour
         }
     }
 #endregion
+
+    public List<PlayerScoreboardItem> GetListScoreBoardItems()
+    {
+        return ScoreboardItems;
+    }
 }

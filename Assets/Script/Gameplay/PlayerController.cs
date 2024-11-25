@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour, IComparable
     public bool hasFinishHole = false;
 
     [Header("Player info")]
-    [SyncVar] [SerializeField] private string playerName = "Player";
+    [SyncVar][SerializeField] private string playerName = "Player";
     public int id;
 
     [Header("Gameobjects")]
@@ -91,7 +91,7 @@ public class PlayerController : NetworkBehaviour, IComparable
             gm.RemovePc(this);
             //foreach(PlayerController pc in gm.GetListPlayer())
             //{
-              //  Debug.Log("name :" + pc.playerName);
+            //  Debug.Log("name :" + pc.playerName);
             //} 
         }
     }
@@ -110,6 +110,16 @@ public class PlayerController : NetworkBehaviour, IComparable
     }
 
     [ClientRpc]
+    public void RpcSetStroke(int x)
+    {
+        strokes[actualHole] = x;
+        if (playerUI != null)
+            playerUI.SetStrokes(strokes[actualHole]);
+        if (playerScore != null)
+            playerScore.SetSum(GetSumStrokes());
+    }
+
+    [ClientRpc]
     public void RpcAddXStroke(int x)
     {
         strokes[actualHole] += x;
@@ -120,6 +130,12 @@ public class PlayerController : NetworkBehaviour, IComparable
             if (playerScore != null)
                 playerScore.SetSum(GetSumStrokes());
         }
+    }
+
+    [Command]
+    public void CmdAddXStroke(int x)
+    {
+        RpcAddXStroke(x);
     }
 
     [ClientRpc]
@@ -321,6 +337,21 @@ public class PlayerController : NetworkBehaviour, IComparable
     {
         var gm = ServiceLocator.Get<GameManager>();
         hasFinishHole = true;
+        if (gm.GetLocalPlayer().netIdentity == netIdentity)
+        {
+            StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, false, true));
+            playerUI.Spectate(true);
+        }
+        gm.PlayerFinished();
+        StartCoroutine(gm.GoNextHole());
+    }
+
+    [ClientRpc]
+    public void RpcOutOfTime()
+    {
+        var gm = ServiceLocator.Get<GameManager>();
+        hasFinishHole = true;
+        ball.IgnoreBalls();
         if (gm.GetLocalPlayer().netIdentity == netIdentity)
         {
             StartCoroutine(CouroutineShowResultHole(strokes[actualHole], 0, false, true));

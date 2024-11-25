@@ -8,12 +8,14 @@ public class Timer : MonoBehaviour
 {
     [Header("Timer")]
     float currentTime = 0;
-    float startingTime = 5f * 60f;
+    float startingTime = /*5f * 60f*/ 2f;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] bool isRunning = false;
     bool hasCallPc = false;
     [Header("Manager")]
     PlayerController pc;
+    GameManager gm;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -23,8 +25,8 @@ public class Timer : MonoBehaviour
     }
     void Start()
     {
-       
-        timerText = GetComponent<TextMeshProUGUI>();
+       gm = ServiceLocator.Get<GameManager>();
+       timerText = GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -39,8 +41,8 @@ public class Timer : MonoBehaviour
                 isRunning = false;
                 hasCallPc = true;
                 currentTime = 0f;
-                pc.RpcAddXStroke(pc.GetBall().GetMaxStrokes() - pc.GetActualStrokes() + pc.GetBall().GetPenalityStrokes());
-                pc.OutOfTime();
+                if(gm.IsHost())
+                    gm.TimesUp();
             }
         }
       

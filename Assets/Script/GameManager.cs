@@ -215,6 +215,16 @@ public class GameManager : MonoRegistrable
         nbPlayerFinishHole++;
     }
 
+    public void TimesUp()
+    {
+        foreach(PlayerController player in players) 
+        {
+            player.RpcSetStroke(15);
+            player.GetBall().IgnoreBalls();
+            player.RpcOutOfTime();
+        }
+    }
+
     public IEnumerator GoNextHole()
     {
         //Debug.Log("Nombre de joueurs ayant fini "+ nbPlayerFinishHole);
@@ -231,7 +241,13 @@ public class GameManager : MonoRegistrable
                 //Debug.Log("Map fini");
                 yield return new WaitForSeconds(1f);
 
-                uiManager.GetPlayerUI().GetScoreboard().Pop(1f);
+                Scoreboard scoreboard = uiManager.GetPlayerUI().GetFinalScoreboard();
+                var changeMap = scoreboard.transform.parent;
+                changeMap.gameObject.SetActive(true);
+
+                var listScoreboard = scoreboard.GetListScoreBoardItems();
+
+                players.ForEach(p => listScoreboard[p.id-1].SetupAndSum(p, p.GetSumStrokes()));
 
                 ResetManager();
 
@@ -242,21 +258,13 @@ public class GameManager : MonoRegistrable
 
                 if (isHost)
                 {
-                    //Parent
-                    GameObject gmNextMap = GameObject.Find("NextMap");
-                    var changeMap = gmNextMap.transform.GetChild(0);
                     //Dropdown of map's choices
-                    TMP_Dropdown dropdown = changeMap.GetChild(2).GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
+                    TMP_Dropdown dropdown = changeMap.GetChild(3).GetChild(0).gameObject.GetComponent<TMPro.TMP_Dropdown>();
                     //Button for launch a new game
-                    var launchGameButton = changeMap.GetChild(2).GetChild(1).GetChild(1).GetComponent<Button>();
-                    //Scoreboard of all players
-                    var scoreboard = GameObject.Find("PlayerList");
-                    //Setup scoreboard
-                    scoreboard.transform.SetParent(changeMap);
-                    scoreboard.transform.localPosition = new Vector3(0, -120, 0);
-                    scoreboard.SetActive(false);
-                    uiManager.GetPlayerUI().GetScoreboard().gameObject.SetActive(false);
-                    changeMap.gameObject.SetActive(true);
+                    var launchGameButton = changeMap.GetChild(3).GetChild(1).GetChild(1).GetComponent<Button>();
+                    
+                    dropdown.gameObject.SetActive(true);
+                    launchGameButton.gameObject.SetActive(true);
                     
                     dropdown.onValueChanged.AddListener(
                         delegate

@@ -242,10 +242,13 @@ public class BallControler : MonoBehaviour
         }
         if (!magnHasChanged && AbsMagn > 0.1)
             magnHasChanged = true;
-        if (magnHasChanged && AbsMagn < 0.1)
+        if (magnHasChanged && AbsMagn < 0.1 && AbsMagn > 0)
+        {
+            pc.RpcDoSimulate();
+        }
+        else if (magnHasChanged && AbsMagn == 0) 
         {
             magnHasChanged = false;
-            pc.RpcDoSimulate();
         }
 
     }
@@ -274,10 +277,6 @@ public class BallControler : MonoBehaviour
         HoleBehavior hole = other.transform.parent.GetComponent<HoleBehavior>();
         if (hole != null)
         {
-            if (pc.isLocalPlayer)
-            {
-                pc.GetTimer().StopTimer();
-            }
             //StopCoroutine(timeLimitCoroutine);
             pc.OnHoleEntered(hole.maxStrokes);
         }

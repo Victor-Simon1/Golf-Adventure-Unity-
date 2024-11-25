@@ -16,6 +16,7 @@ public class PlayerUI : MonoBehaviour
     private PlayerController displayedPlayer;
     private PlayerController player;
     [SerializeField] private VictoryPopup scoreboard;
+    [SerializeField] private Scoreboard FinalScoreboard;
 
     [SerializeField] private GameObject WaitingScreen;
     [SerializeField] private TextMeshProUGUI nbPlayerWaited;
@@ -164,6 +165,11 @@ public class PlayerUI : MonoBehaviour
     public VictoryPopup GetScoreboard()
     {
         return scoreboard;
+    }
+
+    public Scoreboard GetFinalScoreboard()
+    {
+        return FinalScoreboard;
     }
 
     public void DisplayWaiting(bool b, string nbPlayerReady)
