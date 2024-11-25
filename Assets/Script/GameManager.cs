@@ -247,7 +247,7 @@ public class GameManager : MonoRegistrable
 
                 var listScoreboard = scoreboard.GetListScoreBoardItems();
 
-                players.ForEach(p => listScoreboard[p.id-1].SetupAndSum(p, p.GetSumStrokes()));
+                players.ForEach(p => listScoreboard[p.id].SetupAndSum(p, p.GetSumStrokes()));
 
                 ResetManager();
 
