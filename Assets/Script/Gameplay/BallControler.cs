@@ -334,7 +334,8 @@ public class BallControler : MonoBehaviour
 
     public void DontIgnoreBalls()
     {
-        GetComponent<SphereCollider>().excludeLayers = 0;
+        if(moving)
+            GetComponent<SphereCollider>().excludeLayers = 0;
     }
 
     public void Spawn(bool b)

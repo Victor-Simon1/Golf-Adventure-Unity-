@@ -8,7 +8,7 @@ public class Timer : MonoBehaviour
 {
     [Header("Timer")]
     float currentTime = 0;
-    float startingTime = /*5f * 60f*/ 2f;
+    float startingTime = 5f * 60f;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] bool isRunning = false;
     bool hasCallPc = false;
